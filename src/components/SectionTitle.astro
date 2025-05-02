@@ -1,0 +1,8 @@
+---
+const { title, subtitle } = Astro.props;
+---
+
+<div class="mb-12 md:mb-16">
+  <h2 class="text-3xl md:text-4xl font-light">{title}</h2>
+  {subtitle && <p class="mt-3 text-lg text-gray-600 max-w-2xl">{subtitle}</p>}
+</div>

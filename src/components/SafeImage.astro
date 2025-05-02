@@ -1,0 +1,16 @@
+---
+const { src, alt = "", class: className = "" } = Astro.props;
+---
+
+{
+  src ? (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      class={`${className} object-cover`}
+    />
+  ) : (
+    <div class={`${className} bg-gray-200 animate-pulse`} />
+  )
+}

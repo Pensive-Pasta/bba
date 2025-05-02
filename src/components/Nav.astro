@@ -1,0 +1,69 @@
+---
+import { Image } from "astro:assets";
+const BBALogo = "/images/BBA-Logo.svg";
+---
+
+<nav class="absolute top-0 left-0 right-0 z-10 bg-transparent h-16 p-10">
+  <ul class="flex justify-between items-center h-full">
+    <a href="/">
+    <Image
+      class="bba-logo invert"
+      src={BBALogo}
+      alt="BBA Logo"
+      width={100}
+      height={200}
+    />
+    </a>
+    <svg
+      id="burger"
+      class="burger hover:cursor-pointer text-black"
+      onclick="this.classList.toggle('open')"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width="30"
+      height="30"
+      stroke="currentColor"
+      fill="none"
+      stroke-width="2"
+    >
+      <line class="top" x1="3" y1="7" x2="21" y2="7">
+        <animate
+          attributeName="x1"
+          from="3"
+          to="0"
+          dur="0.4s"
+          begin="burger.click"
+          fill="freeze"></animate>
+      </line>
+      <line class="mid" x1="3" y1="12" x2="21" y2="12"></line>
+      <line class="bot" x1="3" y1="17" x2="21" y2="17">
+        <animate
+          attributeName="x1"
+          from="3"
+          to="0"
+          dur="0.4s"
+          begin="burger.click"
+          fill="freeze"></animate>
+      </line>
+    </svg>
+  </ul>
+</nav>
+<style>
+  .burger line {
+    transition: all 0.4s ease;
+    transform-origin: center;
+  }
+
+  .burger.open .top {
+    transform: translate(-3px, 5px) rotate(45deg);
+  }
+
+  .burger.open .mid {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+
+  .burger.open .bot {
+    transform: translate(-3px, -5px) rotate(-45deg);
+  }
+</style>

@@ -1,16 +1,202 @@
 ---
+// src/pages/index.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LandingLogo from "../components/LandingLogo.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+import SafeImage from "../components/SafeImage.astro";
 
+// Featured projects data
+const featuredProjects = [
+  {
+    title: "Oakwood Residence",
+    location: "London",
+    category: "Residential",
+    year: "2023",
+    image: "/placeholder.svg?height=600&width=800",
+    slug: "oakwood-residence",
+    type: "homes",
+  },
+  {
+    title: "Riverside Gallery",
+    location: "Manchester",
+    category: "Cultural",
+    year: "2022",
+    image: "/placeholder.svg?height=600&width=800",
+    slug: "riverside-gallery",
+    type: "places",
+  },
+  {
+    title: "Hillside Retreat",
+    location: "Lake District",
+    category: "Residential",
+    year: "2023",
+    image: "/placeholder.svg?height=600&width=800",
+    slug: "hillside-retreat",
+    type: "homes",
+  },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<div id="landing" class="landing-overlay">
+  <LandingLogo />
+</div>
+
+<BaseLayout>
+  <!-- Hero Section -->
+  <section class="min-h-[calc(100vh-64px)] flex items-center">
+    <div
+      class="flex flex-col md:flex-row px-6 md:px-12 text-black md:space-x-10 justify-between w-full"
+    >
+      <div class="max-w-xl">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
+          Thoughtful architecture for modern living
+        </h1>
+        <p class="text-lg md:text-xl mb-8">
+          we are bba creates spaces that enhance the way people live, work, and
+          interact with their environment.
+        </p>
+        <a
+          href="/projects"
+          class="inline-block border-b border-black pb-1 hover:opacity-70 transition-opacity"
+        >
+          View our projects
+        </a>
+      </div>
+      <div class="md:w-[800px] h-[600px]">
+        <SafeImage
+          src="/images/bba-heathfield-house.jpg"
+          alt="Featured architecture project"
+          class="w-full h-full object-top object-fit"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="py-20 md:py-32 px-6 md:px-12">
+    <div class="container mx-auto">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center"
+      >
+        <div>
+          <h2 class="text-3xl md:text-4xl font-light mb-6">
+            We design spaces that inspire and endure
+          </h2>
+          <p class="text-lg text-gray-700 mb-6">
+            Founded in 2015, we are bba is an architecture practice dedicated to
+            creating thoughtful, sustainable spaces that respond to their
+            context and the needs of the people who use them.
+          </p>
+          <p class="text-lg text-gray-700 mb-8">
+            Our approach combines rigorous analysis, creative thinking, and
+            technical expertise to deliver projects that exceed expectations.
+          </p>
+          <a
+            href="/practice"
+            class="inline-block border-b border-black pb-1 hover:opacity-70 transition-opacity"
+          >
+            Learn more about our practice
+          </a>
+        </div>
+        <div>
+          <img
+            src="/placeholder.svg?height=800&width=800"
+            alt="Our studio"
+            class="w-full aspect-square object-cover bg-gray-200 animate-pulse"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects Section -->
+  <section class="py-20 md:py-32 px-6 md:px-12 bg-gray-50">
+    <div class="container mx-auto">
+      <SectionTitle
+        title="Featured Projects"
+        subtitle="A selection of our recent work across residential and public spaces."
+      />
+
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+      >
+        {featuredProjects.map((project) => <ProjectCard {...project} />)}
+      </div>
+
+      <div class="mt-16 text-center">
+        <a
+          href="/projects"
+          class="inline-block border-b border-black pb-1 hover:opacity-70 transition-opacity"
+        >
+          View all projects
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="py-20 md:py-32 px-6 md:px-12">
+    <div class="container mx-auto">
+      <SectionTitle
+        title="Our Process"
+        subtitle="We believe in a collaborative approach that puts our clients at the center of the design process."
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <div>
+          <h3 class="text-xl font-normal mb-4">01. Listen</h3>
+          <p class="text-gray-700">
+            We begin by understanding your needs, aspirations, and the context
+            of your project. This foundation informs everything that follows.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-normal mb-4">02. Design</h3>
+          <p class="text-gray-700">
+            We explore possibilities, test ideas, and refine concepts through an
+            iterative process that balances creativity with practicality.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-normal mb-4">03. Deliver</h3>
+          <p class="text-gray-700">
+            We manage the realization of your project with attention to detail,
+            ensuring that the finished space fulfills its potential.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-16 text-center">
+        <a
+          href="/process"
+          class="inline-block border-b border-black pb-1 hover:opacity-70 transition-opacity"
+        >
+          Learn more about our process
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  @keyframes overlayFadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  .landing-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    animation: overlayFadeOut 0.8s ease forwards 1.4s;
+    pointer-events: all;
+    z-index: 50;
+  }
+</style>

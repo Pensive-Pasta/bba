@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+
+// Projects data
+const projects = [
+  {
+    title: 'Oakwood Residence',
+    location: 'London',
+    category: 'Residential',
+    year: '2023',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'oakwood-residence',
+    type: 'homes'
+  },
+  {
+    title: 'Riverside Gallery',
+    location: 'Manchester',
+    category: 'Cultural',
+    year: '2022',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'riverside-gallery',
+    type: 'places'
+  },
+  {
+    title: 'Hillside Retreat',
+    location: 'Lake District',
+    category: 'Residential',
+    year: '2023',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'hillside-retreat',
+    type: 'homes'
+  },
+  {
+    title: 'Urban Apartment',
+    location: 'London',
+    category: 'Residential',
+    year: '2022',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'urban-apartment',
+    type: 'homes'
+  },
+  {
+    title: 'Community Hub',
+    location: 'Bristol',
+    category: 'Public',
+    year: '2021',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'community-hub',
+    type: 'places'
+  },
+  {
+    title: 'Garden Studio',
+    location: 'Cambridge',
+    category: 'Workspace',
+    year: '2022',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'garden-studio',
+    type: 'homes'
+  },
+  {
+    title: 'Timber House',
+    location: 'Sussex',
+    category: 'Residential',
+    year: '2021',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'timber-house',
+    type: 'homes'
+  },
+  {
+    title: 'Eco House',
+    location: 'Wales',
+    category: 'Residential',
+    year: '2020',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'eco-house',
+    type: 'homes'
+  },
+  {
+    title: 'Office Renovation',
+    location: 'Edinburgh',
+    category: 'Workspace',
+    year: '2021',
+    image: '/placeholder.svg?height=600&width=800',
+    slug: 'office-renovation',
+    type: 'places'
+  }
+];
+
+// Filter projects by type
+const homeProjects = projects.filter(project => project.type === 'homes');
+const placeProjects = projects.filter(project => project.type === 'places');
+---
+
+<BaseLayout title="Projects">
+  <section class="py-20 px-6 md:px-12">
+    <div class="container mx-auto">
+      <SectionTitle 
+        title="Our Projects" 
+        subtitle="A selection of our work across residential and public spaces."
+      />
+      
+      <div class="mb-16">
+        <h3 class="text-2xl font-light mb-8">Homes</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+          {homeProjects.map(project => (
+            <ProjectCard {...project} />
+          ))}
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="text-2xl font-light mb-8">Places</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+          {placeProjects.map(project => (
+            <ProjectCard {...project} />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
