@@ -5,12 +5,31 @@ import SectionTitle from '../../components/SectionTitle.astro';
 
 // Projects data
 const projects = [
+{
+    title: "Wrap Around House",
+    location: "Cambridge",
+    category: "Residential",
+    year: "2023",
+    image:
+      "/images/bba-018-wrap_around_house-complete-copyright_msap-16-900x900.jpg",
+    slug: "wrap-around-house",
+    type: "homes",
+  },
+  {
+    title: "Copper House",
+    location: "Cambridge",
+    category: "Residential",
+    year: "2024",
+    image: "/images/copper.jpg",
+    slug: "copper-house",
+    type: "homes",
+  },
   {
     title: 'Oakwood Residence',
     location: 'London',
     category: 'Residential',
     year: '2023',
-    image: '/placeholder.svg?height=600&width=800',
+    image: 'images/placeholder.jpg',
     slug: 'oakwood-residence',
     type: 'homes'
   },
@@ -19,7 +38,7 @@ const projects = [
     location: 'Manchester',
     category: 'Cultural',
     year: '2022',
-    image: '/placeholder.svg?height=600&width=800',
+    image: 'images/placeholder.jpg',
     slug: 'riverside-gallery',
     type: 'places'
   },
@@ -28,7 +47,7 @@ const projects = [
     location: 'Lake District',
     category: 'Residential',
     year: '2023',
-    image: '/placeholder.svg?height=600&width=800',
+    image: 'images/placeholder.jpg',
     slug: 'hillside-retreat',
     type: 'homes'
   },
@@ -37,7 +56,7 @@ const projects = [
     location: 'London',
     category: 'Residential',
     year: '2022',
-    image: '/placeholder.svg?height=600&width=800',
+    image: '/images/placeholder.jpg',
     slug: 'urban-apartment',
     type: 'homes'
   },
@@ -46,7 +65,7 @@ const projects = [
     location: 'Bristol',
     category: 'Public',
     year: '2021',
-    image: '/placeholder.svg?height=600&width=800',
+    image: '/images/placeholder.jpg',
     slug: 'community-hub',
     type: 'places'
   },
@@ -55,7 +74,7 @@ const projects = [
     location: 'Cambridge',
     category: 'Workspace',
     year: '2022',
-    image: '/placeholder.svg?height=600&width=800',
+    image: '/images/placeholder.jpg',
     slug: 'garden-studio',
     type: 'homes'
   },
@@ -64,16 +83,25 @@ const projects = [
     location: 'Sussex',
     category: 'Residential',
     year: '2021',
-    image: '/placeholder.svg?height=600&width=800',
+    image: '/images/placeholder.jpg',
     slug: 'timber-house',
     type: 'homes'
+  },
+  {
+    title: "Western Park",
+    location: "Leicester",
+    category: "Cultural",
+    year: "2025",
+    image: "/images/westernpark.jpg",
+    slug: "western-park",
+    type: "places",
   },
   {
     title: 'Eco House',
     location: 'Wales',
     category: 'Residential',
     year: '2020',
-    image: '/placeholder.svg?height=600&width=800',
+    image: '/images/placeholder.jpg',
     slug: 'eco-house',
     type: 'homes'
   },
@@ -82,7 +110,7 @@ const projects = [
     location: 'Edinburgh',
     category: 'Workspace',
     year: '2021',
-    image: '/placeholder.svg?height=600&width=800',
+    image: 'images/placeholder.jpg',
     slug: 'office-renovation',
     type: 'places'
   }

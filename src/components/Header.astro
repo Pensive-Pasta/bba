@@ -12,7 +12,7 @@ const navItems = [
 const pathname = Astro.url.pathname;
 ---
 
-<header class="py-6 px-6 md:px-12 relative z-40">
+<header class="py-6 px-6 md:px-20 bg-white max-w-[1440px] w-full mx-auto">
   <div class="flex justify-between items-center">
     <a href="/" class="text-xl font-light tracking-tighter">
       <Logo />
@@ -42,7 +42,7 @@ const pathname = Astro.url.pathname;
     </button>
   </div>
   
-  <div class="mobile-menu fixed inset-0 bg-white pt-24 px-6 hidden md:hidden h-screen w-screen" id="mobile-menu">
+  <div class="mobile-menu fixed inset-0 bg-white pt-24 px-6 hidden md:hidden h-screen w-screen z-40" id="mobile-menu">
     <ul class="space-y-8">
       {navItems.map(item => (
         <li>

@@ -1,24 +1,25 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import SectionTitle from '../../../components/SectionTitle.astro';
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SectionTitle from "../../../components/SectionTitle.astro";
 
 const projectInfo = {
-  title: 'Oakwood Residence',
-  location: 'London',
-  year: '2023',
-  client: 'Private',
-  size: '350 m²',
-  services: 'Full Architectural Services',
-  photographer: 'John Smith',
-  description: 'A contemporary family home that responds to its wooded context. The design features a series of interconnected volumes that step down the sloping site, creating a variety of spaces that connect to the landscape.',
+  title: "Wrap Around House",
+  location: "Cambridge",
+  year: "2023",
+  client: "Private",
+  size: "350 m²",
+  services: "Full Architectural Services",
+  photographer: "John Smith",
+  description:
+    "A contemporary extension that enhances family life through light-filled, open-plan living. The design wraps around the existing home, improving flow and connection to the garden while respecting the original structure.",
   images: [
-    '/placeholder.svg?height=800&width=1200',
-    '/placeholder.svg?height=800&width=1200',
-    '/placeholder.svg?height=800&width=1200',
-    '/placeholder.svg?height=800&width=1200',
-    '/placeholder.svg?height=800&width=1200',
-    '/placeholder.svg?height=800&width=1200'
-  ]
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+  ],
 };
 ---
 
@@ -28,7 +29,9 @@ const projectInfo = {
       <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
           <div>
-            <h1 class="text-3xl md:text-4xl font-light mb-6">{projectInfo.title}</h1>
+            <h1 class="text-3xl md:text-4xl font-light mb-6">
+              {projectInfo.title}
+            </h1>
             <p class="text-lg text-gray-700 mb-8">
               {projectInfo.description}
             </p>
@@ -60,86 +63,97 @@ const projectInfo = {
             </div>
           </div>
           <div>
-            <img 
-              src={projectInfo.images[0] || "/placeholder.svg"} 
-              alt={projectInfo.title} 
+            <img
+              src={projectInfo.images[0] || "/placeholder.svg"}
+              alt={projectInfo.title}
               class="w-full aspect-[4/3] object-cover"
             />
           </div>
         </div>
       </div>
     </section>
-    
+
     <section class="py-12 px-6 md:px-12">
       <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <img 
-            src={projectInfo.images[1] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Interior view`} 
+          <img
+            src={projectInfo.images[1] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Interior view`}
             class="w-full aspect-[4/3] object-cover"
           />
-          <img 
-            src={projectInfo.images[2] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Interior view`} 
+          <img
+            src={projectInfo.images[2] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Interior view`}
             class="w-full aspect-[4/3] object-cover"
           />
         </div>
       </div>
     </section>
-    
+
     <section class="py-12 px-6 md:px-12">
       <div class="container mx-auto">
         <div class="max-w-3xl mx-auto">
           <p class="text-lg text-gray-700 mb-6">
-            The Oakwood Residence is designed to maximize the connection between inside and outside, with large windows and sliding doors that open onto terraces and gardens. The material palette is restrained, with a focus on natural materials that will age gracefully.
+            Butcher Bayley Architects completed a full-house refurbishment –
+            including a two-story side and rear extension – for a family home in
+            Cambridge. The design takes the house from a two-bed to a four-bed
+            and significantly expands the living space for a growing family. A
+            Cambridge family, seeking sustainability Two words that kept arising
+            in the design of this project were family and environment. There
+            were some improvements the client wanted
           </p>
           <p class="text-lg text-gray-700">
-            The house is organized around a central double-height space that brings light deep into the plan and creates a visual connection between the different levels. The living spaces flow into one another, creating a sense of openness while still providing distinct areas for different activities.
+            To meet these ambitions, we designed the site to new-build
+            environmental standards and sourced materials in line with this
+            wherever possible. External wall insulation has been installed to
+            make up for the lack of insulation when the house was originally
+            built – and new technologies, like under-floor heating, were
+            employed to further decrease the environmental footprint.
           </p>
         </div>
       </div>
     </section>
-    
+
     <section class="py-12 px-6 md:px-12">
       <div class="container mx-auto">
-        <img 
-          src={projectInfo.images[3] || "/placeholder.svg"} 
-          alt={`${projectInfo.title} - Full width view`} 
+        <img
+          src={projectInfo.images[3] || "/placeholder.svg"}
+          alt={`${projectInfo.title} - Full width view`}
           class="w-full aspect-video object-cover"
         />
       </div>
     </section>
-    
+
     <section class="py-12 px-6 md:px-12">
       <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <img 
-            src={projectInfo.images[4] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Detail view`} 
+          <img
+            src={projectInfo.images[4] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Detail view`}
             class="w-full aspect-[4/3] object-cover"
           />
-          <img 
-            src={projectInfo.images[5] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Detail view`} 
+          <img
+            src={projectInfo.images[5] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Detail view`}
             class="w-full aspect-[4/3] object-cover"
           />
         </div>
       </div>
     </section>
-    
+
     <section class="py-20 px-6 md:px-12 bg-gray-50">
       <div class="container mx-auto">
-        <SectionTitle 
-          title="More Projects" 
+        <SectionTitle
+          title="More Projects"
           subtitle="Explore more of our residential projects."
         />
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           <a href="/projects/homes/hillside-retreat" class="group block">
             <div class="overflow-hidden">
-              <img 
-                src="/placeholder.svg?height=600&width=800" 
-                alt="Hillside Retreat" 
+              <img
+                src="/images/placeholder.jpg"
+                alt="Hillside Retreat"
                 class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
@@ -148,12 +162,12 @@ const projectInfo = {
               <p class="text-sm text-gray-600">Lake District, 2023</p>
             </div>
           </a>
-          
+
           <a href="/projects/homes/urban-apartment" class="group block">
             <div class="overflow-hidden">
-              <img 
-                src="/placeholder.svg?height=600&width=800" 
-                alt="Urban Apartment" 
+              <img
+                src="/images/placeholder.jpg"
+                alt="Urban Apartment"
                 class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
@@ -162,12 +176,12 @@ const projectInfo = {
               <p class="text-sm text-gray-600">London, 2022</p>
             </div>
           </a>
-          
+
           <a href="/projects/homes/timber-house" class="group block">
             <div class="overflow-hidden">
-              <img 
-                src="/placeholder.svg?height=600&width=800" 
-                alt="Timber House" 
+              <img
+                src="/images/placeholder.jpg"
+                alt="Timber House"
                 class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
