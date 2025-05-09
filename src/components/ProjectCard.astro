@@ -2,7 +2,7 @@
 const { title, location, category, year, image, slug, type } = Astro.props;
 ---
 
-<a href={`/projects/${type}/${slug}`} class="group block">
+<a href={`/projects/${type}/${slug}`} class="group block project-card">
   <div class="overflow-hidden">
     <img
       src={image || "/placeholder.svg"}

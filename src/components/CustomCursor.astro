@@ -1,0 +1,370 @@
+---
+
+---
+
+<div class="custom-cursor-container">
+  <div class="custom-cursor hidden"></div>
+  <div class="custom-cursor-follower hidden"></div>
+</div>
+
+<style>
+  .custom-cursor-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 40;
+    overflow: hidden;
+  }
+
+  .custom-cursor {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #000;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.2s,
+      height 0.2s,
+      background-color 0.2s;
+    z-index: 40;
+    opacity: 1;
+  }
+
+  .custom-cursor-follower {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease-out;
+    z-index: 10000;
+    opacity: 1;
+  }
+
+  .custom-cursor.hidden,
+  .custom-cursor-follower.hidden {
+    opacity: 0;
+  }
+
+  /* Hide default cursor when custom cursor is active */
+  @media (pointer: fine) and (min-width: 1024px) {
+    :global(html) {
+      cursor: none !important;
+    }
+
+    :global(body),
+    :global(a),
+    :global(button),
+    :global([role="button"]),
+    :global(input),
+    :global(textarea),
+    :global(select),
+    :global(.clickable),
+    :global(*) {
+      cursor: none !important;
+    }
+  }
+
+  /* Hover state for interactive elements */
+  :global(.cursor-hover .custom-cursor) {
+    width: 12px;
+    height: 12px;
+    background-color: #000;
+  }
+
+  :global(.cursor-hover .custom-cursor-follower) {
+    width: 60px;
+    height: 60px;
+    border-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  /* View project hover state */
+  :global(.cursor-view .custom-cursor-follower) {
+    width: 80px;
+    height: 80px;
+    border-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  :global(.cursor-view .custom-cursor-follower::after) {
+    content: "View";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: #000;
+  }
+
+  /* Link hover state */
+  :global(.cursor-link .custom-cursor-follower::after) {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17l9.2-9.2M17 17V7H7'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* Text input state */
+  :global(.cursor-text .custom-cursor) {
+    width: 2px;
+    height: 24px;
+    border-radius: 0;
+    animation: blink 1s infinite;
+  }
+
+  :global(.cursor-text .custom-cursor-follower) {
+    opacity: 0;
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* Dragging state */
+  :global(.cursor-grabbing .custom-cursor) {
+    width: 12px;
+    height: 12px;
+    background-color: #000;
+  }
+
+  :global(.cursor-grabbing .custom-cursor-follower) {
+    width: 50px;
+    height: 50px;
+    border-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+</style>
+
+<script>
+  // Store last known mouse position globally
+  let lastKnownMouseX = window.innerWidth / 2;
+  let lastKnownMouseY = window.innerHeight / 2;
+
+  // Track mouse position globally
+  document.addEventListener("mousemove", (e) => {
+    lastKnownMouseX = e.clientX;
+    lastKnownMouseY = e.clientY;
+  });
+
+  // Function to initialize the custom cursor
+  function initCustomCursor() {
+    // Only run on non-touch devices
+    if ("ontouchstart" in window || window.innerWidth < 1024) {
+      return;
+    }
+
+    const cursor = document.querySelector(".custom-cursor") as HTMLElement;
+    const follower = document.querySelector(
+      ".custom-cursor-follower"
+    ) as HTMLElement;
+
+    if (!cursor || !follower) return;
+
+    // Keep cursor hidden initially
+    cursor.classList.add("hidden");
+    follower.classList.add("hidden");
+
+    // Hide default cursor immediately
+    document.documentElement.style.cursor = "none";
+
+    // Initial position at center or last known position
+    let mouseX = lastKnownMouseX;
+    let mouseY = lastKnownMouseY;
+
+    // Follower position with some lag
+    let followerX = mouseX;
+    let followerY = mouseY;
+
+    // Track if animation is running
+    let animationRunning = false;
+
+    // Position cursor at current mouse position immediately
+    cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+    follower.style.transform = `translate(${followerX}px, ${followerY}px)`;
+
+    // Update cursor position immediately with mouse
+    function onMouseMove(e: MouseEvent) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      // Show cursor if it's hidden
+      if (cursor.classList.contains("hidden")) {
+        cursor.classList.remove("hidden");
+        follower.classList.remove("hidden");
+      }
+
+      // Update cursor position immediately
+      cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+
+      // Start animation loop if not already running
+      if (!animationRunning) {
+        animationRunning = true;
+        updateFollower();
+      }
+    }
+
+    // Handle cursor hover states
+    function handleHoverState() {
+      // Links and buttons
+      const hoverElements = document.querySelectorAll(
+        'a, button, [role="button"], .clickable'
+      );
+
+      // Project cards
+      const projectCards = document.querySelectorAll(".project-card");
+
+      // Text inputs
+      const textElements = document.querySelectorAll(
+        'input[type="text"], input[type="email"], input[type="password"], textarea'
+      );
+
+      // External links
+      const externalLinks = document.querySelectorAll(
+        'a[target="_blank"], a[href^="http"]'
+      );
+
+      // Handle standard interactive elements
+      hoverElements.forEach((element) => {
+        element.addEventListener("mouseenter", () => {
+          document.body.classList.add("cursor-hover");
+        });
+
+        element.addEventListener("mouseleave", () => {
+          document.body.classList.remove("cursor-hover");
+        });
+      });
+
+      // Handle project cards
+      projectCards.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          document.body.classList.add("cursor-view");
+        });
+
+        card.addEventListener("mouseleave", () => {
+          document.body.classList.remove("cursor-view");
+        });
+      });
+
+      // Handle text inputs
+      textElements.forEach((element) => {
+        element.addEventListener("mouseenter", () => {
+          document.body.classList.add("cursor-text");
+        });
+
+        element.addEventListener("mouseleave", () => {
+          document.body.classList.remove("cursor-text");
+        });
+      });
+
+      // Handle external links
+      externalLinks.forEach((link) => {
+        link.addEventListener("mouseenter", () => {
+          document.body.classList.add("cursor-link");
+        });
+
+        link.addEventListener("mouseleave", () => {
+          document.body.classList.remove("cursor-link");
+        });
+      });
+
+      // Handle draggable elements and mouse down states
+      document.addEventListener("mousedown", () => {
+        document.body.classList.add("cursor-grabbing");
+      });
+
+      document.addEventListener("mouseup", () => {
+        document.body.classList.remove("cursor-grabbing");
+      });
+    }
+
+    // Update follower position with smooth animation
+    function updateFollower() {
+      // Calculate follower position with easing
+      followerX += (mouseX - followerX) * 0.1;
+      followerY += (mouseY - followerY) * 0.1;
+
+      // Apply position with transform for better performance
+      follower.style.transform = `translate(${followerX}px, ${followerY}px)`;
+
+      // Continue animation loop
+      requestAnimationFrame(updateFollower);
+    }
+
+    // Add event listener
+    document.addEventListener("mousemove", onMouseMove);
+
+    // Call once on load
+    handleHoverState();
+
+    // Handle dynamic content loading - reattach event listeners when DOM changes
+    const observer = new MutationObserver(handleHoverState);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Force cursor to be visible on first load
+    setTimeout(() => {
+      // Dispatch a synthetic mousemove event
+      const event = new MouseEvent("mousemove", {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+        clientX: lastKnownMouseX,
+        clientY: lastKnownMouseY,
+      });
+      document.dispatchEvent(event);
+    }, 100);
+  }
+
+  // Initialize on page load
+  document.addEventListener("DOMContentLoaded", initCustomCursor);
+
+  // Re-initialize when the document becomes visible (handles navigation)
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      initCustomCursor();
+    }
+  });
+
+  // Also initialize immediately if the DOM is already loaded
+  if (
+    document.readyState === "interactive" ||
+    document.readyState === "complete"
+  ) {
+    initCustomCursor();
+  }
+
+  // Handle Astro page transitions
+  document.addEventListener("astro:before-preparation", () => {
+    // Hide cursor during page transition
+    const cursor = document.querySelector(".custom-cursor");
+    const follower = document.querySelector(".custom-cursor-follower");
+    if (cursor && follower) {
+      cursor.classList.add("hidden");
+      follower.classList.add("hidden");
+    }
+  });
+
+  document.addEventListener("astro:page-load", initCustomCursor);
+  document.addEventListener("astro:after-swap", initCustomCursor);
+</script>

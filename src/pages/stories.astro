@@ -1,80 +1,76 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import SectionTitle from '../components/SectionTitle.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionTitle from "../components/SectionTitle.astro";
 
 const stories = [
   {
-    title: 'Designing for Wellbeing',
-    date: 'April 15, 2023',
-    excerpt: 'How architecture can promote physical and mental health through thoughtful design choices.',
-    image: '/images/placeholder.jpg',
-    slug: 'designing-for-wellbeing'
+    title: "Test Story",
+    date: "April 15, 2023",
+    excerpt:
+      "How architecture can promote physical and mental health through thoughtful design choices.",
+    image: "/images/placeholder.jpg",
+    slug: "test-story",
   },
   {
-    title: 'The Future of Sustainable Housing',
-    date: 'March 2, 2023',
-    excerpt: 'Exploring innovative approaches to creating environmentally responsible homes.',
-    image: '/images/placeholder.jpg',
-    slug: 'future-of-sustainable-housing'
+    title: "Another Test Story",
+    date: "May 10, 2023",
+    excerpt:
+      "Exploring the potential of architecture to create a sense of belonging and community.",
+    image: "/images/placeholder.jpg",
+    slug: "another-test-story",
   },
   {
-    title: 'Adaptive Reuse: Giving New Life to Old Buildings',
-    date: 'February 10, 2023',
-    excerpt: 'The environmental and cultural benefits of repurposing existing structures.',
-    image: '/images/placeholder.jpg',
-    slug: 'adaptive-reuse'
+    title: "Yet Another Test Story",
+    date: "June 5, 2023",
+    excerpt:
+      "Delving into the complex relationship between architecture and sustainability.",
+    image: "/images/placeholder.jpg",
+    slug: "yet-another-test-story",
   },
   {
-    title: 'Designing for Community',
-    date: 'January 5, 2023',
-    excerpt: 'How architecture can foster social connections and create vibrant neighborhoods.',
-    image: '/images/placeholder.jpg',
-    slug: 'designing-for-community'
+    title: "Yet Another Test Story 2",
+    date: "June 5, 2023",
+    excerpt:
+      "Delving into the complex relationship between architecture and sustainability.",
+    image: "/images/placeholder.jpg",
+    slug: "yet-another-test-story-2",
   },
-  {
-    title: 'The Role of Light in Architecture',
-    date: 'December 12, 2022',
-    excerpt: 'Exploring how natural light shapes our experience of space and influences wellbeing.',
-    image: '/images/placeholder.jpg',
-    slug: 'role-of-light'
-  },
-  {
-    title: 'Material Matters: Choosing Sustainable Building Materials',
-    date: 'November 8, 2022',
-    excerpt: 'A guide to selecting materials that minimize environmental impact without compromising quality.',
-    image: '/images/placeholder.jpg',
-    slug: 'material-matters'
-  }
 ];
 ---
 
 <BaseLayout title="Stories">
   <section class="py-20 px-6 md:px-12">
     <div class="container mx-auto">
-      <SectionTitle 
-        title="Stories" 
+      <SectionTitle
+        title="Stories"
         subtitle="Thoughts, insights, and ideas from the we are bba team."
       />
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-        {stories.map(story => (
-          <article class="group">
-            <a href={`/stories/${story.slug}`} class="block">
-              <div class="overflow-hidden">
-                <img 
-                  src={story.image || "/placeholder.svg"} 
-                  alt={story.title} 
-                  class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-              <div class="mt-4 space-y-2">
-                <p class="text-sm text-gray-500">{story.date}</p>
-                <h3 class="text-xl font-normal group-hover:underline">{story.title}</h3>
-                <p class="text-gray-700">{story.excerpt}</p>
-              </div>
-            </a>
-          </article>
-        ))}
+
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+      >
+        {
+          stories.map((story) => (
+            <article class="group">
+              <a href={`/stories/${story.slug}`} class="block">
+                <div class="overflow-hidden">
+                  <img
+                    src={story.image || "/placeholder.svg"}
+                    alt={story.title}
+                    class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div class="mt-4 space-y-2">
+                  <p class="text-sm text-gray-500">{story.date}</p>
+                  <h3 class="text-xl font-normal group-hover:underline">
+                    {story.title}
+                  </h3>
+                  <p class="text-gray-700">{story.excerpt}</p>
+                </div>
+              </a>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
