@@ -2,6 +2,8 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import SectionTitle from "../../components/SectionTitle.astro";
+import SectionWrapper from "../../layouts/SectionWrapper.astro";
+import Hero from "../../components/Hero.astro";
 
 // Projects data
 const projects = [
@@ -115,11 +117,13 @@ const projects = [
     type: "homes",
   },
 ];
+
+const id = "projects";
 ---
 
 <BaseLayout title="Projects">
-  <section class="py-20 px-6 md:px-12">
-    <div class="container mx-auto">
+  <Hero image="/images/copper.jpg" id={id} />
+  <SectionWrapper id={id}>
       <SectionTitle
         title="Our Projects"
         subtitle="A selection of our work across residential and public spaces."
@@ -168,7 +172,7 @@ const projects = [
         <span class="places-heading">Places</span>
       </h3>
       <div
-        class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+        class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         {
           projects.map((project) => (
@@ -178,8 +182,7 @@ const projects = [
           ))
         }
       </div>
-    </div>
-  </section>
+  </SectionWrapper>
 </BaseLayout>
 
 <style>

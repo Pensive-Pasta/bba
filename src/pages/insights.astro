@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionTitle from "../components/SectionTitle.astro";
 
-const stories = [
+const insights = [
   {
     title: "Test Story",
     date: "April 15, 2023",
@@ -38,11 +38,11 @@ const stories = [
 ];
 ---
 
-<BaseLayout title="Stories">
+<BaseLayout title="insights">
   <section class="py-20 px-6 md:px-12">
     <div class="container mx-auto">
       <SectionTitle
-        title="Stories"
+        title="insights"
         subtitle="Thoughts, insights, and ideas from the we are bba team."
       />
 
@@ -50,9 +50,9 @@ const stories = [
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
       >
         {
-          stories.map((story) => (
+          insights.map((story) => (
             <article class="group">
-              <a href={`/stories/${story.slug}`} class="block">
+              <a href={`/insights/${story.slug}`} class="block">
                 <div class="overflow-hidden">
                   <img
                     src={story.image || "/placeholder.svg"}

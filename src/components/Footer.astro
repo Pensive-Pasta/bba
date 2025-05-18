@@ -25,22 +25,17 @@ const certificationLogos = [
     url: "https://www.passivhaustrust.org.uk/",
   },
   { src: "/logos/aecb.png", alt: "AECB Member", url: "https://aecb.net/" },
-  {
-    src: "/logos/webcarbon.svg",
-    alt: "Web Carbon",
-    url: "https://webcarbon.org/",
-  },
 ];
 ---
 
-<footer class="py-12 px-6 md:px-12 border-t border-gray-100">
-  <div class="container mx-auto">
+<footer class="py-12 px-6 md:px-12 border-t border-gray-100 bg-white">
+  <div class="container">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div class="space-y-4">
         <a href="/" class="">
           <Logo />
         </a>
-        <p class="text-sm text-gray-600 max-w-xs">
+        <p class="text-sm text-primary max-w-xs">
           An architecture practice focused on creating thoughtful, sustainable
           spaces that enhance the way people live and work.
         </p>
@@ -48,7 +43,7 @@ const certificationLogos = [
 
       <div>
         <h3 class="text-sm font-medium mb-4">Contact</h3>
-        <address class="text-sm text-gray-600 not-italic">
+        <address class="text-sm text-primary not-italic">
           The Courthouse, Mill Road, Oundle<br />
           Northamptonshire, PE8 4BW<br />
           <a
@@ -71,7 +66,7 @@ const certificationLogos = [
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-sm text-gray-600 hover:text-black transition-colors"
+                  class="text-sm text-primary hover:text-black transition-colors"
                 >
                   {link.name}
                 </a>
@@ -84,9 +79,9 @@ const certificationLogos = [
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 my-12">
       <div
-      class="flex flex-wrap gap-6 items-center invert saturate-0 md:col-span-2"
+        class="flex flex-wrap gap-6 items-center invert saturate-0 md:col-span-2"
       >
-      {
+        {
           certificationLogos.map((logo) => (
             <a href={logo.url} target="_blank" rel="noopener noreferrer">
               <img src={logo.src} alt={logo.alt} class="h-12 w-auto" />
@@ -94,7 +89,7 @@ const certificationLogos = [
           ))
         }
       </div>
-      <span class="text-xs text-gray-600 max-w-xs">
+      <span class="text-xs text-primary max-w-xs">
         Registered Office: Rutland House, Minerva Business Park, Lynch Wood,
         Peterborough PE2 6PZ Butcher Bayley Architects Limited Company No:
         10500305
@@ -104,7 +99,7 @@ const certificationLogos = [
     <div
       class="mt-12 pt-6 border-t border-gray-100 flex flex-col md:flex-row justify-between md:items-center"
     >
-      <p class="text-xs text-gray-500">
+      <p class="text-xs text-primary">
         &copy; {currentYear} we are bba. All rights reserved.
       </p>
 
@@ -113,7 +108,7 @@ const certificationLogos = [
           <li>
             <a
               href="/privacy"
-              class="text-xs text-gray-500 hover:text-black transition-colors"
+              class="text-xs text-primary hover:primary transition-colors"
             >
               Privacy
             </a>
@@ -121,7 +116,7 @@ const certificationLogos = [
           <li>
             <a
               href="/terms"
-              class="text-xs text-gray-500 hover:text-black transition-colors"
+              class="text-xs text-primary hover:primary transition-colors"
             >
               Terms
             </a>
@@ -129,7 +124,7 @@ const certificationLogos = [
           <li>
             <a
               href="/cookies"
-              class="text-xs text-gray-500 hover:text-black transition-colors"
+              class="text-xs text-primary hover:primary transition-colors"
             >
               Cookies
             </a>

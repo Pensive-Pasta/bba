@@ -1,44 +1,58 @@
 ---
-import SectionWrapper from "../layouts/SectionWrapper.astro";
-import SafeImage from "./SafeImage.astro";
+import ChevronDown from "../assets/icons/chevron-down.svg";
+const { image = "", id = "" } = Astro.props;
 ---
 
-<SectionWrapper>
-  <div
-    class="flex flex-col space-y-8 md:flex-row text-black md:space-x-10 justify-between w-full"
+<section
+  class={`w-full bg-[url('${image}')] bg-cover bg-center bg-blend-color-burn h-screen flex items-center justify-center`}
+  style={`background-image: url('${image}'); background-size: cover; background-position: center;`}
+>
+  <a
+    href={`#${id}`}
+    class="absolute bottom-6 md:bottom-12 right-6 md:right-12"
+    data-target={id}
   >
-    <div class="max-w-xl">
-      <h1
-        class="text-4xl md:text-5xl lg:text-6xl font-light mb-6 opacity-0 animate-fadeInDown"
-        style="animation-delay: 2s;"
-      >
-        We shape dreams into timeless spaces
-      </h1>
-      <p
-        class="text-lg text-gray-700 mb-6 opacity-0 animate-fadeInUp"
-        style="animation-delay: 2s;"
-      >
-        From forever homes to community landmarks, we turn vision into place.
-        Butcher Bayley Architects creates sustainable, beautiful architecture
-        with care and craft.
-      </p>
-      <a
-        href="/projects"
-        class="inline-block border-b border-black pb-1 hover:opacity-70 transition-opacity opacity-0 animate-fadeInUp"
-        style="animation-delay: 2s;"
-      >
-        View our projects
-      </a>
-    </div>
-    <div
-      class="md:w-[800px] md:h-[600px] opacity-0 animate-fadeInRight"
-      style="animation-delay: 2s;"
-    >
-      <SafeImage
-        src="/images/bba-heathfield-house.jpg"
-        alt="Featured architecture project"
-        class="w-full h-full object-top object-fit"
-      />
-    </div>
-  </div>
-</SectionWrapper>
+    <ChevronDown class="animate-bounce w-16 text-white" />
+  </a>
+</section>
+
+<script>
+  function initSmoothScroll() {
+    const targetId = document.querySelector("a[data-target]")?.getAttribute("data-target");
+    let fired = false;
+
+    function smoothJump() {
+      if (targetId) {
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function onScroll() {
+      const y = window.scrollY;
+
+      if (!fired && y > 10) {
+        fired = true;
+        smoothJump();
+      }
+
+      if (fired && y < 10) {
+        fired = false;
+      }
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    document.addEventListener("astro:before-swap", () => {
+      window.removeEventListener("scroll", onScroll);
+      fired = false;
+    });
+  }
+
+  // Run on initial load
+  initSmoothScroll();
+
+  // Re-run on client-side navigation
+  document.addEventListener("astro:page-load", initSmoothScroll);
+</script>

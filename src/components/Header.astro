@@ -1,88 +1,157 @@
 ---
 import Logo from "./Logo.astro";
+import ArrowUpRight from "../assets/icons/arrow-up-right.svg";
 
 const navItems = [
-  { name: "Practice", url: "/practice" },
-  { name: "Process", url: "/process" },
-  { name: "Projects", url: "/projects" },
-  { name: "Stories", url: "/stories" },
-  { name: "Contact", url: "/contact" },
+  { name: "Projects", url: "/projects", color: "text-orange" },
+  { name: "Practice", url: "/practice", color: "text-green" },
+  { name: "Insights", url: "/insights", color: "text-yellow" },
+  { name: "Contact", url: "/contact", color: "text-pink" },
 ];
 
-const pathname = Astro.url.pathname;
+const routeThemes = [
+  { test: /^\/projects/, bg: "bg-orange", fill: "fill-orange" },
+  { test: /^\/practice/, bg: "bg-green", fill: "fill-green" },
+  { test: /^\/insights/, bg: "bg-yellow", fill: "fill-yellow" },
+  { test: /^\/contact/, bg: "bg-pink", fill: "fill-pink" },
+];
+
+const currentRoute = Astro.url.pathname;
+const isHome = currentRoute === "/";
+
+const currentTheme = routeThemes.find((t) => t.test.test(currentRoute)) ?? {
+  bg: "bg-primary",
+  fill: "fill-primary",
+};
+
 ---
 
-<header class="py-6 px-6 md:px-20 bg-white max-w-[1440px] w-full mx-auto">
+<header
+  class="py-6 px-6 md:px-12 max-w-[1440px] min-w-full absolute top-0 left-0 right-0 z-40"
+>
   <div class="flex justify-between items-center">
-    <a href="/" class="text-xl font-light tracking-tighter z-40">
-      <Logo />
+    <a href="/" class={`text-xl font-light tracking-tighter z-40 ${isHome ? "text-primary" : "text-white"}`}>
+      <Logo class="logo" />
     </a>
 
-    <nav class="hidden md:block">
-      <ul class="flex space-x-8">
-        {
-          navItems.map((item) => (
-            <li>
-              <a
-                href={item.url}
-                class={`text-sm hover:text-black transition-colors ${pathname.startsWith(item.url) ? "text-black" : "text-gray-500"}`}
-              >
-                {item.name}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <button
-      class="md:hidden z-40 relative"
-      id="menu-toggle"
-      aria-label="Toggle menu"
-    >
-      <div class="w-6 h-5 flex flex-col justify-between overflow-hidden">
+    <button class="z-40 relative" id="menu-toggle" aria-label="Toggle menu">
+      <div class="w-10 h-8 flex flex-col justify-between overflow-hidden">
         <span
-          class="w-full h-0.5 bg-black transform transition-all duration-300 origin-left menu-line-1"
+          class={`w-full h-1 ${isHome ? "bg-primary" : "bg-white"} transform transition-all duration-300 origin-left menu-line-1`}
         ></span>
         <span
-          class="w-full h-0.5 bg-black transition-all duration-300 menu-line-2 origin-center"
+          class={`w-full h-1 ${isHome ? "bg-primary" : "bg-white"} transition-all duration-300 origin-center menu-line-2`}
         ></span>
         <span
-          class="w-full h-0.5 bg-black transform transition-all duration-300 origin-left menu-line-3"
+          class={`w-full h-1 ${isHome ? "bg-primary" : "bg-white"} transform transition-all duration-300 origin-left menu-line-3`}
         ></span>
       </div>
     </button>
   </div>
 
   <div
-    class="mobile-menu fixed inset-0 bg-white pt-24 px-6 hidden md:hidden h-screen w-screen z-30"
-    id="mobile-menu"
+    class="nav-menu fixed inset-0 pt-24 px-6 md:px-12 h-screen w-screen z-30 hidden"
+    id="nav-menu"
   >
-    <ul class="space-y-8">
-      {
-        navItems.map((item) => (
-          <li>
-            <a
-              href={item.url}
-              class={`block py-2 text-2xl font-light hover:text-black transition-colors ${pathname.startsWith(item.url) ? "text-black" : "text-gray-500"}`}
+    <div
+      class=`fixed inset-0 -z-10 pointer-events-none overflow-hidden ${currentTheme.bg} bg-[url('/images/blue-lines.png')] bg-cover bg-center bg-blend-color-burn`
+    >
+    </div>
+    <div
+      class="absolute inset-0 h-screen -z-10 pointer-events-none overflow-hidden"
+    >
+      <svg
+        class=`absolute -top-[50%] md:-top-72 left-[25%] w-[600px] h-[600px] ${currentTheme.fill}`
+        viewBox="0 0 100 100"
+      >
+        <circle cx="50" cy="50" r="50"></circle>
+      </svg>
+      <svg
+        class=`absolute hidden md:block top-[50%] -left-10 w-[200px] h-[200px] ${currentTheme.fill}`
+        viewBox="0 0 100 100"
+      >
+        <circle cx="50" cy="50" r="50"></circle>
+      </svg>
+      <svg
+        class=`absolute top-[42%] -right-10 w-[200px] h-[200px] ${currentTheme.fill}`
+        viewBox="0 0 100 100"
+      >
+        <circle cx="50" cy="50" r="50"></circle>
+      </svg>
+      <circle cx="50" cy="50" r="50"></circle>
+    </div>
+    <svg
+      class=`absolute top-[65%] right-6 w-[800px] h-[800px] ${currentTheme.fill}`
+      viewBox="0 0 100 100"
+    >
+      <circle cx="50" cy="50" r="50"></circle>
+    </svg>
+    <div
+      class="flex flex-col h-full w-full text-white pt-36 md:pt-[30vh] md:ml-[15vw] lg:ml-[20vw] xl:ml-[25vw] 2xl:ml-[30vw]"
+    >
+      <div class="flex items-start gap-12 md:gap-32 flex-grow">
+        <ul class="space-y-2">
+          {
+            navItems.map((item) => (
+              <li>
+                <a
+                  href={item.url}
+                  class={`block text-3xl md:text-intro transition-colors text-white
+                    ${item.url !== currentRoute && item.color === "text-orange" ? "hover:text-orange" : ""}
+                    ${item.url !== currentRoute && item.color === "text-green" ? "hover:text-green" : ""}
+                    ${item.url !== currentRoute && item.color === "text-yellow" ? "hover:text-yellow" : ""}
+                    ${item.url !== currentRoute && item.color === "text-pink" ? "hover:text-pink" : ""}`}
+                >
+                  {item.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <ul class="font-light text-white space-y-2 mt-2">
+          <li class="flex items-center gap-2">
+            <a href="tel:+442012345678" class="transition-colors"
+              >+44 (0) 1832 774 121</a
             >
-              {item.name}
-            </a>
+            <ArrowUpRight class="w-6 h-6 mt-1" />
           </li>
-        ))
-      }
-    </ul>
+          <li class="flex items-center gap-2">
+            <a href="mailto:hello@wearebba.com" class="transition-colors"
+              >hello@wearebba.co.uk</a
+            >
+            <ArrowUpRight class="w-6 h-6 mt-1" />
+          </li>
+          <li class="flex items-center gap-2">
+            <a href="instagram.com" class="transition-colors">@wearebba </a>
+            <ArrowUpRight class="w-6 h-6 mt-1" />
+          </li>
+        </ul>
+      </div>
+      <div class="mt-auto mb-12 z-10">
+        <ul
+          class="flex flex-col space-y-2 text-white transition-colors font-light"
+        >
+          <li>
+            <a href="/cookies"> Cookies </a>
+          </li>
+          <li>
+            <a href="/privacy"> Privacy Policy </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </header>
 
 <script>
   const setupMobileMenu = () => {
     const menuToggle = document.getElementById("menu-toggle");
-    const mobileMenu = document.getElementById("mobile-menu");
+    const mobileMenu = document.getElementById("nav-menu");
     const body = document.body;
     const menuLine1 = document.querySelector(".menu-line-1");
     const menuLine2 = document.querySelector(".menu-line-2");
     const menuLine3 = document.querySelector(".menu-line-3");
+    const logo = document.querySelector(".logo");
 
     if (!menuToggle || !mobileMenu) return;
     if (menuToggle.dataset.bound) return;
@@ -92,6 +161,8 @@ const pathname = Astro.url.pathname;
       e.preventDefault();
       mobileMenu.classList.toggle("hidden");
       body.classList.toggle("overflow-hidden");
+      logo?.classList.toggle("text-white");
+      logo?.classList.toggle("text-primary");
 
       menuLine1?.classList.toggle("rotate-45");
       menuLine1?.classList.toggle("translate-x-1");
@@ -99,6 +170,9 @@ const pathname = Astro.url.pathname;
       menuLine2?.classList.toggle("scale-x-0");
       menuLine3?.classList.toggle("-rotate-45");
       menuLine3?.classList.toggle("translate-x-1");
+      menuLine1?.classList.toggle("!bg-white");
+      menuLine2?.classList.toggle("!bg-white");
+      menuLine3?.classList.toggle("!bg-white");
     };
 
     menuToggle.addEventListener("click", handleToggle);
@@ -106,7 +180,7 @@ const pathname = Astro.url.pathname;
   };
 
   if (document.readyState !== "loading") {
-    setupMobileMenu(); // DOM is ready already
+    setupMobileMenu();
   } else {
     document.addEventListener("DOMContentLoaded", setupMobileMenu);
   }
