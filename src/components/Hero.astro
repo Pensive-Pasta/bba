@@ -1,6 +1,6 @@
 ---
 import ChevronDown from "../assets/icons/chevron-down.svg";
-const { image = "", id = "" } = Astro.props;
+const { image = "", scrollTarget = "" } = Astro.props;
 ---
 
 <section
@@ -8,9 +8,9 @@ const { image = "", id = "" } = Astro.props;
   style={`background-image: url('${image}'); background-size: cover; background-position: center;`}
 >
   <a
-    href={`#${id}`}
+    href={`#${scrollTarget}`}
     class="absolute bottom-6 md:bottom-12 right-6 md:right-12"
-    data-target={id}
+    data-target={scrollTarget}
   >
     <ChevronDown class="animate-bounce w-16 text-white" />
   </a>
