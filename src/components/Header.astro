@@ -106,7 +106,7 @@ const textColor = isHome || isContact || isArticle ? "text-primary" : "text-whit
       class="flex flex-col h-full w-full text-white pt-36 md:pt-[30vh] md:ml-[15vw] lg:ml-[20vw] xl:ml-[25vw] 2xl:ml-[30vw]"
     >
       <div class="flex items-start gap-12 md:gap-32 flex-grow">
-        <ul class="space-y-2">
+        <ul>
           {
             navItems.map((item) => (
               <li>
@@ -114,7 +114,7 @@ const textColor = isHome || isContact || isArticle ? "text-primary" : "text-whit
                   href={item.url}
                   data-bg={item.color.replace("text-", "bg-")}
                   data-fill={item.color.replace("text-", "fill-")}
-                  class={`block text-3xl md:text-intro transition-all text-white transform duration-300
+                  class={`block text-3xl md:text-intro transition-all text-white transform duration-300 py-2
                   ${item.url !== currentRoute && item.color === "text-orange" ? "hover:translate-x-2 hover:fill-orange" : ""}
                   ${item.url !== currentRoute && item.color === "text-green" ? "hover:translate-x-2 hover:fill-green" : ""}
                   ${item.url !== currentRoute && item.color === "text-yellow" ? "hover:translate-x-2 hover:fill-yellow" : ""}
