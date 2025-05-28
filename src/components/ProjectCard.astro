@@ -2,17 +2,27 @@
 const { title, location, category, year, image, slug, type } = Astro.props;
 ---
 
-<a href={`/projects/${type}/${slug}`} class="group block project-card">
-  <div class="overflow-hidden">
-    <img
+<a
+  href={`/projects/${type}/${slug}`}
+  class="group block project-card overflow-hidden"
+>
+  <div
+    class="w-full aspect-square object-cover"
+    style={`background-image: url('${image}'); background-size: cover; background-position: center;`}
+  >
+    <!-- <img
       src={image || "/placeholder.svg"}
       alt={title}
       class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-    />
-  </div>
-  <div class="mt-4 space-y-1">
-    <h3 class="text-lg font-normal">{title}</h3>
-    <p class="text-sm text-gray-600">{location}, {year}</p>
-    <p class="text-xs uppercase tracking-wider text-gray-500">{category}</p>
+    /> -->
+    <div
+      class="flex flex-col justify-between h-full space-y-1 text-white p-4 opacity-0 group-hover:opacity-100 group-hover:max-h-[500px] transition-all duration-700 ease-in overflow-hidden pt-4"
+    >
+      <h3 class="text-lg font-bold">{title}</h3>
+      <p class="text-lg">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente
+        excepturi facere ea rerum
+      </p>
+    </div>
   </div>
 </a>

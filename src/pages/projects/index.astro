@@ -1,11 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
-import SectionTitle from "../../components/SectionTitle.astro";
 import SectionWrapper from "../../layouts/SectionWrapper.astro";
 import Hero from "../../components/Hero.astro";
 
-// Projects data
 const projects = [
   {
     title: "Wrap Around House",
@@ -117,71 +115,71 @@ const projects = [
     type: "homes",
   },
 ];
-
-const id = "projects";
 ---
 
 <BaseLayout title="Projects">
-  <Hero image="/images/copper.jpg" scrollTarget={id} />
-  <SectionWrapper id={id}>
-      <SectionTitle
-        title="Our Projects"
-        subtitle="A selection of our work across residential and public spaces."
-      />
-      <!-- hidden radio buttons used for filtering -->
-      <input
-        type="radio"
-        id="homes"
-        name="project-filter"
-        class="sr-only"
-        checked
-      />
-      <input type="radio" id="both" name="project-filter" class="sr-only" />
-      <input type="radio" id="places" name="project-filter" class="sr-only" />
+  <Hero image="/images/copper.jpg" scrollTarget="projects" />
+  <SectionWrapper id="projects">
+    
+    <p class="my-40 w-1/2 ml-auto">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, modi enim
+      eligendi reiciendis perspiciatis perferendis, quisquam ad, tenetur dolore
+      necessitatibus sed? Esse magni quam, saepe minima earum porro vitae
+      possimus!
+    </p>
+    <!-- hidden radio buttons used for filtering -->
+    <input
+      type="radio"
+      id="homes"
+      name="project-filter"
+      class="sr-only"
+      checked
+    />
+    <input type="radio" id="both" name="project-filter" class="sr-only" />
+    <input type="radio" id="places" name="project-filter" class="sr-only" />
 
-      <div class="toggle-wrapper flex md:justify-end mb-10 relative md:ml-2">
-        <div class="project-slider relative w-72 h-3 bg-gray-300 rounded-full">
-          <!-- movable knob -->
-          <div
-            class="slider-thumb absolute top-1/2 left-0 h-6 w-6 bg-black rounded-full -translate-y-1/2 transition-[left] duration-300"
-          >
-          </div>
-
-          <!-- click zones (visually hidden text for a11y) -->
-          <label
-            for="homes"
-            class="absolute left-0 top-0 w-1/3 h-full cursor-pointer"
-            ><span class="sr-only">Homes</span></label
-          >
-          <label
-            for="both"
-            class="absolute left-1/3 top-0 w-1/3 h-full cursor-pointer"
-            ><span class="sr-only">Homes &amp; Places</span></label
-          >
-          <label
-            for="places"
-            class="absolute left-2/3 top-0 w-1/3 h-full cursor-pointer"
-            ><span class="sr-only">Places</span></label
-          >
+    <div class="toggle-wrapper flex md:justify-end mb-10 relative md:ml-2">
+      <div class="project-slider relative w-72 h-3 bg-gray-300 rounded-full">
+        <!-- movable knob -->
+        <div
+          class="slider-thumb absolute top-1/2 left-0 h-6 w-6 bg-black rounded-full -translate-y-1/2 transition-[left] duration-300"
+        >
         </div>
+        <!-- click zones (visually hidden text for a11y) -->
+        <label
+          for="homes"
+          class="absolute left-0 top-0 w-1/3 h-full cursor-pointer"
+          ><span class="sr-only">Homes</span></label
+        >
+        <label
+          for="both"
+          class="absolute left-1/3 top-0 w-1/3 h-full cursor-pointer"
+          ><span class="sr-only">Homes &amp; Places</span></label
+        >
+        <label
+          for="places"
+          class="absolute left-2/3 top-0 w-1/3 h-full cursor-pointer"
+          ><span class="sr-only">Places</span></label
+        >
       </div>
+    </div>
 
-      <h3 class="current-heading text-2xl font-light mb-8">
-        <span class="homes-heading">Homes</span>
-        <span class="both-heading">Homes &amp; Places</span>
-        <span class="places-heading">Places</span>
-      </h3>
-      <div
-        class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-      >
-        {
-          projects.map((project) => (
-            <div class="card" data-type={project.type}>
-              <ProjectCard {...project} />
-            </div>
-          ))
-        }
-      </div>
+    <h3 class="current-heading text-2xl font-light mb-8">
+      <span class="homes-heading">Homes</span>
+      <span class="both-heading">Homes &amp; Places</span>
+      <span class="places-heading">Places</span>
+    </h3>
+    <div
+      class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+    >
+      {
+        projects.map((project) => (
+          <div class="card" data-type={project.type}>
+            <ProjectCard {...project} />
+          </div>
+        ))
+      }
+    </div>
   </SectionWrapper>
 </BaseLayout>
 

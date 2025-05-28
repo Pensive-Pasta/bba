@@ -18,32 +18,43 @@ const routeThemes = [
 
 const currentRoute = Astro.url.pathname;
 const isHome = currentRoute === "/";
+const isContact = currentRoute === "/contact";
+const isArticle = currentRoute.startsWith("/projects/homes/");
 
 const currentTheme = routeThemes.find((t) => t.test.test(currentRoute)) ?? {
   bg: "bg-primary",
   fill: "fill-primary",
 };
 
+const textColor = isHome || isContact || isArticle ? "text-primary" : "text-white";
 ---
 
 <header
-  class="py-6 px-6 md:px-12 max-w-[1440px] min-w-full fixed top-0 left-0 right-0 z-40"
+  id="site-header"
+  class={`py-6 px-6 md:px-12 min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${
+    textColor
+  }`}
 >
-  <div class="flex justify-between items-center">
-    <a href="/" class={`text-xl font-light tracking-tighter z-40 ${isHome ? "text-primary" : "text-white"}`}>
-      <Logo class="logo" />
+  <div class="flex justify-between items-center max-w-screen-2xl mx-auto">
+    <a
+      href="/"
+      class="text-xl font-light tracking-tighter z-40 header-link text-current"
+    >
+      <span class="header-text">
+        <Logo class="logo" />
+      </span>
     </a>
 
     <button class="z-40 relative" id="menu-toggle" aria-label="Toggle menu">
       <div class="w-10 h-8 flex flex-col justify-between overflow-hidden">
         <span
-          class={`w-full h-1 ${isHome ? "bg-primary" : "bg-white"} transform transition-all duration-300 origin-left menu-line-1`}
+          class="w-full h-1 transform transition-all duration-300 origin-left menu-line-1 bg-current"
         ></span>
         <span
-          class={`w-full h-1 ${isHome ? "bg-primary" : "bg-white"} transition-all duration-300 origin-center menu-line-2`}
+          class="w-full h-1 transition-all duration-300 origin-center menu-line-2 bg-current"
         ></span>
         <span
-          class={`w-full h-1 ${isHome ? "bg-primary" : "bg-white"} transform transition-all duration-300 origin-left menu-line-3`}
+          class="w-full h-1 transform transition-all duration-300 origin-left menu-line-3 bg-current"
         ></span>
       </div>
     </button>
@@ -54,26 +65,30 @@ const currentTheme = routeThemes.find((t) => t.test.test(currentRoute)) ?? {
     id="nav-menu"
   >
     <div
-      class=`fixed inset-0 -z-10 pointer-events-none overflow-hidden ${currentTheme.bg} bg-[url('/images/blue-lines.png')] bg-cover bg-center bg-blend-color-burn`
+      id="nav-bg"
+      class={`fixed inset-0 -z-10 pointer-events-none overflow-hidden ${currentTheme.bg} bg-[url('/images/blue-lines.png')] bg-cover bg-center bg-blend-color-burn`}
     >
     </div>
     <div
       class="absolute inset-0 h-screen -z-10 pointer-events-none overflow-hidden"
     >
       <svg
-        class=`absolute -top-[50%] md:-top-72 left-[25%] w-[600px] h-[600px] ${currentTheme.fill}`
+        id="nav-fill-1"
+        class={`absolute -top-[50%] md:-top-72 left-[25%] w-[600px] h-[600px] ${currentTheme.fill}`}
         viewBox="0 0 100 100"
       >
         <circle cx="50" cy="50" r="50"></circle>
       </svg>
       <svg
-        class=`absolute hidden md:block top-[50%] -left-10 w-[200px] h-[200px] ${currentTheme.fill}`
+        id="nav-fill-2"
+        class={`absolute hidden md:block top-[50%] -left-10 w-[200px] h-[200px] ${currentTheme.fill}`}
         viewBox="0 0 100 100"
       >
         <circle cx="50" cy="50" r="50"></circle>
       </svg>
       <svg
-        class=`absolute top-[42%] -right-10 w-[200px] h-[200px] ${currentTheme.fill}`
+        id="nav-fill-3"
+        class={`absolute top-[42%] -right-10 w-[200px] h-[200px] ${currentTheme.fill}`}
         viewBox="0 0 100 100"
       >
         <circle cx="50" cy="50" r="50"></circle>
@@ -81,7 +96,8 @@ const currentTheme = routeThemes.find((t) => t.test.test(currentRoute)) ?? {
       <circle cx="50" cy="50" r="50"></circle>
     </div>
     <svg
-      class=`absolute top-[65%] right-6 w-[800px] h-[800px] ${currentTheme.fill}`
+      id="nav-fill-4"
+      class={`absolute top-[65%] right-6 w-[800px] h-[800px] ${currentTheme.fill}`}
       viewBox="0 0 100 100"
     >
       <circle cx="50" cy="50" r="50"></circle>
@@ -96,11 +112,14 @@ const currentTheme = routeThemes.find((t) => t.test.test(currentRoute)) ?? {
               <li>
                 <a
                   href={item.url}
-                  class={`block text-3xl md:text-intro transition-colors text-white
-                    ${item.url !== currentRoute && item.color === "text-orange" ? "hover:text-orange" : ""}
-                    ${item.url !== currentRoute && item.color === "text-green" ? "hover:text-green" : ""}
-                    ${item.url !== currentRoute && item.color === "text-yellow" ? "hover:text-yellow" : ""}
-                    ${item.url !== currentRoute && item.color === "text-pink" ? "hover:text-pink" : ""}`}
+                  data-bg={item.color.replace("text-", "bg-")}
+                  data-fill={item.color.replace("text-", "fill-")}
+                  class={`block text-3xl md:text-intro transition-all text-white transform duration-300
+                  ${item.url !== currentRoute && item.color === "text-orange" ? "hover:translate-x-2 hover:fill-orange" : ""}
+                  ${item.url !== currentRoute && item.color === "text-green" ? "hover:translate-x-2 hover:fill-green" : ""}
+                  ${item.url !== currentRoute && item.color === "text-yellow" ? "hover:translate-x-2 hover:fill-yellow" : ""}
+                  ${item.url !== currentRoute && item.color === "text-pink" ? "hover:translate-x-2 hover:fill-pink" : ""}
+                  ${item.url === currentRoute ? "text-white" : ""}`}
                 >
                   {item.name}
                 </a>
@@ -187,4 +206,116 @@ const currentTheme = routeThemes.find((t) => t.test.test(currentRoute)) ?? {
 
   // Re-run on client-side navigation
   document.addEventListener("astro:page-load", setupMobileMenu);
+</script>
+
+<script>
+  const setupScrollHeader = () => {
+    const hero = document.getElementById("hero");
+    const header = document.getElementById("site-header");
+
+    if (!hero || !header) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          header.classList.add("text-white");
+          header.classList.remove("text-primary");
+          header.classList.add("bg-transparent");
+          header.classList.remove("bg-white");
+        } else {
+          header.classList.add("text-primary");
+          header.classList.remove("text-white");
+          header.classList.add("bg-white");
+          header.classList.remove("bg-transparent");
+        }
+      },
+      {
+        threshold: 0,
+        rootMargin: `-${header.offsetHeight}px 0px 0px 0px`,
+      }
+    );
+
+    observer.observe(hero);
+  };
+
+  if (document.readyState !== "loading") {
+    setupScrollHeader();
+  } else {
+    document.addEventListener("DOMContentLoaded", setupScrollHeader);
+  }
+
+  document.addEventListener("astro:page-load", setupScrollHeader);
+</script>
+
+<script is:inline>
+  /**
+   * Hover‑swap nav theme (bg + fill) and restore the
+   * active route’s colours. Runs on initial load and on
+   * each Astro client navigation.
+   */
+  const initNavHover = () => {
+    const bgEl = document.getElementById("nav-bg");
+    const fillEls = Array.from(document.querySelectorAll("#nav-menu svg"));
+    const navLinks = document.querySelectorAll(
+      "#nav-menu a[data-bg][data-fill]"
+    );
+
+    if (!bgEl || fillEls.length === 0) return;
+
+    // Runtime route‑to‑theme lookup (keeps colours correct after client navigation)
+    const themeMap = {
+      "/": { bg: "bg-primary", fill: "fill-primary" },
+      "/projects": { bg: "bg-orange", fill: "fill-orange" },
+      "/practice": { bg: "bg-green", fill: "fill-green" },
+      "/insights": { bg: "bg-yellow", fill: "fill-yellow" },
+      "/contact": { bg: "bg-pink", fill: "fill-pink" },
+    };
+
+    const applyTheme = (bgClass, fillClass) => {
+      if (bgClass) {
+        bgEl.className =
+          `fixed inset-0 -z-10 pointer-events-none overflow-hidden ${bgClass} ` +
+          `bg-[url('/images/blue-lines.png')] bg-cover bg-center bg-blend-color-burn`;
+      }
+      if (fillClass) {
+        fillEls.forEach((el) => {
+          el.classList.forEach((cls) => {
+            if (cls.startsWith("fill-")) el.classList.remove(cls);
+          });
+          el.classList.add(fillClass);
+        });
+      }
+    };
+
+    const resetTheme = () => {
+      const path = window.location.pathname.replace(/\/$/, "") || "/"; // fix trailing slash + root
+      const activeLink = document.querySelector(`#nav-menu a[href="${path}"]`);
+      if (activeLink) {
+        applyTheme(activeLink.dataset.bg, activeLink.dataset.fill);
+      } else if (themeMap[path]) {
+        applyTheme(themeMap[path].bg, themeMap[path].fill);
+      } else {
+        // fallback to primary if unknown
+        applyTheme("bg-primary", "fill-primary");
+      }
+    };
+
+    navLinks.forEach((link) => {
+      if (link.dataset.hoverBound) return; // avoid duplicate listeners
+      link.dataset.hoverBound = "true";
+      link.addEventListener("mouseenter", () =>
+        applyTheme(link.dataset.bg, link.dataset.fill)
+      );
+      link.addEventListener("mouseleave", resetTheme);
+    });
+
+    resetTheme(); // correct colours on load
+  };
+
+  if (document.readyState !== "loading") {
+    initNavHover();
+  } else {
+    document.addEventListener("DOMContentLoaded", initNavHover);
+  }
+  document.addEventListener("astro:page-load", initNavHover);
 </script>

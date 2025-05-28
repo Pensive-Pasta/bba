@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SectionTitle from "../components/SectionTitle.astro";
+import SectionWrapper from "../layouts/SectionWrapper.astro";
+import Hero from "../components/Hero.astro";
 
 const insights = [
   {
@@ -39,15 +40,16 @@ const insights = [
 ---
 
 <BaseLayout title="insights">
-  <section class="py-20 px-6 md:px-12">
-    <div class="container mx-auto">
-      <SectionTitle
-        title="insights"
-        subtitle="Thoughts, insights, and ideas from the we are bba team."
-      />
-
+  <Hero image="/images/copper.jpg" scrollTarget="insights" />
+  <SectionWrapper id="insights">
+    <p class="my-40 w-1/2 ml-auto">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, modi enim
+      eligendi reiciendis perspiciatis perferendis, quisquam ad, tenetur dolore
+      necessitatibus sed? Esse magni quam, saepe minima earum porro vitae
+      possimus!
+    </p>
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+        class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         {
           insights.map((story) => (
@@ -72,6 +74,5 @@ const insights = [
           ))
         }
       </div>
-    </div>
-  </section>
+  </SectionWrapper>
 </BaseLayout>
