@@ -1,28 +1,57 @@
+/* ---------------------------------------
+   Tailwind Imports
+--------------------------------------- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-primary: 'Test The Future', sans-serif;
-  --color-background: #ffffff;
-  --color-text: #111111;
-  --spacing-section: 4rem;
+/* ---------------------------------------
+   Custom Fonts
+--------------------------------------- */
+@font-face {
+  font-family: 'Test The Future';
+  src: url('../assets/fonts/test-the-future-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Test The Future';
-  src: url('/fonts/test-the-future-medium-italic.woff2') format('woff2');
+  src: url('../assets/fonts/test-the-future-light.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
-/* Base styles */
-body {
-  font-family: var(--font-primary);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  line-height: 1.5;
-  min-height: 100vh;
+/* ---------------------------------------
+   Base Styles
+--------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
+body {
+  @apply font-future bg-white text-primary leading-relaxed min-h-screen;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background-color: #6081B4;
+  color: #fafafa;
+}
+
+/* ---------------------------------------
+   Accessibility
+--------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

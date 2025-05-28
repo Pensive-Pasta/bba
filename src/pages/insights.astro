@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SectionTitle from "../components/SectionTitle.astro";
+import SectionWrapper from "../layouts/SectionWrapper.astro";
+import Hero from "../components/Hero.astro";
 
-const stories = [
+const insights = [
   {
     title: "Test Story",
     date: "April 15, 2023",
@@ -38,21 +39,22 @@ const stories = [
 ];
 ---
 
-<BaseLayout title="Stories">
-  <section class="py-20 px-6 md:px-12">
-    <div class="container mx-auto">
-      <SectionTitle
-        title="Stories"
-        subtitle="Thoughts, insights, and ideas from the we are bba team."
-      />
-
+<BaseLayout title="insights">
+  <Hero image="/images/copper.jpg" scrollTarget="insights" />
+  <SectionWrapper id="insights">
+    <p class="my-40 w-1/2 ml-auto">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, modi enim
+      eligendi reiciendis perspiciatis perferendis, quisquam ad, tenetur dolore
+      necessitatibus sed? Esse magni quam, saepe minima earum porro vitae
+      possimus!
+    </p>
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+        class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         {
-          stories.map((story) => (
+          insights.map((story) => (
             <article class="group">
-              <a href={`/stories/${story.slug}`} class="block">
+              <a href={`/insights/${story.slug}`} class="block">
                 <div class="overflow-hidden">
                   <img
                     src={story.image || "/placeholder.svg"}
@@ -72,6 +74,5 @@ const stories = [
           ))
         }
       </div>
-    </div>
-  </section>
+  </SectionWrapper>
 </BaseLayout>

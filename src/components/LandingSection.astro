@@ -1,0 +1,100 @@
+---
+import ChevronDown from "../assets/icons/chevron-down.svg";
+import ArrowUpRight from "../assets/icons/arrow-up-right.svg";
+
+const {
+  id = "",
+  scrollTarget = "",
+  image,
+  headline,
+  text,
+  ctaText,
+  ctaHref,
+  scrollDown = true,
+  justify = "end",
+} = Astro.props;
+---
+
+<section
+  class="w-full h-screen relative bg-transparent text-primary flex flex-col items-center justify-center px-6 md:px-12 overflow-hidden"
+  style={image
+    ? `background-image: url('${image}'); background-size: cover; background-position: center;`
+    : ""}
+  id={id}
+>
+  <div class={`relative z-10 w-full max-w-screen-2xl flex justify-${justify}`}>
+    {
+      text && (
+        <p class="text-primary max-w-3xl mb-6 w-full text-intro font-light">
+          {text}
+        </p>
+      )
+    }
+  </div>
+  <div class="-xl w-full flex justify-between">
+    {
+      ctaText && ctaHref && (
+        <a
+          href={ctaHref}
+          class="border-b border-white pb-1 hover:opacity-80 transition-opacity text-intro flex absolute bottom-12 left-6 md:left-12"
+        >
+          {ctaText}
+          <ArrowUpRight class="w-12" />
+        </a>
+      )
+    }
+  </div>
+  <div class="flex items-center absolute bottom-12 right-6 md:right-12">
+    {headline && <h1 class="text-headline ml-6">{headline}</h1>}
+    {
+      scrollDown && (
+        <a href={`#${scrollTarget}`} data-target={scrollTarget}>
+          <ChevronDown class="w-12 mt-5 ml-2" />
+        </a>
+      )
+    }
+  </div>
+</section>
+
+<script>
+  function initSmoothScroll() {
+    const targetId = document
+      .querySelector("a[data-target]")
+      ?.getAttribute("data-target");
+    let fired = false;
+
+    function smoothJump() {
+      if (targetId) {
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function onScroll() {
+      const y = window.scrollY;
+
+      if (!fired && y > 10) {
+        fired = true;
+        smoothJump();
+      }
+
+      if (fired && y < 10) {
+        fired = false;
+      }
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    document.addEventListener("astro:before-swap", () => {
+      window.removeEventListener("scroll", onScroll);
+      fired = false;
+    });
+  }
+
+  // Run on initial load
+  initSmoothScroll();
+
+  // Re-run on client-side navigation
+  document.addEventListener("astro:page-load", initSmoothScroll);
+</script>

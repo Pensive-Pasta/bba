@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionTitle from "../components/SectionTitle.astro";
+import SectionWrapper from "../layouts/SectionWrapper.astro";
+import Hero from "../components/Hero.astro";
 
 const practiceLinks = [
   {
@@ -22,35 +24,39 @@ const practiceLinks = [
 ---
 
 <BaseLayout title="Practice">
-  <section class="py-20 px-6 md:px-12">
+  <Hero image="/images/copper.jpg" scrollTarget="practice" />
+  <SectionWrapper id="practice" class="py-20 px-6 md:px-12">
     <div class="container mx-auto">
-      <h2
-      class="text-3xl md:text-4xl font-light mb-6 opacity-0 animate-on-scroll"
-      data-animate="fadeInDown"
-    >
-    Our Practice
-    </h2>
-    <p
-      class="text-lg text-gray-700 opacity-0 animate-on-scroll mb-20"
-      data-animate="fadeInUp"
-    >
-    we are bba is an architecture practice dedicated to creating thoughtful, sustainable spaces.
+          <p class="my-40 w-1/2 ml-auto">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, modi enim
+      eligendi reiciendis perspiciatis perferendis, quisquam ad, tenetur dolore
+      necessitatibus sed? Esse magni quam, saepe minima earum porro vitae
+      possimus!
     </p>
 
       <div
         class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center"
       >
         <div>
-          <p class="text-lg text-gray-700 mb-6 animate-on-scroll" data-animate="fadeInUp">
+          <p
+            class="text-lg text-gray-700 mb-6 animate-on-scroll"
+            data-animate="fadeInUp"
+          >
             We bring your dreams to life – through beautiful, sustainable
             architecture.
           </p>
-          <p class="text-lg text-gray-700 mb-6 animate-on-scroll" data-animate="fadeInUp">
+          <p
+            class="text-lg text-gray-700 mb-6 animate-on-scroll"
+            data-animate="fadeInUp"
+          >
             Butcher Bayley Architects is a young, progressive architecture
             practice – built around experienced co-founders Luke Butcher and
             Carrie Bayley.
           </p>
-          <p class="text-lg text-gray-700 mb-6 animate-on-scroll" data-animate="fadeInUp">
+          <p
+            class="text-lg text-gray-700 mb-6 animate-on-scroll"
+            data-animate="fadeInUp"
+          >
             We embrace the historic role of the architect – as not just a
             designer, but an adviser and project manager – and combine it with
             our belief in contemporary, sustainable architecture.
@@ -65,7 +71,7 @@ const practiceLinks = [
         </div>
       </div>
     </div>
-  </section>
+  </SectionWrapper>
 
   <section class="py-20 px-6 md:px-12 bg-gray-50">
     <div class="container mx-auto">
