@@ -28,109 +28,27 @@ const certificationLogos = [
 ];
 ---
 
-<footer class="py-12 px-6 md:px-12 border-t border-gray-100 bg-white">
-  <div class="container">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="space-y-4">
-        <a href="/" class="">
-          <Logo />
-        </a>
-        <p class="text-sm text-primary max-w-xs">
-          An architecture practice focused on creating thoughtful, sustainable
-          spaces that enhance the way people live and work.
-        </p>
-      </div>
-
-      <div>
-        <h3 class="text-sm font-medium mb-4">Contact</h3>
-        <address class="text-sm text-primary not-italic">
-          The Courthouse, Mill Road, Oundle<br />
-          Northamptonshire, PE8 4BW<br />
-          <a
-            href="mailto:hello@wearebba.com"
-            class="hover:text-black transition-colors">hello@wearebba.co.uk</a
-          ><br />
-          <a href="tel:+442012345678" class="hover:text-black transition-colors"
-            >+44 (0) 1832 774 121</a
-          >
-        </address>
-      </div>
-
-      <div>
-        <h3 class="text-sm font-medium mb-4">Connect</h3>
-        <ul class="space-y-2">
-          {
-            socialLinks.map((link) => (
-              <li>
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-sm text-primary hover:text-black transition-colors"
-                >
-                  {link.name}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 my-12">
-      <div
-        class="flex flex-wrap gap-6 items-center invert saturate-0 md:col-span-2"
-      >
-        {
-          certificationLogos.map((logo) => (
-            <a href={logo.url} target="_blank" rel="noopener noreferrer">
-              <img src={logo.src} alt={logo.alt} class="h-12 w-auto" />
-            </a>
-          ))
-        }
-      </div>
-      <span class="text-xs text-primary max-w-xs">
-        Registered Office: Rutland House, Minerva Business Park, Lynch Wood,
-        Peterborough PE2 6PZ Butcher Bayley Architects Limited Company No:
-        10500305
-      </span>
-    </div>
-
-    <div
-      class="mt-12 pt-6 border-t border-gray-100 flex flex-col md:flex-row justify-between md:items-center"
-    >
-      <p class="text-xs text-primary">
-        &copy; {currentYear} we are bba. All rights reserved.
+<footer class="py-6 md:p-8 bg-[#178FE4] text-white">
+  <div class="flex flex-col md:flex-row justify-between items-baseline w-full">
+    <div class="flex items-baseline space-x-8">
+      <a href="/" class="">
+        <Logo />
+      </a>
+      <p class="text-sm font-light">
+        &copy; {currentYear} Butcher Bayley Architects
       </p>
-
-      <nav class="mt-4 md:mt-0">
-        <ul class="flex space-x-6">
-          <li>
-            <a
-              href="/privacy"
-              class="text-xs text-primary hover:primary transition-colors"
-            >
-              Privacy
-            </a>
-          </li>
-          <li>
-            <a
-              href="/terms"
-              class="text-xs text-primary hover:primary transition-colors"
-            >
-              Terms
-            </a>
-          </li>
-          <li>
-            <a
-              href="/cookies"
-              class="text-xs text-primary hover:primary transition-colors"
-            >
-              Cookies
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <a href="/privacy" class="text-sm font-light">Our Privacy Policy →</a>
+    </div>
+    <div class="flex space-x-4 mt-4 md:mt-0">
+      <a href="mailto:hello@wearebba.com" class="text-lg font-light"
+        >hello@wearebba.co.uk</a
+      >
+      <a
+        href="https://instagram.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-lg font-light">@wearebba</a
+      >
     </div>
   </div>
 </footer>

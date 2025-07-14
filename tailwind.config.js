@@ -19,14 +19,18 @@ export default {
       colors: {
         white: "#FAFAFA",
         primary: {
-          DEFAULT: "#6081B4",
-          light: "#258FE1",
+          DEFAULT: "#178FE4",
+          light: "#309BE8",
         },
         orange: "#FB9061",
         green: "#89CB73",
         yellow: "#F0ED37",
         pink: "#FB98CC",
         foreground: "#111111",
+      },
+      backgroundImage: {
+        "custom-dotted":
+          "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23BEDCF1' stroke-width='4' stroke-dasharray='0, 10' stroke-linecap='round'/%3e%3c/svg%3e\")",
       },
     },
   },

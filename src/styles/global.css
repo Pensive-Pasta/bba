@@ -9,16 +9,16 @@
    Custom Fonts
 --------------------------------------- */
 @font-face {
-  font-family: 'Test The Future';
-  src: url('../assets/fonts/test-the-future-medium.woff2') format('woff2');
+  font-family: "Test The Future";
+  src: url("../assets/fonts/test-the-future-medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Test The Future';
-  src: url('../assets/fonts/test-the-future-light.woff2') format('woff2');
+  font-family: "Test The Future";
+  src: url("../assets/fonts/test-the-future-light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -36,13 +36,15 @@ body {
   @apply font-future bg-white text-primary leading-relaxed min-h-screen;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 ::selection {
-  background-color: #6081B4;
-  color: #fafafa;
+  background-color: #178FE4;
+  color: white;
 }
 
 /* ---------------------------------------
@@ -54,4 +56,47 @@ body {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+.dot-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  border: 4px dotted #bedcf1;
+}
+
+.dot-grid::before,
+.dot-grid::after {
+  content: "";
+  position: absolute;
+  background-image: radial-gradient(#bedcf1 2px, transparent 2px);
+  background-repeat: repeat;
+  background-position: center;
+}
+
+/* Vertical line down the center */
+.dot-grid::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 50%;
+  width: 0; /* no extra box width */
+  transform: translateX(-2px); /* centre the 4 px border */
+  border-left: 4px dotted #bedcf1;
+  pointer-events: none;
+}
+
+/* Horizontal line across the center */
+.dot-grid::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 50%;
+  height: 0; /* no extra box height */
+  transform: translateY(-2px); /* centre the 4 px border */
+  border-top: 4px dotted #bedcf1;
+  pointer-events: none;
 }
