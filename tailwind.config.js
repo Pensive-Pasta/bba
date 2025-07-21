@@ -21,6 +21,7 @@ export default {
         primary: {
           DEFAULT: "#178FE4",
           light: "#309BE8",
+          dot: "#BEDCF1",
         },
         orange: "#FB9061",
         green: "#89CB73",

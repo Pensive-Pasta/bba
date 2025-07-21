@@ -9,22 +9,10 @@ const navItems = [
   { name: "Contact", url: "/contact", color: "text-pink" },
 ];
 
-const routeThemes = [
-  { test: /^\/projects/, bg: "bg-orange", fill: "fill-orange" },
-  { test: /^\/practice/, bg: "bg-green", fill: "fill-green" },
-  { test: /^\/insights/, bg: "bg-yellow", fill: "fill-yellow" },
-  { test: /^\/contact/, bg: "bg-pink", fill: "fill-pink" },
-];
-
 const currentRoute = Astro.url.pathname;
 const isHome = currentRoute === "/";
 const isContact = currentRoute === "/contact";
 const isArticle = currentRoute.startsWith("/projects/homes/");
-
-const currentTheme = routeThemes.find((t) => t.test.test(currentRoute)) ?? {
-  bg: "bg-primary",
-  fill: "fill-primary",
-};
 
 const currentYear = new Date().getFullYear();
 
@@ -197,11 +185,6 @@ const textColor =
 </script>
 
 <script is:inline>
-  /**
-   * Hover‑swap nav theme (bg + fill) and restore the
-   * active route’s colours. Runs on initial load and on
-   * each Astro client navigation.
-   */
   const initNavHover = () => {
     const bgEl = document.getElementById("nav-bg");
 
@@ -215,9 +198,6 @@ const textColor =
     const resetTheme = () => {
       applyTheme();
     };
-
-    // Remove hover listeners since fill logic is removed, only keep background as bg-blue
-    // No need to bind hover events to links
 
     applyTheme(); // correct background on load
   };

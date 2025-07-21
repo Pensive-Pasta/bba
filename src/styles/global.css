@@ -33,7 +33,7 @@ html {
 }
 
 body {
-  @apply font-future bg-white text-primary leading-relaxed min-h-screen;
+  @apply font-future text-primary leading-relaxed min-h-screen;
 }
 
 *,
@@ -43,7 +43,7 @@ body {
 }
 
 ::selection {
-  background-color: #178FE4;
+  background-color: #178fe4;
   color: white;
 }
 
@@ -99,4 +99,61 @@ body {
   transform: translateY(-2px); /* centre the 4 px border */
   border-top: 4px dotted #bedcf1;
   pointer-events: none;
+}
+
+.dot-grid-right {
+  position: relative;
+  border-right: 4px dotted #bedcf1;
+}
+
+.dot-grid-internal {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.dot-grid-internal::before,
+.dot-grid-internal::after {
+  content: "";
+  position: absolute;
+  background-image: radial-gradient(#bedcf1 2px, transparent 2px);
+  background-repeat: repeat;
+  background-position: center;
+}
+
+/* Vertical line down the center */
+.dot-grid-internal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 0; /* no extra box width */
+  transform: translateX(-2px); /* centre the 4 px border */
+  border-left: 4px dotted #bedcf1;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.row-divider {
+  grid-column: 1 / -1;
+  height: 0;
+  border-top: 4px dotted #bedcf1;
+  margin-top: 0; /* to align */
+  z-index: 0;
+}
+
+/* ---------------------------------------
+   Responsive – 1 cell per row on tablets
+--------------------------------------- */
+@media (max-width: 768px) {
+  /* Switch to a single-column grid */
+  .dot-grid-internal {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hide the centre vertical dotted line when only one column exists */
+  .dot-grid-internal::before {
+    display: none;
+  }
 }
