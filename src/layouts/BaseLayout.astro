@@ -22,50 +22,51 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /></head
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    /></head
   >
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
+
   <ClientRouter />
 
   <body class="w-full min-h-screen bg-white text-gray-900 flex flex-col">
     <!-- <CustomCursor /> -->
     <Header />
-    <main class="max-w-[1440px] mx-auto">
+    <main>
       <slot />
     </main>
     <Footer />
   </body>
+
+
+  <script is:inline>
+    function setupScrollAnimations() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+              const animation = el.dataset.animate;
+              el.classList.remove("opacity-0");
+              el.classList.add(`animate-${animation}`);
+              observer.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.querySelectorAll(".animate-on-scroll").forEach((el) => {
+        observer.observe(el);
+      });
+    }
+
+    if (!window.__scrollAnimSetup) {
+      window.__scrollAnimSetup = true;
+      setupScrollAnimations();
+    }
+
+    document.addEventListener("astro:page-load", setupScrollAnimations);
+  </script>
 </html>
-
-<script is:inline>
-  function setupScrollAnimations() {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            const animation = el.dataset.animate;
-            el.classList.remove("opacity-0");
-            el.classList.add(`animate-${animation}`);
-            observer.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    document.querySelectorAll(".animate-on-scroll").forEach((el) => {
-      observer.observe(el);
-    });
-  }
-
-  if (!window.__scrollAnimSetup) {
-    window.__scrollAnimSetup = true;
-    setupScrollAnimations();
-  }
-
-  document.addEventListener("astro:page-load", setupScrollAnimations);
-</script>

@@ -16,13 +16,12 @@ const isArticle = currentRoute.startsWith("/projects/homes/");
 
 const currentYear = new Date().getFullYear();
 
-const textColor =
-  isHome || isContact || isArticle ? "text-primary" : "text-white";
+const textColor = "text-primary";
 ---
 
 <header
   id="site-header"
-  class={`py-6 px-6 md:p-8 min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${
+  class={`p-6 md:p-8 min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${
     textColor
   }`}
 >

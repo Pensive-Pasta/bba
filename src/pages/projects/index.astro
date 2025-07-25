@@ -1,8 +1,85 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
-import SectionWrapper from "../../layouts/SectionWrapper.astro";
-import Hero from "../../components/Hero.astro";
+import PageDotGrid from "../../components/PageDotGrid.astro";
+
+const projectIndexData = [
+  { title: "Churchill Road Orchard", location: "PE9", category: "Lincolnshire" },
+  { title: "Eachard Road", location: "CB3", category: "Cambridgeshire" },
+  { title: "South View Terrace", location: "PE9", category: "Cambridgeshire" },
+  { title: "Oakhurst Barns", location: "PE6", category: "Cambridgeshire" },
+  { title: "Mill House", location: "PE8", category: "Northamptonshire" },
+  { title: "Swaffham House", location: "CB25", category: "Cambridgeshire" },
+  { title: "Lynch Farm", location: "NN9", category: "Northamptonshire" },
+  { title: "Ashby Lane", location: "LE17", category: "Leicestershire" },
+  { title: "The Pumps", location: "NN14", category: "Northamptonshire" },
+  { title: "The Old Stables", location: "PE28", category: "Cambridgeshire" },
+  { title: "Nene Park Centre Point", location: "PE2", category: "Cambridgeshire" },
+  { title: "Riverside", location: "CB5", category: "Cambridgeshire" },
+  { title: "Corbar", location: "PE9", category: "Lincolnshire" },
+  { title: "The Lane", location: "CB22", category: "Cambridgeshire" },
+  { title: "Netheren United Football Club", location: "PE3", category: "Cambridgeshire" },
+  { title: "Paxton Pits Nature Reserve", location: "PE19", category: "Cambridgeshire" },
+  { title: "Richmond Road", location: "CB4", category: "Cambridgeshire" },
+  { title: "Swinstead Barn", location: "NG33", category: "Lincolnshire" },
+  { title: "Greatford House", location: "PE9", category: "Lincolnshire" },
+  { title: "Red Fold", location: "CB24", category: "Cambridgeshire" },
+  { title: "Deacon's Lane", location: "CB7", category: "Cambridgeshire" },
+  { title: "The Garage", location: "PE8", category: "Northamptonshire" },
+  { title: "Glamis Gardens", location: "Cambridgeshire", category: "Cambridgeshire" },
+  { title: "Chamfered House", location: "CB5", category: "Cambridgeshire" },
+  { title: "Canopy House", location: "CB5", category: "Cambridgeshire" },
+  { title: "Blue House", location: "CB1", category: "Cambridgeshire" },
+  { title: "Netherhall Way", location: "CB1", category: "Cambridgeshire" },
+  { title: "Cavendish House", location: "CB1", category: "Cambridgeshire" },
+  { title: "Designed Plates", location: "PE7", category: "Cambridgeshire" },
+  { title: "Pitch View", location: "PE9", category: "Lincolnshire" },
+  { title: "Woodlands", location: "PE5", category: "Cambridgeshire" },
+  { title: "Highfield Avenue", location: "CB4", category: "Cambridgeshire" },
+  { title: "Hail Weston", location: "PE19", category: "Cambridgeshire" },
+  { title: "Hemingford Barns", location: "PE28", category: "Cambridgeshire" },
+  { title: "Cotterstock House", location: "PE8", category: "Northamptonshire" },
+  { title: "Erskine Hill", location: "NW11", category: "London" },
+  { title: "East Croft", location: "PE27", category: "Cambridgeshire" },
+  { title: "Sowtry Road", location: "PE28", category: "Cambridgeshire" },
+  { title: "Middleton Wold", location: "PE28", category: "Cambridgeshire" },
+  { title: "Glatton Village Hall", location: "PE28", category: "Cambridgeshire" },
+  { title: "Gable House", location: "PE7", category: "Cambridgeshire" },
+  { title: "Surrey House", location: "SM7", category: "Surrey" },
+  { title: "Angled Ash House", location: "PE7", category: "Cambridgeshire" },
+  { title: "Fields End Close", location: "PE7", category: "Cambridgeshire" },
+  { title: "Northstowe Invited Competition", location: "PE8", category: "Northamptonshire" },
+  { title: "PDPS Headquarters", location: "PE7", category: "Cambridgeshire" },
+  { title: "Dial House", location: "PE8", category: "Northamptonshire" },
+  { title: "Worsley House", location: "M28", category: "Greater Manchester" },
+  { title: "Crescent House", location: "CB4", category: "Cambridgeshire" },
+  { title: "Exton Villa", location: "CB4", category: "Cambridgeshire" },
+  { title: "Ferry Meadows Café", location: "PE2", category: "Cambridgeshire" },
+  { title: "Dovecote Lane", location: "CB3", category: "Cambridgeshire" },
+  { title: "Blackmans Road", location: "PE9", category: "Lincolnshire" },
+  { title: "St Martin’s Park Invited Competition", location: "PE9", category: "Lincolnshire" },
+  { title: "Annabelle Davis Centre", location: "PE7", category: "Cambridgeshire" },
+  { title: "The Annexe", location: "PE7", category: "Cambridgeshire" },
+  { title: "Cathedral View", location: "PE3", category: "Cambridgeshire" },
+  { title: "Gable House", location: "PE7", category: "Cambridgeshire" },
+  { title: "Green House", location: "CB3", category: "Cambridgeshire" },
+  { title: "Leicester Meadows", location: "CB21", category: "Cambridgeshire" },
+  { title: "Vaulted House", location: "CB21", category: "Cambridgeshire" },
+  { title: "Acle Bridge Visitor Centre Competition", location: "NR13", category: "Norfolk" },
+  { title: "Heathfield House", location: "CB1", category: "Cambridgeshire" },
+  { title: "Shirley Road", location: "CB24", category: "Cambridgeshire" },
+  { title: "The Vestry", location: "SG4", category: "Hertfordshire" },
+  { title: "Churchfield Road", location: "PE4", category: "Cambridgeshire" },
+  { title: "Copper House", location: "CB1", category: "Cambridgeshire" },
+  { title: "Ribbon House", location: "CB3", category: "Cambridgeshire" },
+  { title: "House of a Writer", location: "CB22", category: "Cambridgeshire" },
+  { title: "Wrap Around House", location: "CB1", category: "Cambridgeshire" },
+  { title: "Franks Lane", location: "PE13", category: "Cambridgeshire" },
+  { title: "Church Street", location: "PE6", category: "Cambridgeshire" },
+  { title: "Dalhouse House", location: "PE8", category: "Northamptonshire" },
+  { title: "Rooftop Meadow House", location: "PE7", category: "Cambridgeshire" },
+  { title: "Yaxley Pumping Station", location: "PE7", category: "Cambridgeshire" }
+];
 
 const projects = [
   {
@@ -114,71 +191,71 @@ const projects = [
     slug: "urban-apartment",
     type: "urban",
   },
+  {
+    title: "Test 34",
+    location: "Test 35",
+    category: "Test 36",
+    year: "2021",
+    image: "/images/placeholder.jpg",
+    slug: "community-hub",
+    type: "inter-urban",
+  },
+  {
+    title: "Test 37",
+    location: "Test 38",
+    category: "Test 39",
+    year: "2022",
+    image: "/images/placeholder.jpg",
+    slug: "garden-studio",
+    type: "inter-urban",
+  },
 ];
 ---
 
 <BaseLayout title="Projects">
-  <Hero image="/images/copper.jpg" scrollTarget="projects" />
-  <SectionWrapper id="projects">
-    <p class="my-40 w-1/2 ml-auto">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, modi enim
-      eligendi reiciendis perspiciatis perferendis, quisquam ad, tenetur dolore
-      necessitatibus sed? Esse magni quam, saepe minima earum porro vitae
-      possimus!
-    </p>
-    <div class="flex flex-row justify-between mb-4 md:mb-8">
-      <h3 class="current-heading text-2xl mb-4 md:mb-0 relative z-10">
-        <button id="index-toggle" class="">Index</button>
-      </h3>
+  <!-- Work view -->
+  <section>
+    <PageDotGrid />
+    <div class="flex px-6 md:px-8 pt-[200px] min-h-[60vh]">
+      <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">Work</h1>
+      <p class="w-1/2 text-base md:text-2xl leading-normal text-primary mb-4 font-light pl-6 md:pl-8">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi interdum
+        justo risus, nec posuere urna iaculis ac. Nulla vehicula cursus nunc, id
+        finibus sem euismod in. Donec semper magna dui, ac bibendum elit euismod
+        non. Mauris et diam lacinia, eleifend diam quis, mattis diam. Fusce
+        vitae blandit urna, bibendum consequat diam. Vivamus quis lobortis
+        ipsum. Proin ultricies sollicitudin viverra.
+      </p>
     </div>
-    <!-- hidden radio buttons used for filtering -->
-    <input type="radio" id="urban" name="project-filter" class="sr-only" />
-    <input
-      type="radio"
-      id="both"
-      name="project-filter"
-      class="sr-only"
-      checked
-    />
-    <input type="radio" id="rural" name="project-filter" class="sr-only" />
-
     <div
-      class="toggle-wrapper flex md:justify-end relative md:ml-2 items-center -top-4 md:-top-16"
+      class="flex flex-row justify-between items-center mb-4 md:mb-8 text-lg p-6 md:p-8"
     >
-      <span class="urban-heading text-2xl mr-4">Urban</span>
-
-      <div class="project-slider relative w-72 h-3 bg-gray-300 rounded-full">
-        <div
-          class="slider-thumb absolute top-1/2 left-0 h-6 w-6 bg-black rounded-full -translate-y-1/2 transition-[left] duration-300"
+      <div
+        class="filter-toggle-group flex flex-wrap items-center justify-center md:justify-end gap-2 bg-white border-2 border-primary rounded-full px-4 py-2"
+      >
+        <button class="filter-btn rounded-full px-12 py-1" data-type="both"
+          >All</button
         >
-        </div>
-
-        <label
-          for="urban"
-          class="absolute left-0 top-0 w-1/3 h-full cursor-pointer"
+        <button class="filter-btn rounded-full px-12 py-1" data-type="urban"
+          >Urban</button
         >
-          <span class="sr-only">Urban</span>
-        </label>
-        <label
-          for="both"
-          class="absolute left-1/3 top-0 w-1/3 h-full cursor-pointer"
+        <button
+          class="filter-btn rounded-full px-12 py-1"
+          data-type="inter-urban">Inter-Urban</button
         >
-          <span class="sr-only">Urban & Rural</span>
-        </label>
-        <label
-          for="rural"
-          class="absolute left-2/3 top-0 w-1/3 h-full cursor-pointer"
+        <button class="filter-btn rounded-full px-12 py-1" data-type="rural"
+          >Rural</button
         >
-          <span class="sr-only">Rural</span>
-        </label>
       </div>
 
-      <span class="rural-heading text-2xl ml-4">Rural</span>
+      <div class="flex flex-row justify-between">
+        <button id="index-toggle">
+          <h3 class="text-lg relative z-10">Index</h3>
+        </button>
+      </div>
     </div>
 
-    <div
-      class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-    >
+    <div class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {
         projects.map((project) => (
           <div class="card" data-type={project.type}>
@@ -187,22 +264,24 @@ const projects = [
         ))
       }
     </div>
+  </section>
 
-    <div id="project-index" class="hidden">
-      <table class="w-full text-left border-collapse">
+  <!-- index view -->
+  <section id="project-index" class="hidden p-6 md:p-8">
+      <table class="w-full text-left">
         <thead>
           <tr>
-            <th class="border-b pb-2">Name</th>
-            <th class="border-b pb-2">Location</th>
-            <th class="border-b pb-2">Category</th>
+            <th class="pb-2">Name</th>
+            <th class="pb-2">Location</th>
+            <th class="pb-2">Category</th>
           </tr>
         </thead>
         <tbody>
           {
-            projects.map((project) => (
+            projectIndexData.map((project) => (
               <tr>
                 <td class="py-2">
-                  <a href={`/projects/${project.slug}`} class="">
+                  <a href="#" class="">
                     {project.title}
                   </a>
                 </td>
@@ -213,59 +292,14 @@ const projects = [
           }
         </tbody>
       </table>
-    </div>
-  </SectionWrapper>
-
-  <style>
-    /* --- Project filtering --- */
-    #urban:checked ~ .project-grid .card[data-type="rural"] {
-      display: none;
-    }
-    #rural:checked ~ .project-grid .card[data-type="urban"] {
-      display: none;
-    }
-
-    /* --- Slider knob movement --- */
-    .slider-thumb {
-      transform: translate(-50%, -50%);
-    }
-    #urban:checked ~ .toggle-wrapper .slider-thumb {
-      left: 0%;
-    }
-    #both:checked ~ .toggle-wrapper .slider-thumb {
-      left: 50%;
-    }
-    #rural:checked ~ .toggle-wrapper .slider-thumb {
-      left: 100%;
-    }
-
-    /* --- Dynamic heading text --- */
-    .current-heading span {
-      display: none;
-    }
-    #urban:checked ~ .current-heading .urban-heading {
-      display: inline;
-    }
-    #both:checked ~ .current-heading .both-heading {
-      display: inline;
-    }
-    #rural:checked ~ .current-heading .rural-heading {
-      display: inline;
-    }
-  </style>
+  </section>
 
   <script is:inline>
-    /**
-     * Grid / Index toggle
-     * — binds once
-     * — resets view on each Astro client navigation
-     */
     const initProjectToggle = () => {
       const btn = document.getElementById("index-toggle");
       const grid = document.querySelector(".project-grid");
       const indexTable = document.getElementById("project-index");
-      const toggleWrap = document.querySelector(".toggle-wrapper");
-
+      const filterBtns = document.querySelectorAll(".filter-btn");
       if (!btn || !grid || !indexTable) return;
       if (btn.dataset.bound) return; // avoid duplicate listeners
       btn.dataset.bound = "true";
@@ -273,19 +307,41 @@ const projects = [
       const resetView = () => {
         grid.classList.remove("hidden");
         indexTable.classList.add("hidden");
-        toggleWrap?.classList.remove("hidden", "md:hidden");
       };
 
       // first paint
       resetView();
 
-      // click-toggle
-      btn.addEventListener("click", () => {
+      btn?.addEventListener("click", () => {
         grid.classList.toggle("hidden");
         indexTable.classList.toggle("hidden");
-        toggleWrap?.classList.toggle("hidden");
-        toggleWrap?.classList.toggle("md:hidden");
       });
+
+      const updateFilter = (type) => {
+        filterBtns.forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector(`.filter-btn[data-type="${type}"]`)
+          ?.classList.add("active");
+
+        const cards = document.querySelectorAll(".project-grid .card");
+        cards.forEach((card) => {
+          const cardType = card.dataset.type;
+          if (type === "both") {
+            card.classList.remove("hidden");
+          } else {
+            card.classList.toggle("hidden", cardType !== type);
+          }
+        });
+      };
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const type = btn.dataset.type;
+          updateFilter(type);
+        });
+      });
+
+      updateFilter("both");
     };
 
     // run on first load

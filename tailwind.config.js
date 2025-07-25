@@ -17,7 +17,6 @@ export default {
         caption: ["11px", { lineHeight: "14px" }],
       },
       colors: {
-        white: "#FAFAFA",
         primary: {
           DEFAULT: "#178FE4",
           light: "#309BE8",

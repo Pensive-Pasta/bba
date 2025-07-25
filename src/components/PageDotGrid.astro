@@ -1,0 +1,77 @@
+---
+/* no front‑matter: everything happens client‑side */
+---
+
+<!-- Background grid (horizontal dotted lines every 600 px, starting 600 px from the top) -->
+<div
+  id="page-dot-grid"
+  class="absolute inset-0 z-[-1] pointer-events-none select-none"
+>
+</div>
+
+<!-- simple client script that adds dotted lines only once DOM is ready -->
+<script>
+  const SPACING = 666;
+  const CLASS =
+    "dot-line absolute left-0 w-full border-t-4 border-dotted border-[#bedcf1]";
+  const VERT_CLASS =
+    "dot-vert absolute left-1/2 w-0 border-l-4 border-dotted border-[#bedcf1] -translate-x-1 pointer-events-none select-none";
+
+function drawLines(gridEl: HTMLElement) {
+  gridEl
+    .querySelectorAll(".dot-line, .dot-vert")
+    .forEach((el: { remove: () => any }) => el.remove());
+
+  // Reset height to allow correct shrink calculation
+  gridEl.style.height = "0px";
+
+  const pageHeight = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight
+  );
+
+  gridEl.style.height = pageHeight + "px";
+
+  const vert = document.createElement("div");
+  vert.className = VERT_CLASS;
+  vert.style.height = pageHeight + "px";
+  gridEl.appendChild(vert);
+
+  for (let y = SPACING; y < pageHeight; y += SPACING) {
+    const line = document.createElement("div");
+    line.className = CLASS;
+    line.style.top = y + "px";
+    gridEl.appendChild(line);
+  }
+}
+  const init = () => {
+    const gridEl = document.getElementById("page-dot-grid");
+    if (!gridEl) return;
+
+    const redraw = () => drawLines(gridEl);
+    let redrawTimeout: number | undefined;
+    const debounceRedraw = () => {
+      clearTimeout(redrawTimeout);
+      redrawTimeout = setTimeout(() => {
+        console.log("Redrawing grid due to observed change");
+        redraw();
+      }, 100);
+    };
+
+    redraw();
+
+    window.addEventListener("resize", debounceRedraw);
+
+    const resizeObserver = new ResizeObserver(debounceRedraw);
+    const targets = document.querySelectorAll("main, section, .project-grid, #project-index");
+    targets.forEach((el) => resizeObserver.observe(el));
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>
