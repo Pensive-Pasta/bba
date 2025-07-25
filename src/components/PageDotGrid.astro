@@ -11,7 +11,7 @@
 
 <!-- simple client script that adds dotted lines only once DOM is ready -->
 <script>
-  const SPACING = 666;
+  const getSpacing = () => window.innerWidth < 768 ? 720 : 666;
   const CLASS =
     "dot-line absolute left-0 w-full border-t-4 border-dotted border-[#bedcf1]";
   const VERT_CLASS =
@@ -37,6 +37,7 @@ function drawLines(gridEl: HTMLElement) {
   vert.style.height = pageHeight + "px";
   gridEl.appendChild(vert);
 
+  const SPACING = getSpacing();
   for (let y = SPACING; y < pageHeight; y += SPACING) {
     const line = document.createElement("div");
     line.className = CLASS;

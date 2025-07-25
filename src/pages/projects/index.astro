@@ -4,7 +4,11 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import PageDotGrid from "../../components/PageDotGrid.astro";
 
 const projectIndexData = [
-  { title: "Churchill Road Orchard", location: "PE9", category: "Lincolnshire" },
+  {
+    title: "Churchill Road Orchard",
+    location: "PE9",
+    category: "Lincolnshire",
+  },
   { title: "Eachard Road", location: "CB3", category: "Cambridgeshire" },
   { title: "South View Terrace", location: "PE9", category: "Cambridgeshire" },
   { title: "Oakhurst Barns", location: "PE6", category: "Cambridgeshire" },
@@ -14,19 +18,35 @@ const projectIndexData = [
   { title: "Ashby Lane", location: "LE17", category: "Leicestershire" },
   { title: "The Pumps", location: "NN14", category: "Northamptonshire" },
   { title: "The Old Stables", location: "PE28", category: "Cambridgeshire" },
-  { title: "Nene Park Centre Point", location: "PE2", category: "Cambridgeshire" },
+  {
+    title: "Nene Park Centre Point",
+    location: "PE2",
+    category: "Cambridgeshire",
+  },
   { title: "Riverside", location: "CB5", category: "Cambridgeshire" },
   { title: "Corbar", location: "PE9", category: "Lincolnshire" },
   { title: "The Lane", location: "CB22", category: "Cambridgeshire" },
-  { title: "Netheren United Football Club", location: "PE3", category: "Cambridgeshire" },
-  { title: "Paxton Pits Nature Reserve", location: "PE19", category: "Cambridgeshire" },
+  {
+    title: "Netheren United Football Club",
+    location: "PE3",
+    category: "Cambridgeshire",
+  },
+  {
+    title: "Paxton Pits Nature Reserve",
+    location: "PE19",
+    category: "Cambridgeshire",
+  },
   { title: "Richmond Road", location: "CB4", category: "Cambridgeshire" },
   { title: "Swinstead Barn", location: "NG33", category: "Lincolnshire" },
   { title: "Greatford House", location: "PE9", category: "Lincolnshire" },
   { title: "Red Fold", location: "CB24", category: "Cambridgeshire" },
   { title: "Deacon's Lane", location: "CB7", category: "Cambridgeshire" },
   { title: "The Garage", location: "PE8", category: "Northamptonshire" },
-  { title: "Glamis Gardens", location: "Cambridgeshire", category: "Cambridgeshire" },
+  {
+    title: "Glamis Gardens",
+    location: "Cambridgeshire",
+    category: "Cambridgeshire",
+  },
   { title: "Chamfered House", location: "CB5", category: "Cambridgeshire" },
   { title: "Canopy House", location: "CB5", category: "Cambridgeshire" },
   { title: "Blue House", location: "CB1", category: "Cambridgeshire" },
@@ -43,12 +63,20 @@ const projectIndexData = [
   { title: "East Croft", location: "PE27", category: "Cambridgeshire" },
   { title: "Sowtry Road", location: "PE28", category: "Cambridgeshire" },
   { title: "Middleton Wold", location: "PE28", category: "Cambridgeshire" },
-  { title: "Glatton Village Hall", location: "PE28", category: "Cambridgeshire" },
+  {
+    title: "Glatton Village Hall",
+    location: "PE28",
+    category: "Cambridgeshire",
+  },
   { title: "Gable House", location: "PE7", category: "Cambridgeshire" },
   { title: "Surrey House", location: "SM7", category: "Surrey" },
   { title: "Angled Ash House", location: "PE7", category: "Cambridgeshire" },
   { title: "Fields End Close", location: "PE7", category: "Cambridgeshire" },
-  { title: "Northstowe Invited Competition", location: "PE8", category: "Northamptonshire" },
+  {
+    title: "Northstowe Invited Competition",
+    location: "PE8",
+    category: "Northamptonshire",
+  },
   { title: "PDPS Headquarters", location: "PE7", category: "Cambridgeshire" },
   { title: "Dial House", location: "PE8", category: "Northamptonshire" },
   { title: "Worsley House", location: "M28", category: "Greater Manchester" },
@@ -57,15 +85,27 @@ const projectIndexData = [
   { title: "Ferry Meadows Café", location: "PE2", category: "Cambridgeshire" },
   { title: "Dovecote Lane", location: "CB3", category: "Cambridgeshire" },
   { title: "Blackmans Road", location: "PE9", category: "Lincolnshire" },
-  { title: "St Martin’s Park Invited Competition", location: "PE9", category: "Lincolnshire" },
-  { title: "Annabelle Davis Centre", location: "PE7", category: "Cambridgeshire" },
+  {
+    title: "St Martin’s Park Invited Competition",
+    location: "PE9",
+    category: "Lincolnshire",
+  },
+  {
+    title: "Annabelle Davis Centre",
+    location: "PE7",
+    category: "Cambridgeshire",
+  },
   { title: "The Annexe", location: "PE7", category: "Cambridgeshire" },
   { title: "Cathedral View", location: "PE3", category: "Cambridgeshire" },
   { title: "Gable House", location: "PE7", category: "Cambridgeshire" },
   { title: "Green House", location: "CB3", category: "Cambridgeshire" },
   { title: "Leicester Meadows", location: "CB21", category: "Cambridgeshire" },
   { title: "Vaulted House", location: "CB21", category: "Cambridgeshire" },
-  { title: "Acle Bridge Visitor Centre Competition", location: "NR13", category: "Norfolk" },
+  {
+    title: "Acle Bridge Visitor Centre Competition",
+    location: "NR13",
+    category: "Norfolk",
+  },
   { title: "Heathfield House", location: "CB1", category: "Cambridgeshire" },
   { title: "Shirley Road", location: "CB24", category: "Cambridgeshire" },
   { title: "The Vestry", location: "SG4", category: "Hertfordshire" },
@@ -77,8 +117,16 @@ const projectIndexData = [
   { title: "Franks Lane", location: "PE13", category: "Cambridgeshire" },
   { title: "Church Street", location: "PE6", category: "Cambridgeshire" },
   { title: "Dalhouse House", location: "PE8", category: "Northamptonshire" },
-  { title: "Rooftop Meadow House", location: "PE7", category: "Cambridgeshire" },
-  { title: "Yaxley Pumping Station", location: "PE7", category: "Cambridgeshire" }
+  {
+    title: "Rooftop Meadow House",
+    location: "PE7",
+    category: "Cambridgeshire",
+  },
+  {
+    title: "Yaxley Pumping Station",
+    location: "PE7",
+    category: "Cambridgeshire",
+  },
 ];
 
 const projects = [
@@ -209,6 +257,15 @@ const projects = [
     slug: "garden-studio",
     type: "inter-urban",
   },
+  {
+    title: "Test 40",
+    location: "Test 41",
+    category: "Test 42",
+    year: "2021",
+    image: "/images/placeholder.jpg",
+    slug: "timber-house",
+    type: "inter-urban",
+  },
 ];
 ---
 
@@ -218,7 +275,9 @@ const projects = [
     <PageDotGrid />
     <div class="flex px-6 md:px-8 pt-[200px] min-h-[60vh]">
       <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">Work</h1>
-      <p class="w-1/2 text-base md:text-2xl leading-normal text-primary mb-4 font-light pl-6 md:pl-8">
+      <p
+        class="w-1/2 text-base md:text-2xl leading-normal text-primary mb-4 font-light pl-6 md:pl-8"
+      >
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi interdum
         justo risus, nec posuere urna iaculis ac. Nulla vehicula cursus nunc, id
         finibus sem euismod in. Donec semper magna dui, ac bibendum elit euismod
@@ -231,26 +290,35 @@ const projects = [
       class="flex flex-row justify-between items-center mb-4 md:mb-8 text-lg p-6 md:p-8"
     >
       <div
-        class="filter-toggle-group flex flex-wrap items-center justify-center md:justify-end gap-2 bg-white border-2 border-primary rounded-full px-4 py-2"
+        class="filter-toggle-group relative flex flex-wrap items-center justify-center md:justify-end gap-2 border-2 border-primary rounded-full text-base md:text-lg"
       >
-        <button class="filter-btn rounded-full px-12 py-1" data-type="both"
-          >All</button
-        >
-        <button class="filter-btn rounded-full px-12 py-1" data-type="urban"
-          >Urban</button
+        
+        <button
+          class="filter-btn rounded-full px-1 md:px-8 lg:px-12 py-2 active-filter"
+          data-type="both">All</button
         >
         <button
-          class="filter-btn rounded-full px-12 py-1"
+          class="filter-btn transition-colors duration-300 rounded-full px-1 md:px-8 lg:px-12 py-2"
+          data-type="urban">Urban</button
+        >
+        <button
+          class="filter-btn rounded-full px-1 md:px-8 lg:px-12 py-2"
           data-type="inter-urban">Inter-Urban</button
         >
-        <button class="filter-btn rounded-full px-12 py-1" data-type="rural"
-          >Rural</button
+        <button
+          class="filter-btn rounded-full px-1 md:px-8 lg:px-12 py-2"
+          data-type="rural">Rural</button
         >
+        <span
+          id="filter-indicator"
+          class="absolute top-0 left-0 h-full rounded-full bg-primary transition-transform duration-300 ease-out pointer-events-none z-[-1]"
+        ></span>
+        
       </div>
 
       <div class="flex flex-row justify-between">
         <button id="index-toggle">
-          <h3 class="text-lg relative z-10">Index</h3>
+          <h3 class="text-base md:text-lg relative z-10">Index</h3>
         </button>
       </div>
     </div>
@@ -266,32 +334,38 @@ const projects = [
     </div>
   </section>
 
+  <style>
+    .active-filter {
+      @apply text-white;
+    }
+  </style>
+
   <!-- index view -->
   <section id="project-index" class="hidden p-6 md:p-8">
-      <table class="w-full text-left">
-        <thead>
-          <tr>
-            <th class="pb-2">Name</th>
-            <th class="pb-2">Location</th>
-            <th class="pb-2">Category</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            projectIndexData.map((project) => (
-              <tr>
-                <td class="py-2">
-                  <a href="#" class="">
-                    {project.title}
-                  </a>
-                </td>
-                <td class="py-2">{project.location}</td>
-                <td class="py-2">{project.category}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+    <table class="w-full text-left">
+      <thead>
+        <tr>
+          <th class="pb-2">Name</th>
+          <th class="pb-2">Location</th>
+          <th class="pb-2">Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          projectIndexData.map((project) => (
+            <tr>
+              <td class="py-2">
+                <a href="#" class="">
+                  {project.title}
+                </a>
+              </td>
+              <td class="py-2">{project.location}</td>
+              <td class="py-2">{project.category}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
   </section>
 
   <script is:inline>
@@ -318,10 +392,10 @@ const projects = [
       });
 
       const updateFilter = (type) => {
-        filterBtns.forEach((b) => b.classList.remove("active"));
+        filterBtns.forEach((b) => b.classList.remove("active-filter"));
         document
           .querySelector(`.filter-btn[data-type="${type}"]`)
-          ?.classList.add("active");
+          ?.classList.add("active-filter");
 
         const cards = document.querySelectorAll(".project-grid .card");
         cards.forEach((card) => {
@@ -332,6 +406,11 @@ const projects = [
             card.classList.toggle("hidden", cardType !== type);
           }
         });
+        // Move indicator to the new active button
+        const newActiveBtn = document.querySelector(
+          `.filter-btn[data-type="${type}"]`
+        );
+        moveIndicatorTo(newActiveBtn);
       };
 
       filterBtns.forEach((btn) => {
@@ -342,6 +421,29 @@ const projects = [
       });
 
       updateFilter("both");
+      // Move indicator to the initial button
+      const initialBtn = document.querySelector(
+        `.filter-btn[data-type="both"]`
+      );
+      setTimeout(() => moveIndicatorTo(initialBtn), 0);
+    };
+
+    // Indicator logic
+    const indicator = document.getElementById("filter-indicator");
+
+    const moveIndicatorTo = (btn) => {
+      if (!indicator || !btn) return;
+      const group = btn.closest(".filter-toggle-group");
+      const groupRect = group.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+
+      const offsetLeft = btnRect.left - groupRect.left;
+      const offsetWidth = btnRect.width;
+
+      requestAnimationFrame(() => {
+        indicator.style.width = `${offsetWidth}px`;
+        indicator.style.transform = `translateX(${offsetLeft - 2}px)`;
+      });
     };
 
     // run on first load
