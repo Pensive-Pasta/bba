@@ -1,133 +1,157 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import SectionTitle from '../components/SectionTitle.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionTitle from "../components/SectionTitle.astro";
 
 const processSteps = [
   {
-    number: '01',
-    title: 'Brief Development',
-    description: 'We work with you to understand your needs, aspirations, and constraints. This forms the foundation of the project and helps us establish clear goals and parameters.',
-    image: '/images/process1.png'
+    number: "01",
+    title: "Brief Development",
+    description:
+      "We work with you to understand your needs, aspirations, and constraints. This forms the foundation of the project and helps us establish clear goals and parameters.",
+    image: "/images/process1.png",
   },
   {
-    number: '02',
-    title: 'Site Analysis',
-    description: 'We analyze the site and its context, considering factors such as orientation, views, access, and planning constraints. This helps us understand the opportunities and challenges of the project.',
-    image: '/images/placeholder.jpg'
+    number: "02",
+    title: "Site Analysis",
+    description:
+      "We analyze the site and its context, considering factors such as orientation, views, access, and planning constraints. This helps us understand the opportunities and challenges of the project.",
+    image: "/images/placeholder.jpg",
   },
   {
-    number: '03',
-    title: 'Concept Design',
-    description: 'We develop initial design concepts that respond to the brief and site. These are presented as sketches, diagrams, and models to help you visualize the possibilities.',
-    image: '/images/placeholder.jpg'
+    number: "03",
+    title: "Concept Design",
+    description:
+      "We develop initial design concepts that respond to the brief and site. These are presented as sketches, diagrams, and models to help you visualize the possibilities.",
+    image: "/images/placeholder.jpg",
   },
   {
-    number: '04',
-    title: 'Design Development',
-    description: 'Based on your feedback, we refine the preferred concept, developing the spatial, material, and technical aspects of the design. This stage includes more detailed drawings and models.',
-    image: '/images/placeholder.jpg'
+    number: "04",
+    title: "Design Development",
+    description:
+      "Based on your feedback, we refine the preferred concept, developing the spatial, material, and technical aspects of the design. This stage includes more detailed drawings and models.",
+    image: "/images/placeholder.jpg",
   },
   {
-    number: '05',
-    title: 'Technical Design',
-    description: 'We prepare detailed technical drawings and specifications for construction, working closely with engineers and other consultants to ensure that all aspects of the design are coordinated.',
-    image: '/images/placeholder.jpg'
+    number: "05",
+    title: "Technical Design",
+    description:
+      "We prepare detailed technical drawings and specifications for construction, working closely with engineers and other consultants to ensure that all aspects of the design are coordinated.",
+    image: "/images/placeholder.jpg",
   },
   {
-    number: '06',
-    title: 'Construction',
-    description: 'We oversee the construction process, making regular site visits to ensure that the design is being realized as intended and addressing any issues that arise during construction.',
-    image: '/images/placeholder.jpg'
-  }
+    number: "06",
+    title: "Construction",
+    description:
+      "We oversee the construction process, making regular site visits to ensure that the design is being realized as intended and addressing any issues that arise during construction.",
+    image: "/images/placeholder.jpg",
+  },
 ];
 ---
 
 <BaseLayout title="Process">
-  <section class="py-20 px-6 md:px-12">
+  <section class="py-20 px-4 md:px-12">
     <div class="container mx-auto">
-      <SectionTitle 
-        title="Our Process" 
+      <SectionTitle
+        title="Our Process"
         subtitle="We believe in a collaborative approach that puts our clients at the center of the design process."
       />
-      
+
       <div class="max-w-3xl mx-auto mb-16">
         <p class="text-lg text-gray-700">
-          Every project is unique, but our process follows a consistent structure that ensures we address all aspects of the design challenge. We work closely with our clients at each stage, ensuring that the final result reflects their vision and meets their needs.
+          Every project is unique, but our process follows a consistent
+          structure that ensures we address all aspects of the design challenge.
+          We work closely with our clients at each stage, ensuring that the
+          final result reflects their vision and meets their needs.
         </p>
       </div>
-      
+
       <div class="space-y-24">
-        {processSteps.map((step, index) => (
-          <div class={`grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center ${index % 2 === 1 ? 'md:grid-flow-dense' : ''}`}>
-            <div class={index % 2 === 1 ? 'md:col-start-2' : ''}>
-              <div class="mb-4 flex items-center">
-                <span class="text-4xl font-light text-gray-300 mr-4">{step.number}</span>
-                <h3 class="text-2xl font-normal">{step.title}</h3>
+        {
+          processSteps.map((step, index) => (
+            <div
+              class={`grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center ${index % 2 === 1 ? "md:grid-flow-dense" : ""}`}
+            >
+              <div class={index % 2 === 1 ? "md:col-start-2" : ""}>
+                <div class="mb-4 flex items-center">
+                  <span class="text-4xl font-light text-gray-300 mr-4">
+                    {step.number}
+                  </span>
+                  <h3 class="text-2xl font-normal">{step.title}</h3>
+                </div>
+                <p class="text-lg text-gray-700">{step.description}</p>
               </div>
-              <p class="text-lg text-gray-700">
-                {step.description}
-              </p>
+              <div class={index % 2 === 1 ? "md:col-start-1" : ""}>
+                <img
+                  src={step.image || "/placeholder.svg"}
+                  alt={step.title}
+                  class="w-full aspect-[4/3] object-cover"
+                />
+              </div>
             </div>
-            <div class={index % 2 === 1 ? 'md:col-start-1' : ''}>
-              <img 
-                src={step.image || "/placeholder.svg"} 
-                alt={step.title} 
-                class="w-full aspect-[4/3] object-cover"
-              />
-            </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
-  
-  <section class="py-20 px-6 md:px-12 bg-gray-50">
+
+  <section class="py-20 px-4 md:px-12 bg-gray-50">
     <div class="container mx-auto">
-      <SectionTitle 
-        title="Our Services" 
+      <SectionTitle
+        title="Our Services"
         subtitle="We offer a range of services to support your project from concept to completion."
       />
-      
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
         <div>
           <h3 class="text-xl font-normal mb-4">Full Architectural Service</h3>
           <p class="text-gray-700">
-            We provide a complete service from initial concept to completion, guiding you through each stage of the design and construction process.
+            We provide a complete service from initial concept to completion,
+            guiding you through each stage of the design and construction
+            process.
           </p>
         </div>
-        
+
         <div>
           <h3 class="text-xl font-normal mb-4">Feasibility Studies</h3>
           <p class="text-gray-700">
-            We help you explore the potential of a site or building, considering options for development and identifying constraints and opportunities.
+            We help you explore the potential of a site or building, considering
+            options for development and identifying constraints and
+            opportunities.
           </p>
         </div>
-        
+
         <div>
           <h3 class="text-xl font-normal mb-4">Planning Applications</h3>
           <p class="text-gray-700">
-            We prepare and submit planning applications, liaising with planning authorities to secure permission for your project.
+            We prepare and submit planning applications, liaising with planning
+            authorities to secure permission for your project.
           </p>
         </div>
-        
+
         <div>
           <h3 class="text-xl font-normal mb-4">Interior Design</h3>
           <p class="text-gray-700">
-            We design interiors that complement the architecture, considering furniture, finishes, lighting, and other elements to create cohesive spaces.
+            We design interiors that complement the architecture, considering
+            furniture, finishes, lighting, and other elements to create cohesive
+            spaces.
           </p>
         </div>
-        
+
         <div>
           <h3 class="text-xl font-normal mb-4">Project Management</h3>
           <p class="text-gray-700">
-            We coordinate the design and construction process, managing consultants, contractors, and other stakeholders to ensure your project is delivered on time and on budget.
+            We coordinate the design and construction process, managing
+            consultants, contractors, and other stakeholders to ensure your
+            project is delivered on time and on budget.
           </p>
         </div>
-        
+
         <div>
           <h3 class="text-xl font-normal mb-4">Sustainability Consulting</h3>
           <p class="text-gray-700">
-            We provide advice on sustainable design strategies, helping you reduce the environmental impact of your project and create healthier, more efficient spaces.
+            We provide advice on sustainable design strategies, helping you
+            reduce the environmental impact of your project and create
+            healthier, more efficient spaces.
           </p>
         </div>
       </div>

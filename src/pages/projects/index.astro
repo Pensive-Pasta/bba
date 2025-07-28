@@ -44,7 +44,7 @@ const projectIndexData = [
   { title: "The Garage", location: "PE8", category: "Northamptonshire" },
   {
     title: "Glamis Gardens",
-    location: "Cambridgeshire",
+    location: "CB24",
     category: "Cambridgeshire",
   },
   { title: "Chamfered House", location: "CB5", category: "Cambridgeshire" },
@@ -273,7 +273,7 @@ const projects = [
   <!-- Work view -->
   <section>
     <PageDotGrid />
-    <div class="flex px-6 md:px-8 pt-[200px] min-h-[60vh]">
+    <div class="flex px-4 lg:px-14 pt-[200px] min-h-[60vh]">
       <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">Work</h1>
       <p
         class="w-1/2 text-base md:text-2xl leading-normal text-primary mb-4 font-light pl-6 md:pl-8"
@@ -287,36 +287,34 @@ const projects = [
       </p>
     </div>
     <div
-      class="flex flex-row justify-between items-center mb-4 md:mb-8 text-lg p-6 md:p-8"
+      class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-8 text-lg p-4 lg:p-8"
     >
       <div
-        class="filter-toggle-group relative flex flex-wrap items-center justify-center md:justify-end gap-2 border-2 border-primary rounded-full text-base md:text-lg"
+        class="filter-toggle-group relative flex flex-nowrap overflow-x-auto whitespace-nowrap items-center justify-between md:justify-end gap-2 border-2 border-primary rounded-full text-base md:text-lg"
       >
-        
         <button
-          class="filter-btn rounded-full px-1 md:px-8 lg:px-12 py-2 active-filter"
+          class="filter-btn rounded-full px-3 sm:px-5 lg:px-14 py-2 active-filter min-w-[68px] w-full"
           data-type="both">All</button
         >
         <button
-          class="filter-btn transition-colors duration-300 rounded-full px-1 md:px-8 lg:px-12 py-2"
+          class="filter-btn transition-colors duration-300 rounded-full px-3 sm:px-5 lg:px-14 py-2 w-full"
           data-type="urban">Urban</button
         >
         <button
-          class="filter-btn rounded-full px-1 md:px-8 lg:px-12 py-2"
+          class="filter-btn rounded-full px-3 sm:px-5 lg:px-14 py-2 w-full"
           data-type="inter-urban">Inter-Urban</button
         >
         <button
-          class="filter-btn rounded-full px-1 md:px-8 lg:px-12 py-2"
+          class="filter-btn rounded-full px-3 sm:px-5 lg:px-14 py-2 w-full"
           data-type="rural">Rural</button
         >
         <span
           id="filter-indicator"
           class="absolute top-0 left-0 h-full rounded-full bg-primary transition-transform duration-300 ease-out pointer-events-none z-[-1]"
         ></span>
-        
       </div>
 
-      <div class="flex flex-row justify-between">
+      <div class="flex flex-row justify-end sm:p-0 p-3">
         <button id="index-toggle">
           <h3 class="text-base md:text-lg relative z-10">Index</h3>
         </button>
@@ -341,26 +339,41 @@ const projects = [
   </style>
 
   <!-- index view -->
-  <section id="project-index" class="hidden p-6 md:p-8">
+  <section id="project-index" class="hidden p-4 md:p-8">
     <table class="w-full text-left">
       <thead>
-        <tr>
-          <th class="pb-2">Name</th>
-          <th class="pb-2">Location</th>
-          <th class="pb-2">Category</th>
+        <tr class="text-lg font-bold">
+          <th class="pb-2 cursor-pointer">
+            Name
+            <svg class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </th>
+          <th class="pb-2 cursor-pointer min-w-[100px]">
+            Code
+            <svg class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </th>
+          <th class="pb-2 cursor-pointer">
+            County
+            <svg class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </th>
         </tr>
       </thead>
       <tbody>
         {
           projectIndexData.map((project) => (
-            <tr>
-              <td class="py-2">
+            <tr class="text-lg font-light">
+              <td class="p-2">
                 <a href="#" class="">
                   {project.title}
                 </a>
               </td>
-              <td class="py-2">{project.location}</td>
-              <td class="py-2">{project.category}</td>
+              <td class="p-2">{project.location}</td>
+              <td class="p-2">{project.category}</td>
             </tr>
           ))
         }
@@ -381,6 +394,9 @@ const projects = [
       const resetView = () => {
         grid.classList.remove("hidden");
         indexTable.classList.add("hidden");
+        document
+          .querySelector(".filter-toggle-group")
+          ?.classList.remove("hidden");
       };
 
       // first paint
@@ -389,6 +405,13 @@ const projects = [
       btn?.addEventListener("click", () => {
         grid.classList.toggle("hidden");
         indexTable.classList.toggle("hidden");
+        const filterGroup = document.querySelector(".filter-toggle-group");
+        const showingIndex = !indexTable.classList.contains("hidden");
+        if (showingIndex) {
+          filterGroup?.classList.add("invisible");
+        } else {
+          filterGroup?.classList.remove("invisible");
+        }
       });
 
       const updateFilter = (type) => {
@@ -426,12 +449,18 @@ const projects = [
         `.filter-btn[data-type="both"]`
       );
       setTimeout(() => moveIndicatorTo(initialBtn), 0);
+
+      // Reposition indicator on window resize
+      window.addEventListener("resize", () => {
+        const activeBtn = document.querySelector(".filter-btn.active-filter");
+        if (activeBtn) moveIndicatorTo(activeBtn);
+      });
     };
 
     // Indicator logic
-    const indicator = document.getElementById("filter-indicator");
 
     const moveIndicatorTo = (btn) => {
+      const indicator = document.getElementById("filter-indicator");
       if (!indicator || !btn) return;
       const group = btn.closest(".filter-toggle-group");
       const groupRect = group.getBoundingClientRect();
@@ -455,5 +484,44 @@ const projects = [
 
     // run again after every Astro SPA navigation
     document.addEventListener("astro:page-load", initProjectToggle);
+
+    // Sorting chevrons logic for project index
+    const initIndexSort = () => {
+      const chevrons = document.querySelectorAll("#project-index .chevron-icon");
+      let isAlphaSort = true;
+
+      chevrons.forEach((chevron) => {
+        chevron.closest("th")?.addEventListener("click", () => {
+          const rows = Array.from(document.querySelectorAll("#project-index tbody tr"));
+          const sorted = rows.sort((a, b) => {
+            const textA = a.querySelector("td")?.innerText.trim().toLowerCase() || "";
+            const textB = b.querySelector("td")?.innerText.trim().toLowerCase() || "";
+            return isAlphaSort ? textB.localeCompare(textA) : textA.localeCompare(textB);
+          });
+
+          const tbody = document.querySelector("#project-index tbody");
+          if (tbody) {
+            tbody.innerHTML = "";
+            sorted.forEach(row => tbody.appendChild(row));
+          }
+
+          chevrons.forEach((icon) => {
+            icon.style.transform = isAlphaSort ? "rotate(180deg)" : "rotate(0deg)";
+          });
+
+          isAlphaSort = !isAlphaSort;
+        });
+      });
+    };
+
+    // Add after-swap listener
+    document.addEventListener("astro:after-swap", initIndexSort);
+
+    // And call it on first load too
+    if (document.readyState !== "loading") {
+      initIndexSort();
+    } else {
+      document.addEventListener("DOMContentLoaded", initIndexSort);
+    }
   </script>
 </BaseLayout>

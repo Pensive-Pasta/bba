@@ -48,31 +48,31 @@ const insights = [
       necessitatibus sed? Esse magni quam, saepe minima earum porro vitae
       possimus!
     </p>
-      <div
-        class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-      >
-        {
-          insights.map((story) => (
-            <article class="group">
-              <a href={`/insights/${story.slug}`} class="block">
-                <div class="overflow-hidden">
-                  <img
-                    src={story.image || "/placeholder.svg"}
-                    alt={story.title}
-                    class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <div class="mt-4 space-y-2">
-                  <p class="text-sm text-gray-500">{story.date}</p>
-                  <h3 class="text-xl font-normal group-hover:underline">
-                    {story.title}
-                  </h3>
-                  <p class="text-gray-700">{story.excerpt}</p>
-                </div>
-              </a>
-            </article>
-          ))
-        }
-      </div>
+    <div
+      class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+    >
+      {
+        insights.map((story) => (
+          <article class="group">
+            <a href={`/insights/${story.slug}`} class="block">
+              <div class="overflow-hidden">
+                <img
+                  src={story.image || "/placeholder.svg"}
+                  alt={story.title}
+                  class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div class="mt-4 space-y-2">
+                <p class="text-sm text-gray-500">{story.date}</p>
+                <h3 class="text-xl font-normal group-hover:underline">
+                  {story.title}
+                </h3>
+                <p class="text-gray-700">{story.excerpt}</p>
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
   </SectionWrapper>
 </BaseLayout>

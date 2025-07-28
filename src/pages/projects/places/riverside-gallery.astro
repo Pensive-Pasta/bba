@@ -1,34 +1,37 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import SectionTitle from '../../../components/SectionTitle.astro';
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SectionTitle from "../../../components/SectionTitle.astro";
 
 const projectInfo = {
-  title: 'Riverside Gallery',
-  location: 'Manchester',
-  year: '2022',
-  client: 'Manchester Arts Council',
-  size: '1,200 m²',
-  services: 'Full Architectural Services',
-  photographer: 'Jane Doe',
-  description: 'A contemporary art gallery located on the banks of the River Irwell. The design creates a series of flexible exhibition spaces that can be reconfigured to accommodate different types of art and events.',
+  title: "Riverside Gallery",
+  location: "Manchester",
+  year: "2022",
+  client: "Manchester Arts Council",
+  size: "1,200 m²",
+  services: "Full Architectural Services",
+  photographer: "Jane Doe",
+  description:
+    "A contemporary art gallery located on the banks of the River Irwell. The design creates a series of flexible exhibition spaces that can be reconfigured to accommodate different types of art and events.",
   images: [
-    '/images/placeholder.jpg',
-    '/images/placeholder.jpg',
-    '/images/placeholder.jpg',
-    '/images/placeholder.jpg',
-    '/images/placeholder.jpg',
-    '/images/placeholder.jpg',
-  ]
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+    "/images/placeholder.jpg",
+  ],
 };
 ---
 
 <BaseLayout title={projectInfo.title}>
   <article>
-    <section class="py-20 px-6 md:px-12">
+    <section class="py-20 px-4 md:px-12">
       <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
           <div>
-            <h1 class="text-3xl md:text-4xl font-light mb-6">{projectInfo.title}</h1>
+            <h1 class="text-3xl md:text-4xl font-light mb-6">
+              {projectInfo.title}
+            </h1>
             <p class="text-lg text-gray-700 mb-8">
               {projectInfo.description}
             </p>
@@ -60,86 +63,93 @@ const projectInfo = {
             </div>
           </div>
           <div>
-            <img 
-              src={projectInfo.images[0] || "/placeholder.svg"} 
-              alt={projectInfo.title} 
+            <img
+              src={projectInfo.images[0] || "/placeholder.svg"}
+              alt={projectInfo.title}
               class="w-full aspect-[4/3] object-cover"
             />
           </div>
         </div>
       </div>
     </section>
-    
-    <section class="py-12 px-6 md:px-12">
+
+    <section class="py-12 px-4 md:px-12">
       <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <img 
-            src={projectInfo.images[1] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Interior view`} 
+          <img
+            src={projectInfo.images[1] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Interior view`}
             class="w-full aspect-[4/3] object-cover"
           />
-          <img 
-            src={projectInfo.images[2] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Interior view`} 
+          <img
+            src={projectInfo.images[2] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Interior view`}
             class="w-full aspect-[4/3] object-cover"
           />
         </div>
       </div>
     </section>
-    
-    <section class="py-12 px-6 md:px-12">
+
+    <section class="py-12 px-4 md:px-12">
       <div class="container mx-auto">
         <div class="max-w-3xl mx-auto">
           <p class="text-lg text-gray-700 mb-6">
-            The Riverside Gallery is designed to be a beacon for the arts in Manchester, with a distinctive form that responds to its riverside setting. The building is clad in a perforated metal skin that filters light during the day and glows at night, creating a lantern effect.
+            The Riverside Gallery is designed to be a beacon for the arts in
+            Manchester, with a distinctive form that responds to its riverside
+            setting. The building is clad in a perforated metal skin that
+            filters light during the day and glows at night, creating a lantern
+            effect.
           </p>
           <p class="text-lg text-gray-700">
-            Inside, the gallery spaces are characterized by their flexibility and quality of light. A combination of top lighting and carefully positioned windows creates ideal conditions for viewing art while maintaining a connection to the surrounding context.
+            Inside, the gallery spaces are characterized by their flexibility
+            and quality of light. A combination of top lighting and carefully
+            positioned windows creates ideal conditions for viewing art while
+            maintaining a connection to the surrounding context.
           </p>
         </div>
       </div>
     </section>
-    
-    <section class="py-12 px-6 md:px-12">
+
+    <section class="py-12 px-4 md:px-12">
       <div class="container mx-auto">
-        <img 
-          src={projectInfo.images[3] || "/placeholder.svg"} 
-          alt={`${projectInfo.title} - Full width view`} 
+        <img
+          src={projectInfo.images[3] || "/placeholder.svg"}
+          alt={`${projectInfo.title} - Full width view`}
           class="w-full aspect-video object-cover"
         />
       </div>
     </section>
-    
-    <section class="py-12 px-6 md:px-12">
+
+    <section class="py-12 px-4 md:px-12">
       <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <img 
-            src={projectInfo.images[4] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Detail view`} 
+          <img
+            src={projectInfo.images[4] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Detail view`}
             class="w-full aspect-[4/3] object-cover"
           />
-          <img 
-            src={projectInfo.images[5] || "/placeholder.svg"} 
-            alt={`${projectInfo.title} - Detail view`} 
+          <img
+            src={projectInfo.images[5] || "/placeholder.svg"}
+            alt={`${projectInfo.title} - Detail view`}
             class="w-full aspect-[4/3] object-cover"
           />
         </div>
       </div>
     </section>
-    
-    <section class="py-20 px-6 md:px-12 bg-gray-50">
+
+    <section class="py-20 px-4 md:px-12 bg-gray-50">
       <div class="container mx-auto">
-        <SectionTitle 
-          title="More Projects" 
+        <SectionTitle
+          title="More Projects"
           subtitle="Explore more of our public and cultural projects."
         />
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           <a href="/projects/places/community-hub" class="group block">
             <div class="overflow-hidden">
-              <img 
-                src='/images/placeholder.jpg' 
-                alt="Community Hub" 
+              <img
+                src="/images/placeholder.jpg"
+                alt="Community Hub"
                 class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
@@ -148,12 +158,13 @@ const projectInfo = {
               <p class="text-sm text-gray-600">Bristol, 2021</p>
             </div>
           </a>
-          
+
           <a href="/projects/places/office-renovation" class="group block">
             <div class="overflow-hidden">
-              <img 
-                src='/images/placeholder.jpg', 
-                alt="Office Renovation" 
+              <img
+                src="/images/placeholder.jpg"
+                ,
+                alt="Office Renovation"
                 class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
@@ -162,12 +173,13 @@ const projectInfo = {
               <p class="text-sm text-gray-600">Edinburgh, 2021</p>
             </div>
           </a>
-          
+
           <a href="/projects/places/riverside-gallery" class="group block">
             <div class="overflow-hidden">
-              <img 
-                src='/images/placeholder.jpg',
-                alt="Riverside Gallery" 
+              <img
+                src="/images/placeholder.jpg"
+                ,
+                alt="Riverside Gallery"
                 class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
