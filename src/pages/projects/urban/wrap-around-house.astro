@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import SectionTitle from "../../../components/SectionTitle.astro";
+import PageDotGrid from "../../../components/PageDotGrid.astro";
+import Hero from "../../../components/Hero.astro";
 
 const projectInfo = {
   title: "Wrap Around House",
@@ -24,8 +26,10 @@ const projectInfo = {
 ---
 
 <BaseLayout title={projectInfo.title}>
-  <article class="pt-40">
-    <section class="py-20 px-4 md:px-12">
+  <PageDotGrid />
+  <article>
+    <Hero image="/images/copper.jpg" scrollTarget="projects" />
+    <section class="p-4 md:p-8">
       <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
           <div>
@@ -137,59 +141,6 @@ const projectInfo = {
             alt={`${projectInfo.title} - Detail view`}
             class="w-full aspect-[4/3] object-cover"
           />
-        </div>
-      </div>
-    </section>
-
-    <section class="py-20 px-4 md:px-12 bg-gray-50">
-      <div class="container mx-auto">
-        <SectionTitle
-          title="More Projects"
-          subtitle="Explore more of our residential projects."
-        />
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-          <a href="/projects/homes/test-project" class="group block">
-            <div class="overflow-hidden">
-              <img
-                src="/images/placeholder.jpg"
-                alt="Hillside Retreat"
-                class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            <div class="mt-4 space-y-1">
-              <h3 class="text-lg font-normal">Test Project</h3>
-              <p class="text-sm text-gray-600">Test, 2022</p>
-            </div>
-          </a>
-
-          <a href="/projects/homes/test-project" class="group block">
-            <div class="overflow-hidden">
-              <img
-                src="/images/placeholder.jpg"
-                alt="Urban Apartment"
-                class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            <div class="mt-4 space-y-1">
-              <h3 class="text-lg font-normal">Test Project</h3>
-              <p class="text-sm text-gray-600">Test, 2022</p>
-            </div>
-          </a>
-
-          <a href="/projects/homes/test-project" class="group block">
-            <div class="overflow-hidden">
-              <img
-                src="/images/placeholder.jpg"
-                alt="Timber House"
-                class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            <div class="mt-4 space-y-1">
-              <h3 class="text-lg font-normal">Test Project</h3>
-              <p class="text-sm text-gray-600">Test, 2021</p>
-            </div>
-          </a>
         </div>
       </div>
     </section>

@@ -1,251 +1,112 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SectionTitle from "../components/SectionTitle.astro";
-import SectionWrapper from "../layouts/SectionWrapper.astro";
+import PageDotGrid from "../components/PageDotGrid.astro";
 ---
 
 <BaseLayout title="Contact">
-  <SectionWrapper id="contact" class="pb-20 pt-40">
-    <SectionTitle
-      title="Contact Us"
-      subtitle="We'd love to hear from you. Get in touch with us to discuss your project."
-    />
+  <PageDotGrid />
+  <section
+    class="flex px-4 md:px-8 pt-[150px] md:pt-[200px] max-w-[1600px] mx-auto"
+  >
+    <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">Contact</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
-      <div>
-        <form class="space-y-6">
-          <div>
-            <label
-              for="name"
-              class="block text-sm font-medium text-gray-700 mb-1">Name</label
-            >
-            <input
-              type="text"
-              id="name"
-              name="name"
-              class="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="email"
-              class="block text-sm font-medium text-gray-700 mb-1">Email</label
-            >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="phone"
-              class="block text-sm font-medium text-gray-700 mb-1"
-              >Phone (optional)</label
-            >
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              class="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
-            />
-          </div>
-          <div>
-            <label
-              for="project-type"
-              class="block text-sm font-medium text-gray-700 mb-1"
-              >Project Type</label
-            >
-            <select
-              id="project-type"
-              name="project-type"
-              class="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              required
-            >
-              <option value="" disabled selected>Select a project type</option>
-              <option value="residential">Residential</option>
-              <option value="commercial">Commercial</option>
-              <option value="cultural">Cultural</option>
-              <option value="educational">Educational</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div>
-            <label
-              for="message"
-              class="block text-sm font-medium text-gray-700 mb-1"
-              >Message</label
-            >
-            <textarea
-              id="message"
-              name="message"
-              rows="5"
-              class="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              required></textarea>
-          </div>
-          <div class="pt-2">
-            <button
-              type="submit"
-              class="px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors"
-            >
-              Send Message
-            </button>
-          </div>
-        </form>
-      </div>
+    <div class="w-1/2 pl-4 md:pl-8">
+      <p
+        class="text-base md:text-2xl leading-normal text-primary mb-8 font-light"
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi interdum
+        justo risus, nec posuere urna iaculis ac. Nulla vehicula cursus nunc, id
+        finibus sem euismod in. Donec semper magna dui, ac bibendum elit euismod
+        non. Mauris et diam lacinia, eleifend diam quis, mattis diam. Fusce
+        vitae blandit urna, bibendum consequat diam. Vivamus quis lobortis
+        ipsum. Proin ultricies sollicitudin viverra.
+      </p>
 
-      <div>
-        <div class="mb-8">
-          <h3 class="text-xl font-normal mb-4">Visit Us</h3>
-          <address class="text-gray-700 not-italic">
-            The Courthouse, Mill Road, Oundle<br />
-            Northamptonshire, PE8 4BW<br />
-            <a
-              href="https://maps.app.goo.gl/t7e9zvdwpHaPgaHKA"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="border-b border-black hover:opacity-70 transition-opacity"
-              >View on Map</a
-            >
-          </address>
-        </div>
-
-        <div class="mb-8">
-          <h3 class="text-xl font-normal mb-4">Contact Details</h3>
-          <p class="text-gray-700 mb-2">
-            <span class="font-medium">General Enquiries:</span><br />
-            <a
-              href="mailto:hello@wearebba.co.uk"
-              class="border-b border-black hover:opacity-70 transition-opacity"
-              >hello@wearebba.co.uk</a
-            ><br />
-            <a
-              href="tel:+441832774121"
-              class="border-b border-black hover:opacity-70 transition-opacity"
-              >+44 (0) 1832 774 121</a
-            >
-          </p>
-          <p class="text-gray-700 mb-2">
-            <span class="font-medium">New Business:</span><br />
-            <a
-              href="mailto:newbusiness@wearebba.com"
-              class="border-b border-black hover:opacity-70 transition-opacity"
-              >newbusiness@wearebba.com</a
-            ><br />
-            <a
-              href="tel:+442012345679"
-              class="border-b border-black hover:opacity-70 transition-opacity"
-              >+44 20 1234 5679</a
-            >
-          </p>
-          <p class="text-gray-700">
-            <span class="font-medium">Careers:</span><br />
-            <a
-              href="mailto:careers@wearebba.com"
-              class="border-b border-black hover:opacity-70 transition-opacity"
-              >careers@wearebba.com</a
-            >
-          </p>
-        </div>
-
-        <div>
-          <h3 class="text-xl font-normal mb-4">Office Hours</h3>
-          <p class="text-gray-700">
-            Monday to Friday: 10am - 4pm<br />
-            Weekends: Closed
-          </p>
-        </div>
-      </div>
+      <p class="text-sm md:text-lg leading-normal text-primary font-light mb-2">
+        <span
+          >E:
+          <a
+            href="mailto:hello@wearebba.co.uk"
+            class="border-b border-primary hover:opacity-70 transition-opacity mb-1 break-words"
+            >hello@wearebba.co.uk</a
+          ></span
+        ><br />
+        <span
+          >T:
+          <a
+            href="tel:+441832774121"
+            class="hover:opacity-70 transition-opacity break-words"
+            >+44 (0) 1832 774 121</a
+          >
+        </span>
+      </p>
     </div>
-  </SectionWrapper>
-
-  <!-- <section class="py-20 px-4 md:px-12 bg-gray-50">
-    <div class="container mx-auto">
-      <SectionTitle
-        title="Follow Us"
-        subtitle="Stay connected with us on social media."
-      />
-
-      <div class="flex justify-center space-x-8">
-        <a
-          href="https://instagram.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-gray-700 hover:text-black transition-colors"
+  </section>
+  <section
+    class="w-full flex md:flex-row flex-col items-center justify-center mt-[10vw]"
+  >
+    <a
+      href="https://maps.app.goo.gl/t7e9zvdwpHaPgaHKA"
+      class="md:w-1/2 w-full aspect-square relative group"
+    >
+      <div class="absolute inset-0 z-0">
+        <iframe
+          src="https://www.google.com/maps?q=The+Courthouse,+Mill+Road,+Oundle,+PE8+4BW&output=embed"
+          class="w-full h-full border-0"
+          allowfullscreen=""
+          loading="lazy"></iframe>
+        <div
+          class="absolute inset-0 bg-purple-600 opacity-80 mix-blend-multiply"
         >
-          <span class="sr-only">Instagram</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="h-6 w-6"
-          >
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-          </svg>
-        </a>
-        <a
-          href="https://linkedin.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-gray-700 hover:text-black transition-colors"
-        >
-          <span class="sr-only">LinkedIn</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="h-6 w-6"
-          >
-            <path
-              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-            ></path>
-            <rect x="2" y="9" width="4" height="12"></rect>
-            <circle cx="4" cy="4" r="2"></circle>
-          </svg>
-        </a>
-        <a
-          href="https://pinterest.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-gray-700 hover:text-black transition-colors"
-        >
-          <span class="sr-only">Pinterest</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="h-6 w-6"
-          >
-            <line x1="8" y1="20" x2="12" y2="10"></line>
-            <path
-              d="M12 4a8 8 0 0 0-8 8 8 8 0 0 0 5.2 7.5c0-.7.2-1.4.5-2 .3-.6 1.3-3.9 1.3-3.9s-.2-.4-.2-1c0-1 .5-1.7 1.2-1.7.6 0 .9.4.9 1 0 .5-.4 1.3-.5 2-.2.6.3 1.1.9 1.1 1.1 0 1.9-1.4 1.9-3.2 0-1.7-1.1-2.9-2.7-2.9-1.9 0-3 1.4-3 3 0 .5.2 1 .4 1.3.1.1.1.2.1.3 0 .1-.1.4-.1.5-.1.2-.2.3-.4.2-1-.4-1.5-1.5-1.5-2.7 0-2.1 1.7-4.5 5-4.5 2.8 0 4.5 2 4.5 4.2 0 2.8-1.6 4.9-3.9 4.9-.8 0-1.5-.4-1.7-.9l-.5 1.8c-.2.6-.5 1.3-.8 1.9.7.2 1.4.3 2.1.3a8 8 0 0 0 8-8 8 8 0 0 0-8-8z"
-            ></path>
-          </svg>
-        </a>
+        </div>
       </div>
-    </div>
-  </section> -->
+      <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
+        <p class="text-white font-light text-[40px]">PE8</p>
+      </div>
+      <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+        <img
+          src="/src/assets/icons/arrow-up-right.svg"
+          alt="Open Map"
+          class="h-14 invert"
+        />
+      </div>
+      <div
+        class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm"
+      >
+        <div>#Oundle Studio</div>
+        <div>The Courthouse, Mill Rd, Oundle,</div>
+        <div>Northamptonshire, PE8 4BW</div>
+      </div>
+    </a>
+
+    <a
+      href="https://maps.app.goo.gl/t7e9zvdwpHaPgaHKA"
+      class="md:w-1/2 w-full aspect-square relative group"
+    >
+      <div class="absolute inset-0 z-0">
+        <iframe
+          src="https://www.google.com/maps?q=Manchester&output=embed"
+          class="w-full h-full border-0"
+          allowfullscreen=""
+          loading="lazy"></iframe>
+        <div class="absolute inset-0 bg-red-600 opacity-80 mix-blend-multiply">
+        </div>
+      </div>
+      <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
+        <p class="text-white font-light text-[40px]">M1</p>
+      </div>
+      <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+        <img
+          src="/src/assets/icons/arrow-up-right.svg"
+          alt="Open Map"
+          class="w-14 invert"
+        />
+      </div>
+      <div
+        class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm"
+      >
+        <div>Greater Manchester Studio</div>
+      </div>
+    </a>
+  </section>
 </BaseLayout>

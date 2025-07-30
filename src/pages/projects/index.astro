@@ -273,7 +273,9 @@ const projects = [
   <!-- Work view -->
   <section>
     <PageDotGrid />
-    <div class="flex px-4 lg:px-14 pt-[200px] min-h-[60vh]">
+    <div
+      class="flex px-4 md:px-8 pt-[200px] min-h-[60vh] max-w-[1600px] mx-auto"
+    >
       <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">Work</h1>
       <p
         class="w-1/2 text-base md:text-2xl leading-normal text-primary mb-4 font-light pl-6 md:pl-8"
@@ -287,7 +289,7 @@ const projects = [
       </p>
     </div>
     <div
-      class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-8 text-lg p-4 lg:p-8"
+      class="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-8 text-lg p-4 lg:p-8 max-w-[1600px] mx-auto"
     >
       <div
         class="filter-toggle-group relative flex flex-nowrap overflow-x-auto whitespace-nowrap items-center justify-between md:justify-end gap-2 border-2 border-primary rounded-full text-base md:text-lg"
@@ -314,14 +316,46 @@ const projects = [
         ></span>
       </div>
 
-      <div class="flex flex-row justify-end sm:p-0 p-3">
+      <div class="flex flex-row justify-end sm:p-0 p-3 group">
         <button id="index-toggle">
-          <h3 class="text-base md:text-lg relative z-10">Index</h3>
+          <div
+            class="text-base md:text-lg relative z-10 flex items-center gap-2 transition-opacity duration-300 ease-in-out"
+          >
+            <span
+              id="label-index"
+              class="flex items-center gap-2 opacity-100 group-hover:scale-105 transition-all duration-300 ease-in-out"
+            >
+              Index
+              <svg
+                class="w-5 h-5 group-hover:scale-105 transition-all duration-300 ease-in-out"
+                viewBox="0 0 20 20"
+                fill="currentColor"><circle cx="10" cy="10" r="8"></circle></svg
+              >
+            </span>
+            <span
+              id="label-grid"
+              class="items-center gap-2 opacity-0 transition-all duration-300 ease-in-out hidden group-hover:scale-105"
+            >
+              <div class="flex items-center gap-2">
+                Grid
+                <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"
+                  ><rect x="3" y="3" width="5" height="5"></rect><rect
+                    x="12"
+                    y="3"
+                    width="5"
+                    height="5"></rect><rect x="3" y="12" width="5" height="5"
+                  ></rect><rect x="12" y="12" width="5" height="5"></rect></svg
+                >
+              </div>
+            </span>
+          </div>
         </button>
       </div>
     </div>
 
-    <div class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div
+      class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300 ease-in-out opacity-100"
+    >
       {
         projects.map((project) => (
           <div class="card" data-type={project.type}>
@@ -339,26 +373,59 @@ const projects = [
   </style>
 
   <!-- index view -->
-  <section id="project-index" class="hidden p-4 md:p-8">
+  <section
+    id="project-index"
+    class="hidden p-4 md:p-8 transition-opacity duration-300 ease-in-out opacity-0 max-w-[1600px] mx-auto"
+  >
     <table class="w-full text-left">
       <thead>
         <tr class="text-lg font-bold">
           <th class="pb-2 cursor-pointer">
             Name
-            <svg class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <svg
+              class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"></path>
             </svg>
           </th>
           <th class="pb-2 cursor-pointer min-w-[100px]">
             Code
-            <svg class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <svg
+              class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"></path>
             </svg>
           </th>
           <th class="pb-2 cursor-pointer">
             County
-            <svg class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <svg
+              class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"></path>
             </svg>
           </th>
         </tr>
@@ -403,14 +470,55 @@ const projects = [
       resetView();
 
       btn?.addEventListener("click", () => {
-        grid.classList.toggle("hidden");
-        indexTable.classList.toggle("hidden");
+        const isShowingIndex = indexTable.classList.contains("hidden");
         const filterGroup = document.querySelector(".filter-toggle-group");
-        const showingIndex = !indexTable.classList.contains("hidden");
-        if (showingIndex) {
+        if (isShowingIndex) {
+          grid.classList.remove("opacity-100");
+          grid.classList.add("opacity-0");
+
+          setTimeout(() => {
+            grid.classList.add("hidden");
+          }, 300);
+
+          indexTable.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            indexTable.classList.remove("opacity-0");
+            indexTable.classList.add("opacity-100");
+          });
           filterGroup?.classList.add("invisible");
+          // Fade out "Index", fade in "Grid"
+          btn.querySelector("#label-index").classList.add("opacity-0");
+          setTimeout(() => {
+            btn.querySelector("#label-index").classList.add("hidden");
+            btn.querySelector("#label-grid").classList.remove("hidden");
+            requestAnimationFrame(() => {
+              btn.querySelector("#label-grid").classList.remove("opacity-0");
+              btn.querySelector("#label-grid").classList.add("opacity-100");
+            });
+          }, 300);
         } else {
-          filterGroup?.classList.remove("invisible");
+          indexTable.classList.add("opacity-0");
+          indexTable.classList.remove("opacity-100");
+
+          setTimeout(() => {
+            indexTable.classList.add("hidden");
+            grid.classList.remove("opacity-0");
+            grid.classList.add("opacity-100");
+            grid.classList.remove("hidden");
+          }, 300);
+          setTimeout(() => {
+            filterGroup?.classList.remove("invisible");
+          }, 300);
+          // Fade out "Grid", fade in "Index"
+          btn.querySelector("#label-grid").classList.add("opacity-0");
+          setTimeout(() => {
+            btn.querySelector("#label-grid").classList.add("hidden");
+            btn.querySelector("#label-index").classList.remove("hidden");
+            requestAnimationFrame(() => {
+              btn.querySelector("#label-index").classList.remove("opacity-0");
+              btn.querySelector("#label-index").classList.add("opacity-100");
+            });
+          }, 300);
         }
       });
 
@@ -487,26 +595,36 @@ const projects = [
 
     // Sorting chevrons logic for project index
     const initIndexSort = () => {
-      const chevrons = document.querySelectorAll("#project-index .chevron-icon");
+      const chevrons = document.querySelectorAll(
+        "#project-index .chevron-icon"
+      );
       let isAlphaSort = true;
 
       chevrons.forEach((chevron) => {
         chevron.closest("th")?.addEventListener("click", () => {
-          const rows = Array.from(document.querySelectorAll("#project-index tbody tr"));
+          const rows = Array.from(
+            document.querySelectorAll("#project-index tbody tr")
+          );
           const sorted = rows.sort((a, b) => {
-            const textA = a.querySelector("td")?.innerText.trim().toLowerCase() || "";
-            const textB = b.querySelector("td")?.innerText.trim().toLowerCase() || "";
-            return isAlphaSort ? textB.localeCompare(textA) : textA.localeCompare(textB);
+            const textA =
+              a.querySelector("td")?.innerText.trim().toLowerCase() || "";
+            const textB =
+              b.querySelector("td")?.innerText.trim().toLowerCase() || "";
+            return isAlphaSort
+              ? textB.localeCompare(textA)
+              : textA.localeCompare(textB);
           });
 
           const tbody = document.querySelector("#project-index tbody");
           if (tbody) {
             tbody.innerHTML = "";
-            sorted.forEach(row => tbody.appendChild(row));
+            sorted.forEach((row) => tbody.appendChild(row));
           }
 
           chevrons.forEach((icon) => {
-            icon.style.transform = isAlphaSort ? "rotate(180deg)" : "rotate(0deg)";
+            icon.style.transform = isAlphaSort
+              ? "rotate(180deg)"
+              : "rotate(0deg)";
           });
 
           isAlphaSort = !isAlphaSort;

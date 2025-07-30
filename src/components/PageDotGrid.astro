@@ -11,40 +11,40 @@
 
 <!-- simple client script that adds dotted lines only once DOM is ready -->
 <script>
-  const getSpacing = () => window.innerWidth < 768 ? 720 : 666;
+  const getSpacing = () => (window.innerWidth < 768 ? 720 : 666);
   const CLASS =
     "dot-line absolute left-0 w-full border-t-4 border-dotted border-[#bedcf1]";
   const VERT_CLASS =
     "dot-vert absolute left-1/2 w-0 border-l-4 border-dotted border-[#bedcf1] -translate-x-1 pointer-events-none select-none";
 
-function drawLines(gridEl: HTMLElement) {
-  gridEl
-    .querySelectorAll(".dot-line, .dot-vert")
-    .forEach((el: { remove: () => any }) => el.remove());
+  function drawLines(gridEl: HTMLElement) {
+    gridEl
+      .querySelectorAll(".dot-line, .dot-vert")
+      .forEach((el: { remove: () => any }) => el.remove());
 
-  // Reset height to allow correct shrink calculation
-  gridEl.style.height = "0px";
+    // Reset height to allow correct shrink calculation
+    gridEl.style.height = "0px";
 
-  const pageHeight = Math.max(
-    document.body.scrollHeight,
-    document.documentElement.scrollHeight
-  );
+    const pageHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
 
-  gridEl.style.height = pageHeight + "px";
+    gridEl.style.height = pageHeight + "px";
 
-  const vert = document.createElement("div");
-  vert.className = VERT_CLASS;
-  vert.style.height = pageHeight + "px";
-  gridEl.appendChild(vert);
+    const vert = document.createElement("div");
+    vert.className = VERT_CLASS;
+    vert.style.height = pageHeight + "px";
+    gridEl.appendChild(vert);
 
-  const SPACING = getSpacing();
-  for (let y = SPACING; y < pageHeight; y += SPACING) {
-    const line = document.createElement("div");
-    line.className = CLASS;
-    line.style.top = y + "px";
-    gridEl.appendChild(line);
+    const SPACING = getSpacing();
+    for (let y = SPACING; y < pageHeight; y += SPACING) {
+      const line = document.createElement("div");
+      line.className = CLASS;
+      line.style.top = y + "px";
+      gridEl.appendChild(line);
+    }
   }
-}
   const init = () => {
     const gridEl = document.getElementById("page-dot-grid");
     if (!gridEl) return;
@@ -64,7 +64,9 @@ function drawLines(gridEl: HTMLElement) {
     window.addEventListener("resize", debounceRedraw);
 
     const resizeObserver = new ResizeObserver(debounceRedraw);
-    const targets = document.querySelectorAll("main, section, .project-grid, #project-index");
+    const targets = document.querySelectorAll(
+      "main, section, .project-grid, #project-index"
+    );
     targets.forEach((el) => resizeObserver.observe(el));
   };
 

@@ -9,11 +9,6 @@ const navItems = [
   { name: "Contact", url: "/contact", color: "text-pink" },
 ];
 
-const currentRoute = Astro.url.pathname;
-const isHome = currentRoute === "/";
-const isContact = currentRoute === "/contact";
-const isArticle = currentRoute.startsWith("/projects/homes/");
-
 const currentYear = new Date().getFullYear();
 
 const textColor = "text-primary";
@@ -21,11 +16,11 @@ const textColor = "text-primary";
 
 <header
   id="site-header"
-  class={`p-4 md:p-8 min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${
+  class={`min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${
     textColor
   }`}
 >
-  <div class="flex justify-between items-center max-w-[1440px] mx-auto">
+  <div class="flex justify-between items-center max-w-[1600px] mx-auto p-4 md:p-8 ">
     <a
       href="/"
       class="text-xl font-light tracking-tighter z-40 header-link text-current"
@@ -51,7 +46,7 @@ const textColor = "text-primary";
   </div>
 
   <div
-    class="nav-menu px-4 md:px-8 fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto pt-[160px] pb-6 md:pb-8 max-w-[1440px] mx-auto"
+    class="nav-menu px-4 md:px-8 fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto pt-[160px] pb-6 md:pb-8 max-w-[1600px] mx-auto"
     id="nav-menu"
   >
     <div
@@ -157,11 +152,9 @@ const textColor = "text-primary";
           header.classList.add("text-white");
           header.classList.remove("text-primary");
           header.classList.add("bg-transparent");
-          header.classList.remove("bg-white");
         } else {
           header.classList.add("text-primary");
           header.classList.remove("text-white");
-          header.classList.add("bg-white");
           header.classList.remove("bg-transparent");
         }
       },
