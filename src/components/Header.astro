@@ -3,8 +3,8 @@ import Logo from "./Logo.astro";
 import PolicyArrow from "../assets/icons/Policy-Arrow.svg";
 
 const navItems = [
-  { name: "Work", url: "/projects", color: "text-orange" },
-  { name: "Studio", url: "/practice", color: "text-green" },
+  { name: "Work", url: "/work", color: "text-orange" },
+  { name: "Studio", url: "/studio", color: "text-green" },
   { name: "Insights", url: "/insights", color: "text-yellow" },
   { name: "Contact", url: "/contact", color: "text-pink" },
 ];
@@ -16,11 +16,11 @@ const textColor = "text-primary";
 
 <header
   id="site-header"
-  class={`min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${
-    textColor
-  }`}
+  class={`min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${textColor}`}
 >
-  <div class="flex justify-between items-center max-w-[1600px] mx-auto p-4 md:p-8 ">
+  <div
+    class="flex justify-between items-center max-w-[1600px] mx-auto p-4 md:p-8"
+  >
     <a
       href="/"
       class="text-xl font-light tracking-tighter z-40 header-link text-current"
