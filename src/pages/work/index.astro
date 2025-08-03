@@ -37,14 +37,12 @@ export interface Project {
         {workPage.description}
       </p>
     </div>
-    <div
-      class="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-8 text-lg p-4 lg:p-8 max-w-[1600px] mx-auto"
-    >
+    <div class="flex items-center text-lg p-4 md:p-8 max-w-[1600px] mx-auto">
       <div
-        class="filter-toggle-group relative flex flex-nowrap overflow-x-auto whitespace-nowrap items-center justify-between md:justify-end gap-2 border-2 border-primary rounded-full text-base md:text-lg"
+        class="filter-toggle-group w-full max-w-[700px] relative flex flex-nowrap whitespace-nowrap items-center justify-between md:justify-end sm:gap-2 border-2 border-primary rounded-full below-xs:text-xs text-sm md:text-lg"
       >
         <button
-          class="filter-btn rounded-full px-3 sm:px-5 lg:px-14 py-2 active-filter min-w-[68px] w-full"
+          class="filter-btn rounded-full px-2 sm:px-5 lg:px-14 py-2 active-filter min-w-[50px] sm:min-w-[68px] w-full"
           data-type="both">All</button
         >
         <button
@@ -65,7 +63,7 @@ export interface Project {
         ></span>
       </div>
 
-      <div class="flex flex-row justify-end sm:p-0 p-3 group">
+      <div class="flex flex-row justify-end pl-3 group ml-auto">
         <button id="index-toggle">
           <div
             class="text-base md:text-lg relative z-10 flex items-center gap-2 transition-opacity duration-300 ease-in-out"
@@ -74,7 +72,7 @@ export interface Project {
               id="label-index"
               class="flex items-center gap-2 opacity-100 group-hover:scale-105 transition-all duration-300 ease-in-out"
             >
-              Index
+              <span class="hidden sm:inline">Index</span>
               <svg
                 class="w-5 h-5 group-hover:scale-105 transition-all duration-300 ease-in-out"
                 viewBox="0 0 20 20"
@@ -86,7 +84,7 @@ export interface Project {
               class="items-center gap-2 opacity-0 transition-all duration-300 ease-in-out hidden group-hover:scale-105"
             >
               <div class="flex items-center gap-2">
-                Grid
+                <span class="hidden sm:inline">Grid</span>
                 <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"
                   ><rect x="3" y="3" width="5" height="5"></rect><rect
                     x="12"
@@ -103,7 +101,7 @@ export interface Project {
     </div>
 
     <div
-      class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300 ease-in-out opacity-100"
+      class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300 ease-in-out opacity-100 px-4 md:px-8 max-w-[1600px] mx-auto mb-4 md:mb-8"
     >
       {
         projects.map((project: Project) => (
@@ -124,12 +122,12 @@ export interface Project {
   <!-- index view -->
   <section
     id="project-index"
-    class="hidden p-4 md:p-8 transition-opacity duration-300 ease-in-out opacity-0 max-w-[1600px] mx-auto"
+    class="hidden p-4 md:p-8 transition-opacity duration-300 ease-in-out opacity-0 max-w-[1600px] mx-auto overflow-auto"
   >
     <table class="w-full text-left">
       <thead>
-        <tr class="text-lg font-bold">
-          <th class="pb-2 cursor-pointer">
+        <tr class="text-base sm:text-lg font-bold">
+          <th class="pb-2 cursor-pointer min-w-[100px]">
             Name
             <svg
               class="chevron-icon inline-block w-8 h-8 ml-1 mb-1 transition-transform duration-300 text-primary"
@@ -182,14 +180,14 @@ export interface Project {
       <tbody>
         {
           projects.map((project: Project) => (
-            <tr class="text-lg font-light">
-              <td class="p-2">
+            <tr class="text-sm sm:text-lg font-light">
+              <td class="pr-2">
                 <a href="#" class="">
                   {project.title}
                 </a>
               </td>
               <td class="p-2">{project.postCode}</td>
-              <td class="p-2">{project.county}</td>
+              <td class="p-2 break-words">{project.county}</td>
             </tr>
           ))
         }

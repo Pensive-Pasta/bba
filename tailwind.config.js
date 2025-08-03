@@ -5,6 +5,9 @@ export default {
   content: ["./src/**/*.{html,js,astro}"],
   theme: {
     extend: {
+      screens: {
+        "below-xs": { max: "374px" },
+      },
       fontFamily: {
         future: ['"Test The Future"', ...defaultTheme.fontFamily.sans],
       },

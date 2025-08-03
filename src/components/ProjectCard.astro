@@ -12,25 +12,36 @@ const fallbackColor = !imageUrl
 
 <a
   href={`/work/${type}/${slug.current}`}
-  class="group block project-card overflow-hidden"
+  class="group block project-card relative overflow-hidden aspect-square"
 >
+  <div class="absolute inset-0 z-0">
+    {
+      imageUrl && (
+        <div
+          class="w-full h-full bg-center bg-cover transition-transform duration-500 scale-100 group-hover:scale-105"
+          style={`background-image: url('${imageUrl}');`}
+        />
+      )
+    }
+  </div>
+
   <div
-    class={`w-full aspect-square object-cover ${fallbackColor}`}
-    style={imageUrl
-      ? `background-image: url('${imageUrl}'); background-size: cover; background-position: center;`
-      : ""}
+    class={`absolute inset-0 z-10 ${
+      type === "rural"
+        ? "bg-aqua"
+        : type === "inter-urban"
+          ? "bg-cornflower"
+          : "bg-pink"
+    } ${imageUrl ? "opacity-95 group-hover:opacity-0 mix-blend-multiply transition-opacity duration-500" : ""}`}
   >
+  </div>
+
+  <div class="relative z-20 flex flex-col justify-between h-full">
     <div class="flex justify-between items-center p-4">
       <span class="text-2xl text-white">{postCode}</span>
-      <img
-        src="/icons/arrow-up-right.svg"
-        alt="arrow"
-        class="arrow w-8"
-      />
+      <img src="/icons/arrow-up-right.svg" alt="arrow" class="arrow w-8" />
     </div>
-    <div
-      class="flex flex-col justify-end h-full text-white font-light p-4 overflow-hidden"
-    >
+    <div class="flex flex-col text-white font-light p-4 overflow-hidden">
       <span class="text-lg">#{title}</span>
       <span class="text-lg">#{type}</span>
       <span class="text-lg">#{county}</span>
