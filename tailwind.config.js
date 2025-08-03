@@ -23,9 +23,12 @@ export default {
           dot: "#BEDCF1",
         },
         orange: "#FB9061",
+        aqua: "#3FE694",
         green: "#89CB73",
         yellow: "#F0ED37",
         pink: "#FB98CC",
+        purple: "#9E46FF",
+        cornflower: "#6766FF",
         foreground: "#111111",
       },
       backgroundImage: {

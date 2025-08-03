@@ -2,271 +2,23 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import PageDotGrid from "../../components/PageDotGrid.astro";
+import { sanity } from "../../lib/sanityClient";
+import { getProjectsQuery, getWorkPageQuery } from "../../lib/queries";
 
-const projectIndexData = [
-  {
-    title: "Churchill Road Orchard",
-    location: "PE9",
-    category: "Lincolnshire",
-  },
-  { title: "Eachard Road", location: "CB3", category: "Cambridgeshire" },
-  { title: "South View Terrace", location: "PE9", category: "Cambridgeshire" },
-  { title: "Oakhurst Barns", location: "PE6", category: "Cambridgeshire" },
-  { title: "Mill House", location: "PE8", category: "Northamptonshire" },
-  { title: "Swaffham House", location: "CB25", category: "Cambridgeshire" },
-  { title: "Lynch Farm", location: "NN9", category: "Northamptonshire" },
-  { title: "Ashby Lane", location: "LE17", category: "Leicestershire" },
-  { title: "The Pumps", location: "NN14", category: "Northamptonshire" },
-  { title: "The Old Stables", location: "PE28", category: "Cambridgeshire" },
-  {
-    title: "Nene Park Centre Point",
-    location: "PE2",
-    category: "Cambridgeshire",
-  },
-  { title: "Riverside", location: "CB5", category: "Cambridgeshire" },
-  { title: "Corbar", location: "PE9", category: "Lincolnshire" },
-  { title: "The Lane", location: "CB22", category: "Cambridgeshire" },
-  {
-    title: "Netheren United Football Club",
-    location: "PE3",
-    category: "Cambridgeshire",
-  },
-  {
-    title: "Paxton Pits Nature Reserve",
-    location: "PE19",
-    category: "Cambridgeshire",
-  },
-  { title: "Richmond Road", location: "CB4", category: "Cambridgeshire" },
-  { title: "Swinstead Barn", location: "NG33", category: "Lincolnshire" },
-  { title: "Greatford House", location: "PE9", category: "Lincolnshire" },
-  { title: "Red Fold", location: "CB24", category: "Cambridgeshire" },
-  { title: "Deacon's Lane", location: "CB7", category: "Cambridgeshire" },
-  { title: "The Garage", location: "PE8", category: "Northamptonshire" },
-  {
-    title: "Glamis Gardens",
-    location: "CB24",
-    category: "Cambridgeshire",
-  },
-  { title: "Chamfered House", location: "CB5", category: "Cambridgeshire" },
-  { title: "Canopy House", location: "CB5", category: "Cambridgeshire" },
-  { title: "Blue House", location: "CB1", category: "Cambridgeshire" },
-  { title: "Netherhall Way", location: "CB1", category: "Cambridgeshire" },
-  { title: "Cavendish House", location: "CB1", category: "Cambridgeshire" },
-  { title: "Designed Plates", location: "PE7", category: "Cambridgeshire" },
-  { title: "Pitch View", location: "PE9", category: "Lincolnshire" },
-  { title: "Woodlands", location: "PE5", category: "Cambridgeshire" },
-  { title: "Highfield Avenue", location: "CB4", category: "Cambridgeshire" },
-  { title: "Hail Weston", location: "PE19", category: "Cambridgeshire" },
-  { title: "Hemingford Barns", location: "PE28", category: "Cambridgeshire" },
-  { title: "Cotterstock House", location: "PE8", category: "Northamptonshire" },
-  { title: "Erskine Hill", location: "NW11", category: "London" },
-  { title: "East Croft", location: "PE27", category: "Cambridgeshire" },
-  { title: "Sowtry Road", location: "PE28", category: "Cambridgeshire" },
-  { title: "Middleton Wold", location: "PE28", category: "Cambridgeshire" },
-  {
-    title: "Glatton Village Hall",
-    location: "PE28",
-    category: "Cambridgeshire",
-  },
-  { title: "Gable House", location: "PE7", category: "Cambridgeshire" },
-  { title: "Surrey House", location: "SM7", category: "Surrey" },
-  { title: "Angled Ash House", location: "PE7", category: "Cambridgeshire" },
-  { title: "Fields End Close", location: "PE7", category: "Cambridgeshire" },
-  {
-    title: "Northstowe Invited Competition",
-    location: "PE8",
-    category: "Northamptonshire",
-  },
-  { title: "PDPS Headquarters", location: "PE7", category: "Cambridgeshire" },
-  { title: "Dial House", location: "PE8", category: "Northamptonshire" },
-  { title: "Worsley House", location: "M28", category: "Greater Manchester" },
-  { title: "Crescent House", location: "CB4", category: "Cambridgeshire" },
-  { title: "Exton Villa", location: "CB4", category: "Cambridgeshire" },
-  { title: "Ferry Meadows Café", location: "PE2", category: "Cambridgeshire" },
-  { title: "Dovecote Lane", location: "CB3", category: "Cambridgeshire" },
-  { title: "Blackmans Road", location: "PE9", category: "Lincolnshire" },
-  {
-    title: "St Martin’s Park Invited Competition",
-    location: "PE9",
-    category: "Lincolnshire",
-  },
-  {
-    title: "Annabelle Davis Centre",
-    location: "PE7",
-    category: "Cambridgeshire",
-  },
-  { title: "The Annexe", location: "PE7", category: "Cambridgeshire" },
-  { title: "Cathedral View", location: "PE3", category: "Cambridgeshire" },
-  { title: "Gable House", location: "PE7", category: "Cambridgeshire" },
-  { title: "Green House", location: "CB3", category: "Cambridgeshire" },
-  { title: "Leicester Meadows", location: "CB21", category: "Cambridgeshire" },
-  { title: "Vaulted House", location: "CB21", category: "Cambridgeshire" },
-  {
-    title: "Acle Bridge Visitor Centre Competition",
-    location: "NR13",
-    category: "Norfolk",
-  },
-  { title: "Heathfield House", location: "CB1", category: "Cambridgeshire" },
-  { title: "Shirley Road", location: "CB24", category: "Cambridgeshire" },
-  { title: "The Vestry", location: "SG4", category: "Hertfordshire" },
-  { title: "Churchfield Road", location: "PE4", category: "Cambridgeshire" },
-  { title: "Copper House", location: "CB1", category: "Cambridgeshire" },
-  { title: "Ribbon House", location: "CB3", category: "Cambridgeshire" },
-  { title: "House of a Writer", location: "CB22", category: "Cambridgeshire" },
-  { title: "Wrap Around House", location: "CB1", category: "Cambridgeshire" },
-  { title: "Franks Lane", location: "PE13", category: "Cambridgeshire" },
-  { title: "Church Street", location: "PE6", category: "Cambridgeshire" },
-  { title: "Dalhouse House", location: "PE8", category: "Northamptonshire" },
-  {
-    title: "Rooftop Meadow House",
-    location: "PE7",
-    category: "Cambridgeshire",
-  },
-  {
-    title: "Yaxley Pumping Station",
-    location: "PE7",
-    category: "Cambridgeshire",
-  },
-];
+const workPage = await sanity.fetch(getWorkPageQuery);
+const projects = await sanity.fetch(getProjectsQuery);
 
-const projects = [
-  {
-    title: "Wrap Around House",
-    location: "Cambridge",
-    category: "Residential",
-    year: "2023",
-    image:
-      "/images/bba-018-wrap_around_house-complete-copyright_msap-16-900x900.jpg",
-    slug: "wrap-around-house",
-    type: "urban",
-  },
-  {
-    title: "Copper House",
-    location: "Cambridge",
-    category: "Residential",
-    year: "2024",
-    image: "/images/copper.jpg",
-    slug: "copper-house",
-    type: "urban",
-  },
-  {
-    title: "Western Park",
-    location: "Leicester",
-    category: "Cultural",
-    year: "2025",
-    image: "/images/westernpark.jpg",
-    slug: "western-park",
-    type: "rural",
-  },
-  {
-    title: "Test 4",
-    location: "Test 5",
-    category: "Test 6",
-    year: "2022",
-    image: "/images/placeholder.jpg",
-    slug: "riverside-gallery",
-    type: "rural",
-  },
-  {
-    title: "Test 10",
-    location: "Test 11",
-    category: "Test 12",
-    year: "2022",
-    image: "/images/placeholder.jpg",
-    slug: "urban-apartment",
-    type: "urban",
-  },
-  {
-    title: "Test 13",
-    location: "Test 14",
-    category: "Test 15",
-    year: "2021",
-    image: "/images/placeholder.jpg",
-    slug: "community-hub",
-    type: "rural",
-  },
-  {
-    title: "Test 16",
-    location: "Test 17",
-    category: "Test 18",
-    year: "2022",
-    image: "/images/placeholder.jpg",
-    slug: "garden-studio",
-    type: "urban",
-  },
-  {
-    title: "Test 19",
-    location: "Test 20",
-    category: "Test 21",
-    year: "2021",
-    image: "/images/placeholder.jpg",
-    slug: "timber-house",
-    type: "urban",
-  },
-  {
-    title: "Test 22",
-    location: "Test 23",
-    category: "Test 24",
-    year: "2020",
-    image: "/images/placeholder.jpg",
-    slug: "eco-house",
-    type: "urban",
-  },
-  {
-    title: "Test 25",
-    location: "Test 26",
-    category: "Test 27",
-    year: "2021",
-    image: "/images/placeholder.jpg",
-    slug: "office-renovation",
-    type: "rural",
-  },
-  {
-    title: "Test 28",
-    location: "Test 29",
-    category: "Test 30",
-    year: "2022",
-    image: "/images/placeholder.jpg",
-    slug: "riverside-gallery",
-    type: "rural",
-  },
-  {
-    title: "Test 31",
-    location: "Test 32",
-    category: "Test 33",
-    year: "2022",
-    image: "/images/placeholder.jpg",
-    slug: "urban-apartment",
-    type: "urban",
-  },
-  {
-    title: "Test 34",
-    location: "Test 35",
-    category: "Test 36",
-    year: "2021",
-    image: "/images/placeholder.jpg",
-    slug: "community-hub",
-    type: "inter-urban",
-  },
-  {
-    title: "Test 37",
-    location: "Test 38",
-    category: "Test 39",
-    year: "2022",
-    image: "/images/placeholder.jpg",
-    slug: "garden-studio",
-    type: "inter-urban",
-  },
-  {
-    title: "Test 40",
-    location: "Test 41",
-    category: "Test 42",
-    year: "2021",
-    image: "/images/placeholder.jpg",
-    slug: "timber-house",
-    type: "inter-urban",
-  },
-];
+export interface Project {
+  title: string;
+  slug: {
+    current: string;
+  };
+  postCode: string;
+  county: string;
+  year: number;
+  type: "urban" | "inter-urban" | "rural";
+  imageUrl: string;
+}
 ---
 
 <BaseLayout title="Work">
@@ -276,16 +28,13 @@ const projects = [
     <div
       class="flex px-4 md:px-8 pt-[200px] min-h-[60vh] max-w-[1600px] mx-auto"
     >
-      <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">Work</h1>
+      <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">
+        {workPage.title}
+      </h1>
       <p
         class="w-1/2 text-base md:text-2xl leading-normal text-primary mb-4 font-light pl-6 md:pl-8"
       >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi interdum
-        justo risus, nec posuere urna iaculis ac. Nulla vehicula cursus nunc, id
-        finibus sem euismod in. Donec semper magna dui, ac bibendum elit euismod
-        non. Mauris et diam lacinia, eleifend diam quis, mattis diam. Fusce
-        vitae blandit urna, bibendum consequat diam. Vivamus quis lobortis
-        ipsum. Proin ultricies sollicitudin viverra.
+        {workPage.description}
       </p>
     </div>
     <div
@@ -357,7 +106,7 @@ const projects = [
       class="project-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300 ease-in-out opacity-100"
     >
       {
-        projects.map((project) => (
+        projects.map((project: Project) => (
           <div class="card" data-type={project.type}>
             <ProjectCard {...project} />
           </div>
@@ -432,214 +181,210 @@ const projects = [
       </thead>
       <tbody>
         {
-          projectIndexData.map((project) => (
+          projects.map((project: Project) => (
             <tr class="text-lg font-light">
               <td class="p-2">
                 <a href="#" class="">
                   {project.title}
                 </a>
               </td>
-              <td class="p-2">{project.location}</td>
-              <td class="p-2">{project.category}</td>
+              <td class="p-2">{project.postCode}</td>
+              <td class="p-2">{project.county}</td>
             </tr>
           ))
         }
       </tbody>
     </table>
   </section>
+</BaseLayout>
 
-  <script is:inline>
-    const initProjectToggle = () => {
-      const btn = document.getElementById("index-toggle");
-      const grid = document.querySelector(".project-grid");
-      const indexTable = document.getElementById("project-index");
-      const filterBtns = document.querySelectorAll(".filter-btn");
-      if (!btn || !grid || !indexTable) return;
-      if (btn.dataset.bound) return; // avoid duplicate listeners
-      btn.dataset.bound = "true";
+<script is:inline>
+  const initProjectToggle = () => {
+    const btn = document.getElementById("index-toggle");
+    const grid = document.querySelector(".project-grid");
+    const indexTable = document.getElementById("project-index");
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    if (!btn || !grid || !indexTable) return;
+    if (btn.dataset.bound) return; // avoid duplicate listeners
+    btn.dataset.bound = "true";
 
-      const resetView = () => {
-        grid.classList.remove("hidden");
-        indexTable.classList.add("hidden");
-        document
-          .querySelector(".filter-toggle-group")
-          ?.classList.remove("hidden");
-      };
+    const resetView = () => {
+      grid.classList.remove("hidden");
+      indexTable.classList.add("hidden");
+      document
+        .querySelector(".filter-toggle-group")
+        ?.classList.remove("hidden");
+    };
 
-      // first paint
-      resetView();
+    // first paint
+    resetView();
 
-      btn?.addEventListener("click", () => {
-        const isShowingIndex = indexTable.classList.contains("hidden");
-        const filterGroup = document.querySelector(".filter-toggle-group");
-        if (isShowingIndex) {
-          grid.classList.remove("opacity-100");
-          grid.classList.add("opacity-0");
+    btn?.addEventListener("click", () => {
+      const isShowingIndex = indexTable.classList.contains("hidden");
+      const filterGroup = document.querySelector(".filter-toggle-group");
+      if (isShowingIndex) {
+        grid.classList.remove("opacity-100");
+        grid.classList.add("opacity-0");
 
-          setTimeout(() => {
-            grid.classList.add("hidden");
-          }, 300);
+        setTimeout(() => {
+          grid.classList.add("hidden");
+        }, 300);
 
-          indexTable.classList.remove("hidden");
+        indexTable.classList.remove("hidden");
+        requestAnimationFrame(() => {
+          indexTable.classList.remove("opacity-0");
+          indexTable.classList.add("opacity-100");
+        });
+        filterGroup?.classList.add("invisible");
+        // Fade out "Index", fade in "Grid"
+        btn.querySelector("#label-index").classList.add("opacity-0");
+        setTimeout(() => {
+          btn.querySelector("#label-index").classList.add("hidden");
+          btn.querySelector("#label-grid").classList.remove("hidden");
           requestAnimationFrame(() => {
-            indexTable.classList.remove("opacity-0");
-            indexTable.classList.add("opacity-100");
+            btn.querySelector("#label-grid").classList.remove("opacity-0");
+            btn.querySelector("#label-grid").classList.add("opacity-100");
           });
-          filterGroup?.classList.add("invisible");
-          // Fade out "Index", fade in "Grid"
-          btn.querySelector("#label-index").classList.add("opacity-0");
-          setTimeout(() => {
-            btn.querySelector("#label-index").classList.add("hidden");
-            btn.querySelector("#label-grid").classList.remove("hidden");
-            requestAnimationFrame(() => {
-              btn.querySelector("#label-grid").classList.remove("opacity-0");
-              btn.querySelector("#label-grid").classList.add("opacity-100");
-            });
-          }, 300);
-        } else {
-          indexTable.classList.add("opacity-0");
-          indexTable.classList.remove("opacity-100");
+        }, 300);
+      } else {
+        indexTable.classList.add("opacity-0");
+        indexTable.classList.remove("opacity-100");
 
-          setTimeout(() => {
-            indexTable.classList.add("hidden");
-            grid.classList.remove("opacity-0");
-            grid.classList.add("opacity-100");
-            grid.classList.remove("hidden");
-          }, 300);
-          setTimeout(() => {
-            filterGroup?.classList.remove("invisible");
-          }, 300);
-          // Fade out "Grid", fade in "Index"
-          btn.querySelector("#label-grid").classList.add("opacity-0");
-          setTimeout(() => {
-            btn.querySelector("#label-grid").classList.add("hidden");
-            btn.querySelector("#label-index").classList.remove("hidden");
-            requestAnimationFrame(() => {
-              btn.querySelector("#label-index").classList.remove("opacity-0");
-              btn.querySelector("#label-index").classList.add("opacity-100");
-            });
-          }, 300);
+        setTimeout(() => {
+          indexTable.classList.add("hidden");
+          grid.classList.remove("opacity-0");
+          grid.classList.add("opacity-100");
+          grid.classList.remove("hidden");
+        }, 300);
+        setTimeout(() => {
+          filterGroup?.classList.remove("invisible");
+        }, 300);
+        // Fade out "Grid", fade in "Index"
+        btn.querySelector("#label-grid").classList.add("opacity-0");
+        setTimeout(() => {
+          btn.querySelector("#label-grid").classList.add("hidden");
+          btn.querySelector("#label-index").classList.remove("hidden");
+          requestAnimationFrame(() => {
+            btn.querySelector("#label-index").classList.remove("opacity-0");
+            btn.querySelector("#label-index").classList.add("opacity-100");
+          });
+        }, 300);
+      }
+    });
+
+    const updateFilter = (type) => {
+      filterBtns.forEach((b) => b.classList.remove("active-filter"));
+      document
+        .querySelector(`.filter-btn[data-type="${type}"]`)
+        ?.classList.add("active-filter");
+
+      const cards = document.querySelectorAll(".project-grid .card");
+      cards.forEach((card) => {
+        const cardType = card.dataset.type;
+        if (type === "both") {
+          card.classList.remove("hidden");
+        } else {
+          card.classList.toggle("hidden", cardType !== type);
         }
       });
+      // Move indicator to the new active button
+      const newActiveBtn = document.querySelector(
+        `.filter-btn[data-type="${type}"]`
+      );
+      moveIndicatorTo(newActiveBtn);
+    };
 
-      const updateFilter = (type) => {
-        filterBtns.forEach((b) => b.classList.remove("active-filter"));
-        document
-          .querySelector(`.filter-btn[data-type="${type}"]`)
-          ?.classList.add("active-filter");
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.type;
+        updateFilter(type);
+      });
+    });
 
-        const cards = document.querySelectorAll(".project-grid .card");
-        cards.forEach((card) => {
-          const cardType = card.dataset.type;
-          if (type === "both") {
-            card.classList.remove("hidden");
-          } else {
-            card.classList.toggle("hidden", cardType !== type);
-          }
-        });
-        // Move indicator to the new active button
-        const newActiveBtn = document.querySelector(
-          `.filter-btn[data-type="${type}"]`
+    updateFilter("both");
+    // Move indicator to the initial button
+    const initialBtn = document.querySelector(`.filter-btn[data-type="both"]`);
+    setTimeout(() => moveIndicatorTo(initialBtn), 0);
+
+    // Reposition indicator on window resize
+    window.addEventListener("resize", () => {
+      const activeBtn = document.querySelector(".filter-btn.active-filter");
+      if (activeBtn) moveIndicatorTo(activeBtn);
+    });
+  };
+
+  // Indicator logic
+
+  const moveIndicatorTo = (btn) => {
+    const indicator = document.getElementById("filter-indicator");
+    if (!indicator || !btn) return;
+    const group = btn.closest(".filter-toggle-group");
+    const groupRect = group.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+
+    const offsetLeft = btnRect.left - groupRect.left;
+    const offsetWidth = btnRect.width;
+
+    requestAnimationFrame(() => {
+      indicator.style.width = `${offsetWidth}px`;
+      indicator.style.transform = `translateX(${offsetLeft - 2}px)`;
+    });
+  };
+
+  // run on first load
+  if (document.readyState !== "loading") {
+    initProjectToggle();
+  } else {
+    document.addEventListener("DOMContentLoaded", initProjectToggle);
+  }
+
+  // run again after every Astro SPA navigation
+  document.addEventListener("astro:page-load", initProjectToggle);
+
+  // Sorting chevrons logic for project index
+  const initIndexSort = () => {
+    const chevrons = document.querySelectorAll("#project-index .chevron-icon");
+    let isAlphaSort = true;
+
+    chevrons.forEach((chevron) => {
+      chevron.closest("th")?.addEventListener("click", () => {
+        const rows = Array.from(
+          document.querySelectorAll("#project-index tbody tr")
         );
-        moveIndicatorTo(newActiveBtn);
-      };
-
-      filterBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const type = btn.dataset.type;
-          updateFilter(type);
+        const sorted = rows.sort((a, b) => {
+          const textA =
+            a.querySelector("td")?.innerText.trim().toLowerCase() || "";
+          const textB =
+            b.querySelector("td")?.innerText.trim().toLowerCase() || "";
+          return isAlphaSort
+            ? textB.localeCompare(textA)
+            : textA.localeCompare(textB);
         });
-      });
 
-      updateFilter("both");
-      // Move indicator to the initial button
-      const initialBtn = document.querySelector(
-        `.filter-btn[data-type="both"]`
-      );
-      setTimeout(() => moveIndicatorTo(initialBtn), 0);
+        const tbody = document.querySelector("#project-index tbody");
+        if (tbody) {
+          tbody.innerHTML = "";
+          sorted.forEach((row) => tbody.appendChild(row));
+        }
 
-      // Reposition indicator on window resize
-      window.addEventListener("resize", () => {
-        const activeBtn = document.querySelector(".filter-btn.active-filter");
-        if (activeBtn) moveIndicatorTo(activeBtn);
-      });
-    };
-
-    // Indicator logic
-
-    const moveIndicatorTo = (btn) => {
-      const indicator = document.getElementById("filter-indicator");
-      if (!indicator || !btn) return;
-      const group = btn.closest(".filter-toggle-group");
-      const groupRect = group.getBoundingClientRect();
-      const btnRect = btn.getBoundingClientRect();
-
-      const offsetLeft = btnRect.left - groupRect.left;
-      const offsetWidth = btnRect.width;
-
-      requestAnimationFrame(() => {
-        indicator.style.width = `${offsetWidth}px`;
-        indicator.style.transform = `translateX(${offsetLeft - 2}px)`;
-      });
-    };
-
-    // run on first load
-    if (document.readyState !== "loading") {
-      initProjectToggle();
-    } else {
-      document.addEventListener("DOMContentLoaded", initProjectToggle);
-    }
-
-    // run again after every Astro SPA navigation
-    document.addEventListener("astro:page-load", initProjectToggle);
-
-    // Sorting chevrons logic for project index
-    const initIndexSort = () => {
-      const chevrons = document.querySelectorAll(
-        "#project-index .chevron-icon"
-      );
-      let isAlphaSort = true;
-
-      chevrons.forEach((chevron) => {
-        chevron.closest("th")?.addEventListener("click", () => {
-          const rows = Array.from(
-            document.querySelectorAll("#project-index tbody tr")
-          );
-          const sorted = rows.sort((a, b) => {
-            const textA =
-              a.querySelector("td")?.innerText.trim().toLowerCase() || "";
-            const textB =
-              b.querySelector("td")?.innerText.trim().toLowerCase() || "";
-            return isAlphaSort
-              ? textB.localeCompare(textA)
-              : textA.localeCompare(textB);
-          });
-
-          const tbody = document.querySelector("#project-index tbody");
-          if (tbody) {
-            tbody.innerHTML = "";
-            sorted.forEach((row) => tbody.appendChild(row));
-          }
-
-          chevrons.forEach((icon) => {
-            icon.style.transform = isAlphaSort
-              ? "rotate(180deg)"
-              : "rotate(0deg)";
-          });
-
-          isAlphaSort = !isAlphaSort;
+        chevrons.forEach((icon) => {
+          icon.style.transform = isAlphaSort
+            ? "rotate(180deg)"
+            : "rotate(0deg)";
         });
+
+        isAlphaSort = !isAlphaSort;
       });
-    };
+    });
+  };
 
-    // Add after-swap listener
-    document.addEventListener("astro:after-swap", initIndexSort);
+  // Add after-swap listener
+  document.addEventListener("astro:after-swap", initIndexSort);
 
-    // And call it on first load too
-    if (document.readyState !== "loading") {
-      initIndexSort();
-    } else {
-      document.addEventListener("DOMContentLoaded", initIndexSort);
-    }
-  </script>
-</BaseLayout>
+  // And call it on first load too
+  if (document.readyState !== "loading") {
+    initIndexSort();
+  } else {
+    document.addEventListener("DOMContentLoaded", initIndexSort);
+  }
+</script>

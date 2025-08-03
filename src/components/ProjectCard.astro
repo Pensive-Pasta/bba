@@ -1,28 +1,39 @@
 ---
-const { title, location, category, year, image, slug, type } = Astro.props;
+const { title, postCode, county, imageUrl, slug, type } = Astro.props;
+
+const fallbackColor = !imageUrl
+  ? type === "rural"
+    ? "bg-aqua"
+    : type === "inter-urban"
+      ? "bg-cornflower"
+      : "bg-pink"
+  : "";
 ---
 
 <a
-  href={`/projects/${type}/${slug}`}
+  href={`/work/${type}/${slug.current}`}
   class="group block project-card overflow-hidden"
 >
   <div
-    class="w-full aspect-square object-cover"
-    style={`background-image: url('${image}'); background-size: cover; background-position: center;`}
+    class={`w-full aspect-square object-cover ${fallbackColor}`}
+    style={imageUrl
+      ? `background-image: url('${imageUrl}'); background-size: cover; background-position: center;`
+      : ""}
   >
-    <!-- <img
-      src={image || "/placeholder.svg"}
-      alt={title}
-      class="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-    /> -->
+    <div class="flex justify-between items-center p-4">
+      <span class="text-2xl text-white">{postCode}</span>
+      <img
+        src="/icons/arrow-up-right.svg"
+        alt="arrow"
+        class="arrow w-8"
+      />
+    </div>
     <div
-      class="flex flex-col justify-between h-full space-y-1 text-white p-4 opacity-0 group-hover:opacity-100 group-hover:max-h-[500px] transition-all duration-700 ease-in overflow-hidden pt-4"
+      class="flex flex-col justify-end h-full text-white font-light p-4 overflow-hidden"
     >
-      <h3 class="text-lg font-bold">{title}</h3>
-      <p class="text-lg">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente
-        excepturi facere ea rerum
-      </p>
+      <span class="text-lg">#{title}</span>
+      <span class="text-lg">#{type}</span>
+      <span class="text-lg">#{county}</span>
     </div>
   </div>
 </a>
