@@ -1,0 +1,41 @@
+---
+interface ProjectInfo {
+  title?: string;
+  postCode?: string;
+  county?: string;
+  site?: string | null;
+  type?: string;
+}
+
+interface Props {
+  projectInfo: ProjectInfo;
+  class?: string;
+}
+
+const { projectInfo, class: className } = Astro.props;
+
+const entries = (
+  [
+    ["Name", projectInfo.title],
+    ["Postcode", projectInfo.postCode],
+    ["County", projectInfo.county],
+    ["Site", projectInfo.site],
+    ["Typology", projectInfo.type],
+  ] as [label: string, value: string | null | undefined][]
+).filter(([, v]) => v && String(v).trim().length > 0);
+---
+
+{
+  entries.length > 0 && (
+    <dl
+      class={`grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-primary ${className ?? ""}`}
+    >
+      {entries.map(([label, value]) => (
+        <>
+          <dt class="font-medium">{label}:</dt>
+          <dd class="font-bold text-xl">{value}</dd>
+        </>
+      ))}
+    </dl>
+  )
+}

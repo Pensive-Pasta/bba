@@ -1,0 +1,50 @@
+---
+interface ImageData {
+  asset: { url: string };
+  altText?: string;
+  caption?: string;
+  size?: "small" | "medium" | "large";
+}
+
+interface Props {
+  images: ImageData[];
+  alignment: "left" | "right";
+}
+
+const { images = [], alignment } = Astro.props;
+
+const alignmentClass =
+  alignment === "right" ? "md:ml-auto md:mr-0" : "md:mr-auto md:ml-0";
+
+// Optional: size mapping
+const sizeClasses = {
+  small: "max-w-xs",
+  medium: "max-w-md",
+  large: "max-w-full",
+} as const;
+
+const classForSize = (size?: keyof typeof sizeClasses) =>
+  size ? sizeClasses[size] : sizeClasses.medium;
+---
+
+<section class={`w-full md:w-1/2 px-4 mb-12 ${alignmentClass}`}>
+  <div class="flex gap-4">
+    {
+      images.map((img) => (
+        <figure class={`flex-1 ${classForSize(img.size as any)}`}>
+          <img
+            src={img.asset?.url}
+            alt={img.altText || "Project image"}
+            class="w-full h-auto object-cover rounded shadow"
+            loading="lazy"
+          />
+          {img.caption && (
+            <figcaption class="mt-2 text-sm text-muted">
+              {img.caption}
+            </figcaption>
+          )}
+        </figure>
+      ))
+    }
+  </div>
+</section>

@@ -14,14 +14,31 @@ export const getProjectsQuery = `*[_type == "project"] | order(year desc){
 }`;
 
 export const getProjectBySlugQuery = `
-  *[_type == "project" && slug.current == $slug][0]{
-    title,
-    postCode,
-    county,
-    year,
-    site,
-    type,
-    "imageUrl": heroImage.asset->url,
-    "altText": heroImage.altText
+*[_type == "project" && slug.current == $slug][0]{
+  title,
+  postCode,
+  county,
+  year,
+  site,
+  type,
+  "imageUrl": heroImage.asset->url,
+  "altText": heroImage.altText,
+
+  // Default to [] if missing
+  "contentBlocks": coalesce(contentBlocks, [])[]{
+    _type,
+    _key,
+    // imageBlock: default images to []
+    _type == "imageBlock" => {
+      "images": coalesce(images, [])[]{
+        altText,
+        caption,
+        size,
+        asset->{ url }
+      }
+    },
+    // textBlock
+    _type == "textBlock" => { content }
   }
+}
 `;
