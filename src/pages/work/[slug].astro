@@ -6,6 +6,7 @@ import { sanity } from "../../lib/sanityClient";
 import { getProjectBySlugQuery } from "../../lib/queries";
 import ContentBlock from "../../components/ContentBlock.astro";
 import ProjectMeta from "../../components/ProjectMeta.astro";
+import Credits from "../../components/Credits.astro";
 
 const { slug } = Astro.params;
 
@@ -26,9 +27,6 @@ const seoTitleParts = [
   projectInfo.county ? `in ${projectInfo.county}` : null,
   "Butcher Bayley Architects",
 ].filter(Boolean);
-
-console.log(seoTitleParts);
-console.log(projectInfo);
 ---
 
 <BaseLayout title={seoTitleParts.join(" | ")}>
@@ -43,15 +41,23 @@ console.log(projectInfo);
         />
       )
     }
-    <section class="px-4 md:px-8 mt-12 mb-12 md:mt-32 md:mb-0">
+    <section
+      class={`${projectInfo.imageUrl ? "mt-12" : ""} ${!projectInfo.imageUrl ? "mt-32 md:mt-40" : ""} ${projectInfo.contentBlocks.length === 0 ? "mb-12" : ""} px-4 md:px-8`}
+    >
       <ProjectMeta projectInfo={projectInfo} />
     </section>
 
     {
-      projectInfo.contentBlocks && (
-        <div class="md:-mt-36">
+      projectInfo.contentBlocks.length >= 1 && (
+        <section class="mt-12 md:-mt-32 mb-32">
           <ContentBlock blocks={projectInfo.contentBlocks} />
-        </div>
+        </section>
+      )
+    }
+
+    {
+      projectInfo.credits?.length > 0 && (
+        <Credits credits={projectInfo.credits} />
       )
     }
   </article>

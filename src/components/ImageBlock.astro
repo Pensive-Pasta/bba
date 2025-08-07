@@ -18,16 +18,19 @@ const alignmentClass =
 
 // Optional: size mapping
 const sizeClasses = {
-  small: "max-w-xs",
-  medium: "max-w-md",
+  small: alignment === "right" ? "max-w-sm ml-auto" : "max-w-sm mr-auto",
+  medium: "max-w-full",
   large: "max-w-full",
 } as const;
 
 const classForSize = (size?: keyof typeof sizeClasses) =>
   size ? sizeClasses[size] : sizeClasses.medium;
+
+const hasLarge = images.some((img) => img.size === "large");
+const widthClass = hasLarge ? "md:w-[65vw]" : "md:w-1/2";
 ---
 
-<section class={`w-full md:w-1/2 px-4 mb-12 ${alignmentClass}`}>
+<section class={`w-full ${widthClass} px-4 md:px-8 mb-12 ${alignmentClass}`}>
   <div class="flex gap-4">
     {
       images.map((img) => (
@@ -39,7 +42,7 @@ const classForSize = (size?: keyof typeof sizeClasses) =>
             loading="lazy"
           />
           {img.caption && (
-            <figcaption class="mt-2 text-sm text-muted">
+            <figcaption class="mt-2 text-lg text-muted">
               {img.caption}
             </figcaption>
           )}

@@ -39,6 +39,10 @@ export const getProjectBySlugQuery = `
     },
     // textBlock
     _type == "textBlock" => { content }
+  },
+      credits[] {
+    label,
+    value
   }
 }
 `;
