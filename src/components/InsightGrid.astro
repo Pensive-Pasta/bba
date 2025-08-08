@@ -9,7 +9,7 @@ const { insights } = Astro.props as { insights: Insight[] };
 >
   {
     insights.map((insight) => (
-     <div class="card" data-type={insight.type.toLowerCase()}>
+     <div class="card mt-12" data-type={insight.type.toLowerCase()}>
         <InsightCard {...insight} />
       </div>
     ))
