@@ -1,0 +1,17 @@
+---
+import type { Insight } from "../types/Insight";
+import InsightCard from "./InsightCard.astro";
+const { insights } = Astro.props as { insights: Insight[] };
+---
+
+<div
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-[1600px] mx-auto mb-8"
+>
+  {
+    insights.map((insight) => (
+     <div class="card" data-type={insight.type.toLowerCase()}>
+        <InsightCard {...insight} />
+      </div>
+    ))
+  }
+</div>

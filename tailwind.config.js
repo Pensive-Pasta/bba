@@ -25,7 +25,7 @@ export default {
           light: "#309BE8",
           dot: "#BEDCF1",
         },
-        orange: "#FB9061",
+        orange: "#FFB232",
         aqua: "#3FE694",
         green: "#89CB73",
         yellow: "#F0ED37",

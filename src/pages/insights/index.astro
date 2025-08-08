@@ -1,0 +1,46 @@
+---
+// Imports
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import InsightGrid from "../../components/InsightGrid.astro";
+import PageDotGrid from "../../components/PageDotGrid.astro";
+import { sanity } from "../../lib/sanityClient";
+import { getInsightsQuery } from "../../lib/queries";
+
+// Data
+const insights = await sanity.fetch(getInsightsQuery);
+const filterTypes = ["all", "news", "projects", "thinking"];
+---
+<BaseLayout title="Insights">
+  <section id="insights-page" class="mb-20">
+    <PageDotGrid />
+
+    <div class="px-4 md:px-8 pt-[200px] min-h-[100vh] max-w-[1600px] mx-auto">
+      <h1 class="text-4xl font-medium mb-4">Insights</h1>
+
+      <!-- Filter Tabs -->
+      <div class="flex gap-4 text-lg mb-8">
+        {filterTypes.map((type, i) => (
+          <button
+            class={`insight-tab ${i === 0 ? "opacity-100" : "opacity-50"}`}
+            data-tab={type}
+          >
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      <!-- Insight Grid Sections -->
+      <div id="insight-all">
+        <InsightGrid insights={insights} />
+      </div>
+
+      {filterTypes.slice(1).map(type => (
+        <div id={`insight-${type}`} class="hidden">
+          <InsightGrid insights={insights.filter((i: { type: string; }) => i.type === type)} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script is:inline type="module" src="/scripts/insightTabs.js"></script>
+</BaseLayout>

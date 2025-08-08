@@ -1,0 +1,61 @@
+<div class="flex items-center text-lg p-4 md:p-8 max-w-[1600px] mx-auto">
+  <div
+    class="filter-toggle-group w-full max-w-[700px] relative flex flex-nowrap whitespace-nowrap items-center justify-between md:justify-end sm:gap-2 border-2 border-primary rounded-full below-xs:text-xs text-sm md:text-lg"
+  >
+    <button
+      class="filter-btn rounded-full px-2 sm:px-5 lg:px-14 py-2 active-filter min-w-[50px] sm:min-w-[68px] w-full"
+      data-type="both">All</button
+    >
+    <button
+      class="filter-btn rounded-full px-3 sm:px-5 lg:px-14 py-2 w-full"
+      data-type="urban">Urban</button
+    >
+    <button
+      class="filter-btn rounded-full px-3 sm:px-5 lg:px-14 py-2 w-full"
+      data-type="inter-urban">Inter-Urban</button
+    >
+    <button
+      class="filter-btn rounded-full px-3 sm:px-5 lg:px-14 py-2 w-full"
+      data-type="rural">Rural</button
+    >
+    <span
+      id="filter-indicator"
+      class="absolute top-0 left-0 h-full rounded-full bg-primary transition-transform duration-300 ease-out pointer-events-none z-[-1]"
+    ></span>
+  </div>
+  <div class="flex flex-row justify-end pl-3 group ml-auto">
+    <button id="index-toggle">
+      <div
+        class="text-base md:text-lg relative z-10 flex items-center gap-2 transition-opacity duration-300 ease-in-out"
+      >
+        <span
+          id="label-index"
+          class="flex items-center gap-2 opacity-100 group-hover:scale-105 transition-all duration-300 ease-in-out"
+        >
+          <span class="hidden sm:inline">Index</span>
+          <svg class="w-5 h-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
+            <rect x="3" y="5" width="14" height="2"></rect>
+            <rect x="3" y="9" width="14" height="2"></rect>
+            <rect x="3" y="13" width="14" height="2"></rect>
+          </svg>
+        </span>
+        <span
+          id="label-grid"
+          class="items-center gap-2 opacity-0 transition-all duration-300 ease-in-out hidden group-hover:scale-105"
+        >
+          <div class="flex items-center gap-2">
+            <span class="hidden sm:inline">Grid</span>
+            <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"
+              ><rect x="3" y="3" width="5" height="5"></rect><rect
+                x="12"
+                y="3"
+                width="5"
+                height="5"></rect><rect x="3" y="12" width="5" height="5"
+              ></rect><rect x="12" y="12" width="5" height="5"></rect></svg
+            >
+          </div>
+        </span>
+      </div>
+    </button>
+  </div>
+</div>

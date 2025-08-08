@@ -1,0 +1,36 @@
+---
+const { title, slug, type, publishedAt } = Astro.props;
+
+const fallbackColor =
+  type === "thinking"
+    ? "bg-orange"
+    : type === "projects"
+      ? "bg-pink"
+      : "bg-green";
+
+const formattedDate = new Date(publishedAt).toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+---
+
+<a
+  href={`/insights/${slug.current}`}
+  class="group block relative overflow-hidden aspect-square"
+>
+  <div class={`absolute inset-0 z-0 ${fallbackColor}`}></div>
+
+  <div
+    class="relative z-10 flex flex-col justify-between h-full text-white p-4"
+  >
+    <div class="flex justify-between items-center">
+      <span class="text-sm">{formattedDate}</span>
+      <img src="/icons/arrow-up-right.svg" alt="arrow" class="arrow w-6" />
+    </div>
+    <div class="flex flex-col mt-auto font-light overflow-hidden">
+      <span class="text-lg line-clamp-3">{title}</span>
+      <span class="text-sm uppercase mt-1 tracking-wide">{type}</span>
+    </div>
+  </div>
+</a>

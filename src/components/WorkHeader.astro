@@ -1,0 +1,15 @@
+---
+import type { PageContent } from "../types/PageContent";
+const { title, description } = Astro.props as PageContent;
+---
+
+<section
+  class="flex px-4 md:px-8 pt-[200px] min-h-[60vh] max-w-[1600px] mx-auto"
+>
+  <h1 class="w-1/2 text-3xl md:text-[40px] font-bold">{title}</h1>
+  <p
+    class="w-1/2 text-lg md:text-xl leading-normal text-primary mb-4 font-light pl-6 md:pl-8"
+  >
+    {description}
+  </p>
+</section>

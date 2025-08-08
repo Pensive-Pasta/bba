@@ -1,0 +1,32 @@
+---
+import type { Project } from "../types/Project";
+const { projects } = Astro.props as { projects: Project[] };
+---
+
+<section
+  id="project-index"
+  class="hidden p-4 md:p-8 transition-opacity duration-300 ease-in-out opacity-0 max-w-[1600px] mx-auto overflow-auto"
+>
+  <table class="w-full text-left">
+    <thead>
+      <tr class="text-base sm:text-lg font-bold">
+        <th class="pb-2 cursor-pointer min-w-[100px]">Name</th>
+        <th class="pb-2 cursor-pointer min-w-[100px]">Code</th>
+        <th class="pb-2 cursor-pointer">County</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        projects.map((project) => (
+          <tr class="text-sm sm:text-lg font-light">
+            <td class="pr-2">
+              <a href="#">{project.title}</a>
+            </td>
+            <td class="p-2">{project.postCode}</td>
+            <td class="p-2 break-words">{project.county}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</section>

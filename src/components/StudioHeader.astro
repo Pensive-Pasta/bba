@@ -1,0 +1,19 @@
+---
+const { title, tabs } = Astro.props as { title: string; tabs: string[] };
+---
+
+<div class="mt-[200px] pl-4 md:pl-8 relative z-30">
+  <h1 class="text-3xl md:text-[40px] font-bold">{title}</h1>
+  <div class="flex gap-2 md:gap-4 mt-4 text-sm md:text-base">
+    {
+      tabs.map((tab, index) => (
+        <span
+          class={`tab text-primary cursor-pointer ${index === 0 ? "opacity-50" : "opacity-100"}`}
+          data-tab={tab.toLowerCase()}
+        >
+          {tab.charAt(0).toUpperCase() + tab.slice(1)}
+        </span>
+      ))
+    }
+  </div>
+</div>

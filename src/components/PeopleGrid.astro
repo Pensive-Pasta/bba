@@ -1,0 +1,58 @@
+---
+import type { Person } from "../types/StudioPage";
+const { people } = Astro.props as { people: Person[] };
+
+function getFirstName(fullName: string | undefined): string {
+  return fullName ? fullName.split(" ")[0] : "";
+}
+---
+
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-16 text-primary px-4 md:px-8 pt-0 pb-16 md:py-32"
+>
+  {
+    people.map((person) => (
+      <div class="flex flex-col items-start">
+        {person.image?.url && (
+          <img
+            src={person.image.url}
+            alt={person.image.alt || person.name || ""}
+            class="w-full h-auto object-cover mb-6"
+            loading="lazy"
+          />
+        )}
+        {person.name && (
+          <h2 class="text-xl md:text-2xl font-bold mb-1">{person.name}</h2>
+        )}
+        {person.position && (
+          <p class="text-xl md:text-2xl font-bold mb-6">{person.position}</p>
+        )}
+        {person.bio && (
+          <p class="text-lg md:text-xl font-light leading-relaxed mb-4 whitespace-pre-line mr-4">
+            {person.bio}
+          </p>
+        )}
+        <div class="flex flex-col gap-1 text-sm md:text-base">
+          {person.socialLink && (
+            <a
+              href={person.socialLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-accent transition"
+            >
+              Follow {getFirstName(person.name)}
+            </a>
+          )}
+          {person.email && (
+            <a
+              href={`mailto:${person.email}`}
+              class="hover:text-accent transition"
+            >
+              Email {getFirstName(person.name)}
+            </a>
+          )}
+        </div>
+      </div>
+    ))
+  }
+</div>
