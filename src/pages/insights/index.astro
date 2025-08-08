@@ -10,23 +10,26 @@ import { getInsightsQuery } from "../../lib/queries";
 const insights = await sanity.fetch(getInsightsQuery);
 const filterTypes = ["all", "news", "projects", "thinking"];
 ---
+
 <BaseLayout title="Insights">
   <section id="insights-page" class="mb-20">
     <PageDotGrid />
 
     <div class="px-4 md:px-8 pt-[200px] min-h-[100vh] max-w-[1600px] mx-auto">
-      <h1 class="text-4xl font-medium mb-4">Insights</h1>
+      <h1 class="text-4xl font-bold mb-4">Insights</h1>
 
       <!-- Filter Tabs -->
-      <div class="flex gap-4 text-lg mb-8">
-        {filterTypes.map((type, i) => (
-          <button
-            class={`insight-tab ${i === 0 ? "opacity-100" : "opacity-50"}`}
-            data-tab={type}
-          >
-            {type.charAt(0).toUpperCase() + type.slice(1)}
-          </button>
-        ))}
+      <div class="flex gap-2 md:gap-4 text-lg mb-8">
+        {
+          filterTypes.map((type, i) => (
+            <button
+              class={`insight-tab ${i === 0 ? "opacity-50" : "opacity-100"}`}
+              data-tab={type}
+            >
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </button>
+          ))
+        }
       </div>
 
       <!-- Insight Grid Sections -->
@@ -34,11 +37,17 @@ const filterTypes = ["all", "news", "projects", "thinking"];
         <InsightGrid insights={insights} />
       </div>
 
-      {filterTypes.slice(1).map(type => (
-        <div id={`insight-${type}`} class="hidden">
-          <InsightGrid insights={insights.filter((i: { type: string; }) => i.type === type)} />
-        </div>
-      ))}
+      {
+        filterTypes.slice(1).map((type) => (
+          <div id={`insight-${type}`} class="hidden">
+            <InsightGrid
+              insights={insights.filter(
+                (i: { type: string }) => i.type === type
+              )}
+            />
+          </div>
+        ))
+      }
     </div>
   </section>
 
