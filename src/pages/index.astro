@@ -20,7 +20,10 @@ const featuredHref = home?.featuredPage?.pageSlug
   : "/studio";
 const featuredLabel = home?.featuredPage?.pageTitle || "Studio";
 
-// Dedupe projects by postcode (first project wins)
+// Build grid items from all projects (no postcode dedupe)
+// First cell remains blank, then one cell per project up to MAX_CELLS
+const MAX_CELLS = 16;
+
 type Project = {
   title: string;
   postCode?: string;
@@ -30,15 +33,13 @@ type Project = {
   imageUrl?: string;
 };
 
-const byPostcode = new Map<string, Project>();
-for (const p of projects as Project[]) {
-  if (p.postCode && !byPostcode.has(p.postCode)) byPostcode.set(p.postCode, p);
-}
-
-// Build grid cells from available postcodes
-const MAX_CELLS = 16;
-const codes = Array.from(byPostcode.keys()).slice(0, MAX_CELLS - 1);
-codes.unshift(""); // first cell blank
+const items: Array<{ label: string; project?: Project }> = [
+  { label: "" },
+  ...(projects as Project[]).slice(0, MAX_CELLS - 1).map((p) => ({
+    label: p.postCode ?? "",
+    project: p,
+  })),
+];
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription}>
@@ -48,8 +49,7 @@ codes.unshift(""); // first cell blank
       <!-- Mobile version: show/hide alternating -->
       <div class="block md:hidden">
         {
-          codes.map((code, i) => {
-            const proj = code ? byPostcode.get(code) : undefined;
+          items.map(({ label, project: proj }, i) => {
             const img = proj?.imageUrl
               ? `${proj.imageUrl}?w=800&h=800&fit=crop&auto=format&q=75`
               : undefined;
@@ -57,15 +57,15 @@ codes.unshift(""); // first cell blank
             return (
               <>
                 <div class="grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
-                  <span class="block p-4 text-2xl">{code}</span>
+                  <span class="block p-4 text-2xl">{label}</span>
                   {i % 2 === 1 && proj && (
                     <div
-                      class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-500"
+                      class="absolute inset-0 z-0 opacity-0 pointer-events-none transition-opacity duration-500"
                       data-project-tile
                     >
                       <ProjectCard
                         title={proj.title}
-                        postCode={code}
+                        postCode={label}
                         county={proj.county}
                         type={proj.type}
                         slug={proj.slug}
@@ -74,7 +74,7 @@ codes.unshift(""); // first cell blank
                     </div>
                   )}
                 </div>
-                {i !== codes.length - 1 && (
+                {i !== items.length - 1 && (
                   <div class="row-divider block" aria-hidden="true" />
                 )}
               </>
@@ -84,10 +84,9 @@ codes.unshift(""); // first cell blank
       </div>
 
       <!-- Desktop version: show/show/hide/hide -->
-      <div class="hidden md:grid md:grid-cols-2">
+      <div class="hidden md:grid md:grid-cols-2 dot-grid-internal">
         {
-          codes.map((code, i) => {
-            const proj = code ? byPostcode.get(code) : undefined;
+          items.map(({ label, project: proj }, i) => {
             const img = proj?.imageUrl
               ? `${proj.imageUrl}?w=800&h=800&fit=crop&auto=format&q=75`
               : undefined;
@@ -95,15 +94,15 @@ codes.unshift(""); // first cell blank
             return (
               <>
                 <div class="grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
-                  <span class="block p-4 text-2xl">{code}</span>
+                  <span class="block p-4 text-2xl">{label}</span>
                   {(i - 1) % 4 < 2 && i > 0 && proj && (
                     <div
-                      class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-500"
+                      class="absolute inset-0 z-0 opacity-0 pointer-events-none transition-opacity duration-500"
                       data-project-tile
                     >
                       <ProjectCard
                         title={proj.title}
-                        postCode={code}
+                        postCode={label}
                         county={proj.county}
                         type={proj.type}
                         slug={proj.slug}
@@ -114,7 +113,7 @@ codes.unshift(""); // first cell blank
                 </div>
 
                 {/* full-width divider AFTER every second item */}
-                {i % 2 === 1 && i !== codes.length - 1 && (
+                {i % 2 === 1 && i !== items.length - 1 && (
                   <div
                     class="row-divider col-span-2 block"
                     aria-hidden="true"
@@ -152,21 +151,54 @@ codes.unshift(""); // first cell blank
     </div>
   </div>
 
-  {/* Fade-in on intersection */}
   <script is:inline>
-    const tiles = document.querySelectorAll("[data-project-tile]");
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          const el = e.target;
-          el.classList.remove("pointer-events-none");
-          requestAnimationFrame(() => el.classList.add("opacity-100"));
-          io.unobserve(el);
-        }
-      },
-      { rootMargin: "120px" }
-    );
-    tiles.forEach((t) => io.observe(t));
+    function setInitialState() {
+      const tiles = document.querySelectorAll("[data-project-tile]");
+      tiles.forEach((el) => {
+        // Ensure starting hidden state and slow transition
+        el.classList.add(
+          "opacity-0",
+          "pointer-events-none",
+          "transition-opacity"
+        );
+        el.classList.remove("duration-500");
+        el.classList.add("duration-[2000ms]"); // very slow fade
+      });
+    }
+
+    function runFade() {
+      const tiles = document.querySelectorAll("[data-project-tile]");
+      if (!tiles.length) return;
+      tiles.forEach((el) => {
+        el.classList.remove("pointer-events-none");
+        el.classList.add("opacity-100");
+      });
+    }
+
+    function setupScrollTrigger() {
+      // Make sure we start hidden each time this page loads via Astro soft nav
+      setInitialState();
+
+      let triggered = false;
+      const fire = () => {
+        if (triggered) return;
+        triggered = true;
+        // Small rAF to let classes apply before animating
+        requestAnimationFrame(runFade);
+        window.removeEventListener("scroll", onScroll, { passive: true });
+        window.removeEventListener("wheel", onScroll, { passive: true });
+        window.removeEventListener("touchmove", onScroll, { passive: true });
+      };
+
+      const onScroll = () => fire();
+
+      // Trigger on any user scroll gesture
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("wheel", onScroll, { passive: true });
+      window.addEventListener("touchmove", onScroll, { passive: true });
+    }
+
+    document.addEventListener("DOMContentLoaded", setupScrollTrigger);
+    document.addEventListener("astro:page-load", setupScrollTrigger);
   </script>
 </BaseLayout>

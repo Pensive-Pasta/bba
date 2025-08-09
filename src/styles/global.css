@@ -108,7 +108,6 @@ body {
 
 .dot-grid-internal {
   position: relative;
-  display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
 
