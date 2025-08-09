@@ -1,13 +1,5 @@
 ---
 const { title, postCode, county, imageUrl, slug, type } = Astro.props;
-
-const fallbackColor = !imageUrl
-  ? type === "rural"
-    ? "bg-aqua"
-    : type === "inter-urban"
-      ? "bg-cornflower"
-      : "bg-pink"
-  : "";
 ---
 
 <a

@@ -1,17 +1,18 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 import { sanity } from "../lib/sanityClient";
 import { getHomePageQuery, getProjectsQuery } from "../lib/queries";
 
-// Sanity data
 const home = await sanity.fetch(getHomePageQuery);
 const projects = await sanity.fetch(getProjectsQuery);
 
-const postcodes = ["","PE28","CB1","PE28","NN14","PE2","PE27","M28","PE27","LE3","NN14","NR21","CB1","PE9","PE5","CB4"];
-
 // SEO
-const metaTitle = home?.seo?.metaTitle || "Home | Butcher Bayley Architects (BBA)";
-const metaDescription = home?.seo?.metaDescription || "Sustainable architecture across urban, inter-urban and rural contexts by Butcher Bayley Architects (BBA).";
+const metaTitle =
+  home?.seo?.metaTitle || "Home | Butcher Bayley Architects (BBA)";
+const metaDescription =
+  home?.seo?.metaDescription ||
+  "Sustainable architecture across urban, inter-urban and rural contexts by Butcher Bayley Architects (BBA).";
 
 // Featured link (fallback to /studio)
 const featuredHref = home?.featuredPage?.pageSlug
@@ -19,105 +20,153 @@ const featuredHref = home?.featuredPage?.pageSlug
   : "/studio";
 const featuredLabel = home?.featuredPage?.pageTitle || "Studio";
 
-// Map: first project per postcode
-type Project = { title: string; postCode?: string; slug: { current: string }; imageUrl?: string };
+// Dedupe projects by postcode (first project wins)
+type Project = {
+  title: string;
+  postCode?: string;
+  county?: string;
+  type?: "urban" | "inter-urban" | "rural";
+  slug: { current: string };
+  imageUrl?: string;
+};
+
 const byPostcode = new Map<string, Project>();
 for (const p of projects as Project[]) {
   if (p.postCode && !byPostcode.has(p.postCode)) byPostcode.set(p.postCode, p);
 }
 
-// Helper: should a cell show a project?
-const cellFor = (i: number, code: string) => {
-  const show = i % 2 === 1 && code && byPostcode.has(code);
-  const proj = show ? byPostcode.get(code)! : undefined;
-  return { show, proj };
-};
+// Build grid cells from available postcodes
+const MAX_CELLS = 16;
+const codes = Array.from(byPostcode.keys()).slice(0, MAX_CELLS - 1);
+codes.unshift(""); // first cell blank
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription}>
   <div class="flex min-h-screen">
     <!-- Left: Grid -->
     <div class="w-full md:w-1/2 dot-grid-right">
-      <div class="dot-grid-internal w-full">
-        {postcodes.map((code, i) => {
-          const { show, proj } = cellFor(i, code);
-          const img = proj?.imageUrl
-            ? `${proj.imageUrl}?w=800&h=800&fit=crop&auto=format&q=75`
-            : undefined;
-          return (
-            <>
-              <div
-                class="grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden"
-                data-grid-cell
-              >
-                {/* initial state: postcode text only */}
-                <span class="block">{code}</span>
+      <!-- Mobile version: show/hide alternating -->
+      <div class="block md:hidden">
+        {
+          codes.map((code, i) => {
+            const proj = code ? byPostcode.get(code) : undefined;
+            const img = proj?.imageUrl
+              ? `${proj.imageUrl}?w=800&h=800&fit=crop&auto=format&q=75`
+              : undefined;
 
-                {/* progressive project tile, injected after load */}
-                {show && proj && img && (
-                  <a
-                    class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-500"
-                    data-project-tile
-                    href={`/work/${proj.slug.current}`}
-                  >
-                    <img
-                      data-src={img}
-                      alt={proj.title}
-                      class="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <div class="absolute bottom-2 left-2 bg-white/85 px-2 py-1 text-xs">
-                      {code}
+            return (
+              <>
+                <div class="grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
+                  <span class="block p-4 text-2xl">{code}</span>
+                  {i % 2 === 1 && proj && (
+                    <div
+                      class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-500"
+                      data-project-tile
+                    >
+                      <ProjectCard
+                        title={proj.title}
+                        postCode={code}
+                        county={proj.county}
+                        type={proj.type}
+                        slug={proj.slug}
+                        imageUrl={img}
+                      />
                     </div>
-                  </a>
-                )}
-              </div>
-
-              {/* row dividers */}
-              {i !== postcodes.length - 1 && (
-                <>
-                  <div class="row-divider block md:hidden" aria-hidden="true" />
-                  {(i + 1) % 2 === 0 && (
-                    <div class="row-divider hidden md:block" aria-hidden="true" />
                   )}
-                </>
-              )}
-            </>
-          );
-        })}
+                </div>
+                {i !== codes.length - 1 && (
+                  <div class="row-divider block" aria-hidden="true" />
+                )}
+              </>
+            );
+          })
+        }
+      </div>
+
+      <!-- Desktop version: show/show/hide/hide -->
+      <div class="hidden md:grid md:grid-cols-2">
+        {
+          codes.map((code, i) => {
+            const proj = code ? byPostcode.get(code) : undefined;
+            const img = proj?.imageUrl
+              ? `${proj.imageUrl}?w=800&h=800&fit=crop&auto=format&q=75`
+              : undefined;
+
+            return (
+              <>
+                <div class="grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
+                  <span class="block p-4 text-2xl">{code}</span>
+                  {(i - 1) % 4 < 2 && i > 0 && proj && (
+                    <div
+                      class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-500"
+                      data-project-tile
+                    >
+                      <ProjectCard
+                        title={proj.title}
+                        postCode={code}
+                        county={proj.county}
+                        type={proj.type}
+                        slug={proj.slug}
+                        imageUrl={img}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* full-width divider AFTER every second item */}
+                {i % 2 === 1 && i !== codes.length - 1 && (
+                  <div
+                    class="row-divider col-span-2 block"
+                    aria-hidden="true"
+                  />
+                )}
+              </>
+            );
+          })
+        }
       </div>
     </div>
 
     <!-- Right: Copy -->
-    <div class="w-full md:w-1/2 flex flex-col px-4 md:px-8 sticky top-0 self-start pt-[200px]">
+    <div
+      class="w-full md:w-1/2 flex flex-col px-4 md:px-8 sticky top-0 self-start pt-[200px]"
+    >
       <h1 class="font-future text-2xl md:text-4xl text-primary mb-4">
-        {home?.title}
+        {home?.title ?? "BBA is an inter-urban studio."}
       </h1>
       <p class="text-lg md:text-xl text-primary font-light break-words mb-4">
-        {home?.intro}
+        {
+          home?.intro ??
+            "We make progressive places for living and working, learning and community."
+        }
       </p>
-      <a href={featuredHref} class="text-lg md:text-xl relative group w-fit mb-10">
+      <a
+        href={featuredHref}
+        class="text-lg md:text-xl relative group w-fit mb-10"
+      >
         &gt; {featuredLabel}
-        <span class="hidden lg:block absolute left-0 -bottom-1 w-0 h-[4px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+        <span
+          class="hidden lg:block absolute left-0 -bottom-1 w-0 h-[4px] bg-primary transition-all duration-300 group-hover:w-full"
+        ></span>
       </a>
     </div>
   </div>
 
-  {/* after first paint: fade in every-other project tiles */}
+  {/* Fade-in on intersection */}
   <script is:inline>
-    const tiles = document.querySelectorAll('[data-project-tile]');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        const a = e.target;
-        const img = a.querySelector('img[data-src]');
-        if (img && !img.src) img.src = img.dataset.src;
-        a.classList.remove('pointer-events-none');
-        requestAnimationFrame(() => { a.classList.add('opacity-100'); });
-        io.unobserve(a);
-      });
-    }, { rootMargin: "100px" });
-
+    const tiles = document.querySelectorAll("[data-project-tile]");
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const el = e.target;
+          el.classList.remove("pointer-events-none");
+          requestAnimationFrame(() => el.classList.add("opacity-100"));
+          io.unobserve(el);
+        }
+      },
+      { rootMargin: "120px" }
+    );
     tiles.forEach((t) => io.observe(t));
   </script>
 </BaseLayout>
