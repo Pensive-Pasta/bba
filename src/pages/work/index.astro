@@ -13,18 +13,23 @@ const projects = await sanity.fetch(getProjectsQuery);
 
 export interface Project {
   title: string;
-  slug: {
-    current: string;
-  };
+  slug: { current: string };
   postCode: string;
   county: string;
   year: number;
   type: "urban" | "inter-urban" | "rural";
   imageUrl: string;
 }
+
+const metaTitle =
+  workPage?.seo?.metaTitle ||
+  "Our work | Butcher Bayley Architects (BBA) | RIBA Chartered Practice";
+const metaDescription =
+  workPage?.seo?.metaDescription ||
+  "Explore Butcher Bayley Architects’ portfolio. Filter projects by urban, inter-urban and rural settings, showcasing our sustainable, place-making approach.";
 ---
 
-<BaseLayout title="Work">
+<BaseLayout title={metaTitle} description={metaDescription}>
   <section id="work-page" class="mb-20">
     <PageDotGrid />
     <WorkHeader title={workPage.title} description={workPage.description} />

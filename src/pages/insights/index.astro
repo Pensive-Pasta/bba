@@ -1,24 +1,30 @@
 ---
-// Imports
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import InsightGrid from "../../components/InsightGrid.astro";
 import PageDotGrid from "../../components/PageDotGrid.astro";
 import { sanity } from "../../lib/sanityClient";
-import { getInsightsQuery } from "../../lib/queries";
+import { getInsightsQuery, getInsightPageQuery } from "../../lib/queries";
 
-// Data
+const insightPage = await sanity.fetch(getInsightPageQuery);
 const insights = await sanity.fetch(getInsightsQuery);
 const filterTypes = ["all", "news", "projects", "thinking"];
+
+const metaTitle =
+  insightPage?.seo?.metaTitle || "Insights | Butcher Bayley Architects (BBA)";
+const metaDescription =
+  insightPage?.seo?.metaDescription ||
+  "Latest news, projects, and thinking from Butcher Bayley Architects.";
 ---
 
-<BaseLayout title="Insights">
+<BaseLayout title={metaTitle} description={metaDescription}>
   <section id="insights-page" class="mb-20">
     <PageDotGrid />
 
     <div class="px-4 md:px-8 pt-[200px] min-h-[100vh] max-w-[1600px] mx-auto">
-      <h1 class="text-4xl font-bold mb-4">Insights</h1>
+      <h1 class="text-4xl font-bold mb-4">
+        {insightPage?.title || "Insights"}
+      </h1>
 
-      <!-- Filter Tabs -->
       <div class="flex gap-2 md:gap-4 text-lg mb-8">
         {
           filterTypes.map((type, i) => (
@@ -32,7 +38,6 @@ const filterTypes = ["all", "news", "projects", "thinking"];
         }
       </div>
 
-      <!-- Insight Grid Sections -->
       <div id="insight-all">
         <InsightGrid insights={insights} />
       </div>

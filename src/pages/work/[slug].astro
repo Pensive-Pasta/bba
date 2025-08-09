@@ -14,22 +14,36 @@ export async function getStaticPaths() {
   const projects = await sanity.fetch(
     `*[_type == "project"]{ "slug": slug.current }`
   );
-  return projects.map((p: { slug: any }) => ({ params: { slug: p.slug } }));
+  return projects.map((p: { slug: string }) => ({ params: { slug: p.slug } }));
 }
 
 const projectInfo = await sanity.fetch(getProjectBySlugQuery, { slug });
 
+// Helper: build OG image from hero
+const ogFromHero = (url?: string) =>
+  url ? `${url}?w=1200&h=630&fit=crop&auto=format&q=80` : undefined;
+
+// Title parts (fallback if no SEO override)
 const seoTitleParts = [
   projectInfo.title,
   projectInfo.type
-    ? `- ${projectInfo.type.charAt(0).toUpperCase() + projectInfo.type.slice(1)} Project`
+    ? ` ${projectInfo.type.charAt(0).toUpperCase() + projectInfo.type.slice(1)} Project`
     : null,
   projectInfo.county ? `in ${projectInfo.county}` : null,
-  "Butcher Bayley Architects",
+  "Butcher Bayley Architects (BBA)",
 ].filter(Boolean);
+
+const seoTitle = projectInfo.seo?.metaTitle ?? seoTitleParts.join(" | ");
+const seoDescription = projectInfo.seo?.metaDescription ?? undefined;
+const ogImage = ogFromHero(projectInfo.imageUrl); // hero -> 1200x630 crop
 ---
 
-<BaseLayout title={seoTitleParts.join(" | ")}>
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  ogType="article"
+  ogImage={ogImage}
+>
   <PageDotGrid />
   <article class="min-h-[100vh]">
     {
@@ -41,6 +55,7 @@ const seoTitleParts = [
         />
       )
     }
+
     <section
       class={`${projectInfo.imageUrl ? "mt-12" : ""} ${!projectInfo.imageUrl ? "mt-32 md:mt-40" : ""} ${projectInfo.contentBlocks.length === 0 ? "mb-12" : ""} px-4 md:px-8`}
     >

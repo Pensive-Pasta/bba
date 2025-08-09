@@ -1,100 +1,94 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageDotGrid from "../components/PageDotGrid.astro";
+import { sanity } from "../lib/sanityClient";
+import { getContactPageQuery } from "../lib/queries";
+
+type Location = {
+  label?: string;
+  addressLines?: string[];
+  postcodeBadge?: string;
+  mapsLink?: string;
+  embedSrc: string;
+};
+
+type ContactData = {
+  title: string;
+  description: string;
+  email: string;
+  tel: string;
+  mapCards?: { locationA?: Location; locationB?: Location };
+  seo?: { metaTitle?: string; metaDescription?: string };
+};
+
+const data = (await sanity.fetch(getContactPageQuery)) as ContactData;
+const { title, description, email, tel, mapCards, seo } = data ?? {};
+const locA = mapCards?.locationA;
+const locB = mapCards?.locationB;
+
+// Overlay logic: first card gets one class, second gets the other.
+const overlayForIndex = (i: number) => (i === 0 ? "bg-purple" : "bg-red-600");
+// Cards array in fixed order
+const cards: Array<Location | undefined> = [locA, locB];
 ---
 
-<BaseLayout title="Contact">
+<BaseLayout title={seo?.metaTitle ?? title} description={seo?.metaDescription}>
   <PageDotGrid />
-  <section
-    class="flex flex-col md:flex-row px-4 md:px-8 pt-[150px] md:pt-[200px] max-w-[1600px] mx-auto"
-  >
-    <h1 class="md:w-1/2 text-3xl md:text-[40px] font-bold mb-12">Contact</h1>
+
+  <section class="flex flex-col md:flex-row px-4 md:px-8 pt-[150px] md:pt-[200px] max-w-[1600px] mx-auto">
+    <h1 class="md:w-1/2 text-3xl md:text-[40px] font-bold mb-12">{title}</h1>
 
     <div class="md:w-1/2 md:pl-8">
       <p class="text-lg md:text-xl leading-normal text-primary mb-8 font-light">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi interdum
-        justo risus, nec posuere urna iaculis ac. Nulla vehicula cursus nunc, id
-        finibus sem euismod in. Donec semper magna dui, ac bibendum elit euismod
-        non. Mauris et diam lacinia, eleifend diam quis, mattis diam. Fusce
-        vitae blandit urna, bibendum consequat diam. Vivamus quis lobortis
-        ipsum. Proin ultricies sollicitudin viverra.
+        {description}
       </p>
 
       <p class="text-sm md:text-lg leading-normal text-primary font-light mb-2">
-        <span
-          >E:
-          <a
-            href="mailto:hello@wearebba.co.uk"
-            class="border-b border-primary hover:opacity-70 transition-opacity mb-1 break-words"
-            >hello@wearebba.co.uk</a
-          ></span
-        ><br />
-        <span
-          >T:
-          <a
-            href="tel:+441832774121"
-            class="hover:opacity-70 transition-opacity break-words"
-            >+44 (0) 1832 774 121</a
-          >
+        <span>
+          E:
+          <a href={`mailto:${email}`} class="border-b border-primary hover:opacity-70 transition-opacity mb-1 break-words">
+            {email}
+          </a>
+        </span><br />
+        <span>
+          T:
+          <a href={`tel:${tel}`} class="hover:opacity-70 transition-opacity break-words">
+            {tel}
+          </a>
         </span>
       </p>
     </div>
   </section>
-  <section
-    class="w-full flex md:flex-row flex-col items-center justify-center mt-[10vw]"
-  >
-    <a
-      href="https://maps.app.goo.gl/t7e9zvdwpHaPgaHKA"
-      class="md:w-1/2 w-full aspect-square relative group"
-    >
-      <div class="absolute inset-0 z-0">
-        <iframe
-          src="https://www.google.com/maps?q=The+Courthouse,+Mill+Road,+Oundle,+PE8+4BW&output=embed"
-          class="w-full h-full border-0"
-          allowfullscreen=""
-          loading="lazy"></iframe>
-        <div class="absolute inset-0 bg-purple opacity-80 mix-blend-multiply">
-        </div>
-      </div>
-      <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
-        <p class="text-white font-light text-[40px]">PE8</p>
-      </div>
-      <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
-        <img src="/icons/arrow-up-right.svg" alt="Open Map" class="w-8" />
-      </div>
-      <div
-        class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm"
-      >
-        <div>#Oundle Studio</div>
-        <div>The Courthouse, Mill Rd, Oundle,</div>
-        <div>Northamptonshire, PE8 4BW</div>
-      </div>
-    </a>
 
-    <a
-      href="https://maps.app.goo.gl/t7e9zvdwpHaPgaHKA"
-      class="md:w-1/2 w-full aspect-square relative group"
-    >
-      <div class="absolute inset-0 z-0">
-        <iframe
-          src="https://www.google.com/maps?q=Manchester&output=embed"
-          class="w-full h-full border-0"
-          allowfullscreen=""
-          loading="lazy"></iframe>
-        <div class="absolute inset-0 bg-red-600 opacity-80 mix-blend-multiply">
-        </div>
-      </div>
-      <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
-        <p class="text-white font-light text-[40px]">M1</p>
-      </div>
-      <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
-        <img src="/icons/arrow-up-right.svg" alt="Open Map" class="w-8" />
-      </div>
-      <div
-        class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm"
-      >
-        <div>Greater Manchester Studio</div>
-      </div>
-    </a>
-  </section>
+  {(locA && locB) && (
+    <section class="w-full flex md:flex-row flex-col items-center justify-center mt-[10vw]">
+      {cards.map((loc, i) => loc && (
+        <a href={loc.mapsLink} class="md:w-1/2 w-full aspect-square relative group" target="_blank" rel="noopener">
+          <div class="absolute inset-0 z-0">
+            <iframe
+              src={loc.embedSrc}
+              class="w-full h-full border-0"
+              allowfullscreen=""
+              loading="lazy" />
+            <div class={`absolute inset-0 opacity-80 mix-blend-multiply ${overlayForIndex(i)}`}></div>
+          </div>
+
+          {loc.postcodeBadge && (
+            <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
+              <p class="text-white font-light text-[40px]">{loc.postcodeBadge}</p>
+            </div>
+          )}
+
+          <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+            <img src="/icons/arrow-up-right.svg" alt="Open map" class="w-8" />
+          </div>
+
+          <div class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm">
+            {loc.label && <div>#{loc.label}</div>}
+            {Array.isArray(loc.addressLines) && loc.addressLines.map((line) => <div>{line}</div>)}
+          </div>
+        </a>
+      ))}
+    </section>
+  )}
 </BaseLayout>

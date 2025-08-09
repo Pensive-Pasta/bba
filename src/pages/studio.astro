@@ -2,23 +2,28 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageDotGrid from "../components/PageDotGrid.astro";
 import ContentBlock from "../components/ContentBlock.astro";
-
 import { sanity } from "../lib/sanityClient";
 import { getStudioPageQuery } from "../lib/queries";
-import type { StudioPage } from "../types/StudioPage";
 import PeopleGrid from "../components/PeopleGrid.astro";
 import StudioHeader from "../components/StudioHeader.astro";
 import TextBlock from "../components/TextBlock.astro";
 
-const studioPage: StudioPage = await sanity.fetch(getStudioPageQuery);
+const studioPage = await sanity.fetch(getStudioPageQuery);
+
+const metaTitle =
+  studioPage?.seo?.metaTitle || "Studio | Butcher Bayley Architects (BBA)";
+const metaDescription =
+  studioPage?.seo?.metaDescription ||
+  "Meet our team, discover our values, and explore the profile of Butcher Bayley Architects, a RIBA Chartered Practice.";
 ---
 
-<BaseLayout>
+<BaseLayout title={metaTitle} description={metaDescription}>
   <PageDotGrid />
   <StudioHeader
     title="Studio"
     tabs={["profile", "people", "values", "awards"]}
   />
+
   <section id="studio-page" class="flex max-w-[1600px] mx-auto min-h-[100vh]">
     <div id="profile" class="min-h-[60vh] mt-12 md:-mt-20">
       <ContentBlock blocks={studioPage.profileBlocks} />
@@ -28,7 +33,11 @@ const studioPage: StudioPage = await sanity.fetch(getStudioPageQuery);
       id="people"
       class={`hidden min-h-[60vh] mt-12 ${studioPage.peopleIntro ? "md:-mt-20" : ""}`}
     >
-      <TextBlock content={studioPage.peopleIntro} alignment="right" />
+      {
+        studioPage.peopleIntro && (
+          <TextBlock content={studioPage.peopleIntro} alignment="right" />
+        )
+      }
       <PeopleGrid people={studioPage.people} />
     </div>
 
@@ -40,5 +49,6 @@ const studioPage: StudioPage = await sanity.fetch(getStudioPageQuery);
       <ContentBlock blocks={studioPage.awardsBlocks} />
     </div>
   </section>
+
   <script type="module" src="/scripts/studioTabs.js"></script>
 </BaseLayout>
