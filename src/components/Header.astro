@@ -15,7 +15,7 @@ const textColor = "text-primary";
 
 <header
   id="site-header"
-  class={`min-w-full fixed top-0 left-0 right-0 z-40 duration-300 ${textColor}`}
+  class={`min-w-full fixed top-0 left-0 right-0 z-40 duration-500 ease-out transition-all will-change-transform ${textColor}`}
 >
   <div
     class="flex justify-between items-center max-w-[1600px] mx-auto p-4 md:p-8"
@@ -45,15 +45,17 @@ const textColor = "text-primary";
   </div>
 
   <div
-    class="nav-menu px-4 md:px-8 fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto pt-[160px] pb-6 md:pb-8 max-w-[1600px] mx-auto"
+    class="nav-menu fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto max-w-[1600px] mx-auto isolate"
     id="nav-menu"
   >
     <div
       id="nav-bg"
-      class="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#178FE4]"
+      class="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#178FE4]"
     >
     </div>
-    <div class="flex flex-col items-center justify-between h-full">
+    <div
+      class="relative z-10 flex flex-col items-center justify-between h-full bg-primary pt-[160px] px-4 md:px-8 pb-8"
+    >
       <div class="dot-grid w-full max-w-[600px] aspect-square">
         {
           navItems.map((item) => (
@@ -199,4 +201,75 @@ const textColor = "text-primary";
     document.addEventListener("DOMContentLoaded", initNavHover);
   }
   document.addEventListener("astro:page-load", initNavHover);
+</script>
+
+<script is:inline>
+  // Hide header on scroll down. Show on scroll up. Ensure reveal precedes first solid bg.
+  const setupScrollHideHeader = () => {
+    const header = document.getElementById("site-header");
+    if (!header) return;
+
+    // Track if header is over the hero section
+    const hero = document.getElementById("hero");
+    let overHero = false;
+
+    if (hero) {
+      const heroObserver = new IntersectionObserver(
+        ([entry]) => {
+          overHero = entry.isIntersecting;
+        },
+        {
+          threshold: 0,
+          rootMargin: `-${header.offsetHeight}px 0px 0px 0px`,
+        }
+      );
+      heroObserver.observe(hero);
+    }
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    const DELTA = 6; // small threshold to reduce jitter
+
+    const applyState = (currentY) => {
+      const scrollingDown = currentY > lastScrollY;
+
+      if (scrollingDown && currentY > header.offsetHeight) {
+        // Scrolling down: slide header out and keep bg logic unchanged here
+        header.classList.add("-translate-y-full");
+      } else {
+        // Scrolling up: slide header in and control bg relative to hero
+        header.classList.remove("-translate-y-full");
+        if (hero && overHero || currentY < header.offsetHeight) {
+          // Over hero: no solid bg
+          header.classList.remove("bg-white");
+          header.classList.add("bg-transparent");
+        } else {
+          // Not over hero: use solid white bg
+          header.classList.add("bg-white");
+          header.classList.remove("bg-transparent");
+        }
+      }
+
+      lastScrollY = currentY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      if (Math.abs(currentY - lastScrollY) < DELTA) return; // ignore tiny moves
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => applyState(currentY));
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+  };
+
+  if (document.readyState !== "loading") {
+    setupScrollHideHeader();
+  } else {
+    document.addEventListener("DOMContentLoaded", setupScrollHideHeader);
+  }
+  document.addEventListener("astro:page-load", setupScrollHideHeader);
 </script>
