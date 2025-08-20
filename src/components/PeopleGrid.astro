@@ -1,17 +1,23 @@
 ---
 import type { Person } from "../types/StudioPage";
+import { normaliseText } from "../utils/normaliseText";
 const { people } = Astro.props as { people: Person[] };
 
 function getFirstName(fullName: string | undefined): string {
   return fullName ? fullName.split(" ")[0] : "";
 }
+
+const normalisedPeople = people.map((person) => ({
+  ...person,
+  bio: normaliseText(person.bio),
+}));
 ---
 
 <div
   class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-16 text-primary px-4 md:px-8 pt-0 pb-16 md:py-32"
 >
   {
-    people.map((person) => (
+    normalisedPeople.map((person) => (
       <div class="flex flex-col items-start">
         {person.image?.url && (
           <img
@@ -27,11 +33,11 @@ function getFirstName(fullName: string | undefined): string {
         {person.position && (
           <p class="text-xl md:text-2xl font-bold mb-6">{person.position}</p>
         )}
-        {person.bio && (
-          <p class="text-lg md:text-xl font-light leading-relaxed mb-4 whitespace-pre-line mr-4">
-            {person.bio}
+        {person.bio.map((para) => (
+          <p class="text-lg md:text-xl font-light leading-relaxed mb-4 mr-4">
+            {para.replace(/\n+/g, " ")}
           </p>
-        )}
+        ))}
         <div class="flex flex-col gap-1 text-sm md:text-base">
           {person.socialLink && (
             <a
