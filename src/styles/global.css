@@ -101,9 +101,9 @@ body {
   pointer-events: none;
 }
 
-.dot-grid-right {
+.dot-grid-top {
   position: relative;
-  border-right: 4px dotted #bedcf1;
+  border-top: 4px dotted #bedcf1;
 }
 
 .dot-grid-internal {
@@ -141,18 +141,8 @@ body {
   margin-top: 0; /* to align */
   z-index: 0;
 }
-
-/* ---------------------------------------
-   Responsive – 1 cell per row on tablets
---------------------------------------- */
-@media (max-width: 768px) {
-  /* Switch to a single-column grid */
-  .dot-grid-internal {
-    grid-template-columns: 1fr;
-  }
-
-  /* Hide the centre vertical dotted line when only one column exists */
-  .dot-grid-internal::before {
-    display: none;
+@layer utilities {
+  .dot-grid-right {
+    @apply relative border-r-4 border-dotted border-primary-dot;
   }
 }
