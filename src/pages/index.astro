@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import { sanity } from "../lib/sanityClient";
 import { getHomePageQuery, getProjectsQuery } from "../lib/queries";
+import { normaliseText } from "../utils/normaliseText";
 
 const home = await sanity.fetch(getHomePageQuery);
 const projects = await sanity.fetch(getProjectsQuery);
@@ -40,6 +41,10 @@ const items: Array<{ label: string; project?: Project }> = [
     project: p,
   })),
 ];
+
+// Normalise intro text
+const introRaw = home?.intro ?? "";
+const intro = normaliseText(introRaw);
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription}>
@@ -133,12 +138,13 @@ const items: Array<{ label: string; project?: Project }> = [
       <h1 class="font-future text-2xl md:text-4xl text-primary mb-4">
         {home?.title ?? "BBA is an inter-urban studio."}
       </h1>
-      <p class="text-lg md:text-xl text-primary font-light break-words mb-4">
-        {
-          home?.intro ??
-            "We make progressive places for living and working, learning and community."
-        }
-      </p>
+      {
+        intro.map((para: string) => (
+          <p class="text-lg md:text-xl text-primary font-light break-words mb-4 whitespace-normal">
+            {para.replace(/\n+/g, " ")}
+          </p>
+        ))
+      }
       <a
         href={featuredHref}
         class="text-lg md:text-xl relative group w-fit mb-10"

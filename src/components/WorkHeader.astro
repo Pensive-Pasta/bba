@@ -1,15 +1,22 @@
 ---
 import type { PageContent } from "../types/PageContent";
+import { normaliseText } from "../utils/normaliseText";
+
 const { title, description } = Astro.props as PageContent;
+
+const introRaw = description;
+const intro = normaliseText(introRaw);
 ---
 
 <section
   class="flex flex-col md:flex-row px-4 md:px-8 pt-[200px] min-h-[60vh] max-w-[1600px] mx-auto"
 >
   <h1 class="md:w-1/2 text-3xl md:text-[40px] font-bold mb-12">{title}</h1>
-  <p
-    class="md:w-1/2 text-lg md:text-xl leading-normal text-primary mb-4 font-light md:pl-8"
-  >
-    {description}
-  </p>
+  {
+    intro.map((para: string) => (
+      <p class="md:w-1/2 text-lg md:text-xl leading-normal text-primary mb-4 font-light md:pl-8">
+        {para.replace(/\n+/g, " ")}
+      </p>
+    ))
+  }
 </section>

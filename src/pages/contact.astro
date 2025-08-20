@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageDotGrid from "../components/PageDotGrid.astro";
 import { sanity } from "../lib/sanityClient";
 import { getContactPageQuery } from "../lib/queries";
+import { normaliseText } from "../utils/normaliseText";
 
 type Location = {
   label?: string;
@@ -30,29 +31,44 @@ const locB = mapCards?.locationB;
 const overlayForIndex = (i: number) => (i === 0 ? "bg-purple" : "bg-red-600");
 // Cards array in fixed order
 const cards: Array<Location | undefined> = [locA, locB];
+
+const introRaw = description;
+const intro = normaliseText(introRaw);
 ---
 
 <BaseLayout title={seo?.metaTitle ?? title} description={seo?.metaDescription}>
   <PageDotGrid />
 
-  <section class="flex flex-col md:flex-row px-4 md:px-8 pt-[150px] md:pt-[200px] max-w-[1600px] mx-auto">
+  <section
+    class="flex flex-col md:flex-row px-4 md:px-8 pt-[150px] md:pt-[200px] max-w-[1600px] mx-auto"
+  >
     <h1 class="md:w-1/2 text-3xl md:text-[40px] font-bold mb-12">{title}</h1>
 
     <div class="md:w-1/2 md:pl-8">
-      <p class="text-lg md:text-xl leading-normal text-primary mb-8 font-light">
-        {description}
-      </p>
+      {
+        intro.map((para: string) => (
+          <p class="text-lg md:text-xl leading-normal text-primary mb-8 font-light">
+            {para.replace(/\n+/g, " ")}
+          </p>
+        ))
+      }
 
       <p class="text-sm md:text-lg leading-normal text-primary font-light mb-2">
         <span>
           E:
-          <a href={`mailto:${email}`} class="border-b border-primary hover:opacity-70 transition-opacity mb-1 break-words">
+          <a
+            href={`mailto:${email}`}
+            class="border-b border-primary hover:opacity-70 transition-opacity mb-1 break-words"
+          >
             {email}
           </a>
         </span><br />
         <span>
           T:
-          <a href={`tel:${tel}`} class="hover:opacity-70 transition-opacity break-words">
+          <a
+            href={`tel:${tel}`}
+            class="hover:opacity-70 transition-opacity break-words"
+          >
             {tel}
           </a>
         </span>
@@ -60,35 +76,55 @@ const cards: Array<Location | undefined> = [locA, locB];
     </div>
   </section>
 
-  {(locA && locB) && (
-    <section class="w-full flex md:flex-row flex-col items-center justify-center mt-[10vw]">
-      {cards.map((loc, i) => loc && (
-        <a href={loc.mapsLink} class="md:w-1/2 w-full aspect-square relative group" target="_blank" rel="noopener">
-          <div class="absolute inset-0 z-0">
-            <iframe
-              src={loc.embedSrc}
-              class="w-full h-full border-0"
-              allowfullscreen=""
-              loading="lazy" />
-            <div class={`absolute inset-0 opacity-80 mix-blend-multiply ${overlayForIndex(i)}`}></div>
-          </div>
+  {
+    locA && locB && (
+      <section class="w-full flex md:flex-row flex-col items-center justify-center mt-[10vw]">
+        {cards.map(
+          (loc, i) =>
+            loc && (
+              <a
+                href={loc.mapsLink}
+                class="md:w-1/2 w-full aspect-square relative group"
+                target="_blank"
+                rel="noopener"
+              >
+                <div class="absolute inset-0 z-0">
+                  <iframe
+                    src={loc.embedSrc}
+                    class="w-full h-full border-0"
+                    allowfullscreen=""
+                    loading="lazy"
+                  />
+                  <div
+                    class={`absolute inset-0 opacity-80 mix-blend-multiply ${overlayForIndex(i)}`}
+                  />
+                </div>
 
-          {loc.postcodeBadge && (
-            <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
-              <p class="text-white font-light text-[40px]">{loc.postcodeBadge}</p>
-            </div>
-          )}
+                {loc.postcodeBadge && (
+                  <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
+                    <p class="text-white font-light text-[40px]">
+                      {loc.postcodeBadge}
+                    </p>
+                  </div>
+                )}
 
-          <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
-            <img src="/icons/arrow-up-right.svg" alt="Open map" class="w-8" />
-          </div>
+                <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+                  <img
+                    src="/icons/arrow-up-right.svg"
+                    alt="Open map"
+                    class="w-8"
+                  />
+                </div>
 
-          <div class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm">
-            {loc.label && <div>#{loc.label}</div>}
-            {Array.isArray(loc.addressLines) && loc.addressLines.map((line) => <div>{line}</div>)}
-          </div>
-        </a>
-      ))}
-    </section>
-  )}
+                <div class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm">
+                  {loc.label && <div>#{loc.label}</div>}
+                  {Array.isArray(loc.addressLines) &&
+                    loc.addressLines.map((line) => <div>{line}</div>)}
+                </div>
+              </a>
+            )
+        )}
+      </section>
+    )
+  }
 </BaseLayout>
