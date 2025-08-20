@@ -51,7 +51,7 @@ const intro = normaliseText(introRaw);
   <div class="flex md:flex-row flex-col min-h-screen max-w-[1600px] mx-auto">
     <!-- Left: Grid -->
 
-    <div class="w-full md:w-1/2 md:dot-grid-right pt-[100px]">
+    <div class="w-full md:w-1/2 md:dot-grid-right">
       <!-- <div class="dot-grid-top md:hidden absolute inset-0 pointer-events-none">
       </div> -->
       <div class="grid grid-cols-2 dot-grid-internal">
@@ -65,7 +65,7 @@ const intro = normaliseText(introRaw);
               <>
                 <div class="grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
                   <span class="block p-4 text-2xl">{label}</span>
-                  {(i - 1) % 4 < 2 && i > 0 && proj && (
+                  {(i - 1) % 4 >= 2 && i > 0 && proj && (
                     <div
                       class="absolute inset-0 z-0 opacity-0 pointer-events-none transition-opacity duration-500"
                       data-project-tile
@@ -100,7 +100,7 @@ const intro = normaliseText(introRaw);
 
     <!-- Right: Copy -->
     <div
-      class="w-full md:w-1/2 flex flex-col px-4 md:px-8 md:sticky md:top-0 self-start md:pt-[200px] mt-10"
+      class="w-full md:w-1/2 flex flex-col px-4 md:px-8 md:sticky md:top-0 self-start md:pt-[200px] mt-10 md:mt-0"
     >
       <h1 class="font-future text-2xl md:text-4xl text-primary mb-4">
         {home?.title ?? "BBA is an inter-urban studio."}
