@@ -1,0 +1,177 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { sanity } from "../lib/sanityClient";
+import { getHomePageQuery, getProjectsQuery } from "../lib/queries";
+import { normaliseText } from "../utils/normaliseText";
+
+const home = await sanity.fetch(getHomePageQuery);
+const projects = await sanity.fetch(getProjectsQuery);
+
+// SEO
+const metaTitle =
+  home?.seo?.metaTitle || "Home | Butcher Bayley Architects (BBA)";
+const metaDescription =
+  home?.seo?.metaDescription ||
+  "Sustainable architecture across urban, inter-urban and rural contexts by Butcher Bayley Architects (BBA).";
+
+// Featured link (fallback to /studio)
+const featuredHref = home?.featuredPage?.pageSlug
+  ? `/${home.featuredPage.pageSlug.replace(/^\/+/, "")}`
+  : "/studio";
+const featuredLabel = home?.featuredPage?.pageTitle || "Studio";
+
+// Build grid items from all projects (no postcode dedupe)
+// First cell remains blank, then one cell per project up to MAX_CELLS
+const MAX_CELLS = 16;
+
+type Project = {
+  title: string;
+  postCode?: string;
+  county?: string;
+  type?: "urban" | "inter-urban" | "rural";
+  slug: { current: string };
+  imageUrl?: string;
+};
+
+const items: Array<{ label: string; project?: Project }> = [
+  { label: "" },
+  ...(projects as Project[]).slice(0, MAX_CELLS - 1).map((p) => ({
+    label: p.postCode ?? "",
+    project: p,
+  })),
+];
+
+// Normalise intro text
+const introRaw = home?.intro ?? "";
+const intro = normaliseText(introRaw);
+---
+
+<BaseLayout title={metaTitle} description={metaDescription}>
+  <div class="flex md:flex-row flex-col min-h-screen max-w-[1600px] mx-auto">
+    <!-- Left: Grid -->
+
+    <div class="w-full md:w-1/2 md:dot-grid-right pt-[100px]">
+      <!-- <div class="dot-grid-top md:hidden absolute inset-0 pointer-events-none">
+      </div> -->
+      <div class="grid grid-cols-2 dot-grid-internal">
+        {
+          items.map(({ label, project: proj }, i) => {
+            const img = proj?.imageUrl
+              ? `${proj.imageUrl}?w=800&h=800&fit=crop&auto=format&q=75`
+              : undefined;
+
+            return (
+              <>
+                <div class="grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
+                  <span class="block p-4 text-2xl">{label}</span>
+                  {(i - 1) % 4 < 2 && i > 0 && proj && (
+                    <div
+                      class="absolute inset-0 z-0 opacity-0 pointer-events-none transition-opacity duration-500"
+                      data-project-tile
+                    >
+                      <ProjectCard
+                        title={proj.title}
+                        postCode={label}
+                        county={proj.county}
+                        type={proj.type}
+                        slug={proj.slug}
+                        imageUrl={img}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* full-width divider AFTER every second item */}
+                {i % 2 === 1 && i !== items.length - 1 && (
+                  <div
+                    class="row-divider col-span-2 block"
+                    aria-hidden="true"
+                  />
+                )}
+              </>
+            );
+          })
+        }
+      </div>
+      <!-- <div class="dot-grid-top md:hidden absolute inset-0 pointer-events-none">
+      </div> -->
+    </div>
+
+    <!-- Right: Copy -->
+    <div
+      class="w-full md:w-1/2 flex flex-col px-4 md:px-8 md:sticky md:top-0 self-start md:pt-[200px] mt-10"
+    >
+      <h1 class="font-future text-2xl md:text-4xl text-primary mb-4">
+        {home?.title ?? "BBA is an inter-urban studio."}
+      </h1>
+      {
+        intro.map((para: string) => (
+          <p class="text-lg md:text-xl text-primary font-light break-words mb-4 whitespace-normal">
+            {para.replace(/\n+/g, " ")}
+          </p>
+        ))
+      }
+      <a
+        href={featuredHref}
+        class="text-lg md:text-xl relative group w-fit mb-10"
+      >
+        &gt; {featuredLabel}
+        <span
+          class="hidden lg:block absolute left-0 -bottom-1 w-0 h-[4px] bg-primary transition-all duration-300 group-hover:w-full"
+        ></span>
+      </a>
+    </div>
+  </div>
+
+  <script is:inline>
+    function setInitialState() {
+      const tiles = document.querySelectorAll("[data-project-tile]");
+      tiles.forEach((el) => {
+        // Ensure starting hidden state and slow transition
+        el.classList.add(
+          "opacity-0",
+          "pointer-events-none",
+          "transition-opacity"
+        );
+        el.classList.remove("duration-500");
+        el.classList.add("duration-[2000ms]"); // very slow fade
+      });
+    }
+
+    function runFade() {
+      const tiles = document.querySelectorAll("[data-project-tile]");
+      if (!tiles.length) return;
+      tiles.forEach((el) => {
+        el.classList.remove("pointer-events-none");
+        el.classList.add("opacity-100");
+      });
+    }
+
+    function setupScrollTrigger() {
+      // Make sure we start hidden each time this page loads via Astro soft nav
+      setInitialState();
+
+      let triggered = false;
+      const fire = () => {
+        if (triggered) return;
+        triggered = true;
+        // Small rAF to let classes apply before animating
+        requestAnimationFrame(runFade);
+        window.removeEventListener("scroll", onScroll, { passive: true });
+        window.removeEventListener("wheel", onScroll, { passive: true });
+        window.removeEventListener("touchmove", onScroll, { passive: true });
+      };
+
+      const onScroll = () => fire();
+
+      // Trigger on any user scroll gesture
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("wheel", onScroll, { passive: true });
+      window.addEventListener("touchmove", onScroll, { passive: true });
+    }
+
+    document.addEventListener("DOMContentLoaded", setupScrollTrigger);
+    document.addEventListener("astro:page-load", setupScrollTrigger);
+  </script>
+</BaseLayout>
