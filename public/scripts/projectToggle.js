@@ -11,7 +11,7 @@ const initProjectToggle = () => {
   const resetView = () => {
     grid.classList.remove("hidden");
     indexTable.classList.add("hidden");
-    document.querySelector(".filter-toggle-group")?.classList.remove("hidden");
+    document.querySelector(".filter-toggle-group")?.classList.remove("opacity-0");
   };
 
   resetView();
@@ -29,7 +29,7 @@ const initProjectToggle = () => {
         indexTable.classList.replace("opacity-0", "opacity-100");
       });
 
-      filterGroup?.classList.add("invisible");
+      filterGroup?.classList.add("opacity-0");
 
       // swap labels
       swapToggleLabels(btn, "index", "grid");
@@ -39,7 +39,7 @@ const initProjectToggle = () => {
         indexTable.classList.add("hidden");
         grid.classList.remove("opacity-0", "hidden");
         grid.classList.add("opacity-100");
-        filterGroup?.classList.remove("invisible");
+        filterGroup?.classList.remove("opacity-0");
       }, 300);
 
       // swap labels

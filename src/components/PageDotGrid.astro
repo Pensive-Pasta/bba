@@ -13,9 +13,9 @@
 <script>
   const getSpacing = () => (window.innerWidth < 768 ? 720 : 666);
   const CLASS =
-    "dot-line absolute left-0 w-full border-t-4 border-dotted border-[#bedcf1]";
+    "dot-line absolute left-0 w-full border-t-4 border-dotted border-[var(--dot-color)]";
   const VERT_CLASS =
-    "dot-vert absolute left-1/2 w-0 border-l-4 border-dotted border-[#bedcf1] -translate-x-1 pointer-events-none select-none";
+    "dot-vert absolute left-1/2 w-0 border-l-4 border-dotted border-[var(--dot-color)] -translate-x-1 pointer-events-none select-none";
 
   function drawLines(gridEl: HTMLElement) {
     gridEl
