@@ -5,6 +5,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --dot-color: rgba(190, 220, 241, 0.4);
+}
+
 /* ---------------------------------------
    Custom Fonts
 --------------------------------------- */
@@ -63,14 +67,14 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  border: 4px dotted #bedcf1;
+  border: 4px dotted var(--dot-color);
 }
 
 .dot-grid::before,
 .dot-grid::after {
   content: "";
   position: absolute;
-  background-image: radial-gradient(#bedcf1 2px, transparent 2px);
+  background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
   background-repeat: repeat;
   background-position: center;
 }
@@ -84,7 +88,7 @@ body {
   left: 50%;
   width: 0; /* no extra box width */
   transform: translateX(-2px); /* centre the 4 px border */
-  border-left: 4px dotted #bedcf1;
+  border-left: 4px dotted var(--dot-color);
   pointer-events: none;
 }
 
@@ -97,13 +101,13 @@ body {
   top: 50%;
   height: 0; /* no extra box height */
   transform: translateY(-2px); /* centre the 4 px border */
-  border-top: 4px dotted #bedcf1;
+  border-top: 4px dotted var(--dot-color);
   pointer-events: none;
 }
 
 .dot-grid-top {
   position: relative;
-  border-top: 4px dotted #bedcf1;
+  border-top: 4px dotted var(--dot-color);
 }
 
 .dot-grid-internal {
@@ -115,7 +119,7 @@ body {
 .dot-grid-internal::after {
   content: "";
   position: absolute;
-  background-image: radial-gradient(#bedcf1 2px, transparent 2px);
+  background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
   background-repeat: repeat;
   background-position: center;
 }
@@ -129,7 +133,7 @@ body {
   left: 50%;
   width: 0; /* no extra box width */
   transform: translateX(-2px); /* centre the 4 px border */
-  border-left: 4px dotted #bedcf1;
+  border-left: 4px dotted var(--dot-color);
   pointer-events: none;
   z-index: 1;
 }
@@ -137,12 +141,13 @@ body {
 .row-divider {
   grid-column: 1 / -1;
   height: 0;
-  border-top: 4px dotted #bedcf1;
+  border-top: 4px dotted var(--dot-color);
   margin-top: 0; /* to align */
   z-index: 0;
 }
 @layer utilities {
   .dot-grid-right {
-    @apply relative border-r-4 border-dotted border-primary-dot;
+    position: relative;
+    border-right: 4px dotted var(--dot-color);
   }
 }
