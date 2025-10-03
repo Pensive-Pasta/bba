@@ -16,6 +16,7 @@ function initStudioTabs() {
       tabs.forEach((t) => {
         t.classList.toggle("opacity-50", t === tab);
         t.classList.toggle("opacity-100", t !== tab);
+        t.classList.toggle("italic", t === tab);
       });
     });
   });

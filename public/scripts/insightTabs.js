@@ -15,8 +15,9 @@ function initInsightTabs() {
       // visual tab state
       tabs.forEach((t) => {
         const isActive = t === tab;
-        t.classList.toggle("opacity-100", isActive);
-        t.classList.toggle("opacity-50", !isActive);
+        t.classList.toggle("opacity-50", isActive);
+        t.classList.toggle("opacity-100", !isActive);
+        t.classList.toggle("italic", isActive);
       });
     });
   });
