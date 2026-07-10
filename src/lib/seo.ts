@@ -1,6 +1,6 @@
 export const SITE_NAME = "Butcher Bayley Architects";
 export const SITE_TITLE_SUFFIX = "Butcher Bayley Architects (BBA)";
-export const DEFAULT_SEO_IMAGE = "/images/BBA-Logo-Blue.svg";
+export const DEFAULT_SEO_IMAGE = "/images/logo-og.jpg";
 
 type PortableTextChild = {
   text?: string;
