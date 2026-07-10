@@ -36,10 +36,19 @@ const firstSlidePreload = holdingSlides[0]
     })
   : undefined;
 
+const firstSlideSocial = holdingSlides[0]
+  ? await getImage({
+      src: holdingSlides[0].image,
+      width: 1200,
+      height: 630,
+      format: "jpg",
+    })
+  : undefined;
+
 const metaTitle = "Butcher Bayley Architects | New website coming soon";
 const metaDescription =
   "A new Butcher Bayley Architects website is coming soon. In the meantime, view the project archive or contact the studio directly.";
-const ogImage = firstSlidePreload?.src;
+const ogImage = firstSlideSocial?.src;
 ---
 
 <HoldingLayout

@@ -39,11 +39,11 @@ const holdingSlides = Object.entries(holdingImageModules)
   });
 ---
 
-<section class="relative min-h-screen overflow-hidden bg-primary text-white">
+<section class="relative min-h-[100svh] overflow-hidden bg-white text-white md:min-h-screen">
   <HoldingSlideshow slides={holdingSlides} />
   <div class="absolute inset-0 bg-black/20"></div>
 
-  <div class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:px-8 md:pb-10 md:pt-8">
+  <div class="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:min-h-screen md:px-8 md:pb-10 md:pt-8">
     <header class="flex items-start justify-between gap-4 text-white">
       <Logo class="w-24 md:w-32" />
       <p class="pt-1 text-right text-[0.7rem] uppercase tracking-[0.22em] md:pt-2 md:text-sm">
