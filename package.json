@@ -2,6 +2,12 @@
   "name": "bba-site",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "overrides": {
+    "vite": "8.1.4"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -9,19 +15,18 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^6.0.2",
     "@portabletext/react": "^3.2.1",
     "@portabletext/to-html": "^2.0.14",
     "@portabletext/types": "^2.0.13",
     "@sanity/client": "^7.8.1",
-    "astro": "^5.7.4",
+    "astro": "7.0.7",
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.1",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.4",
-    "@types/node": "^24.1.0"
+    "@types/node": "^24.10.0",
+    "typescript": "^5.9.3"
   }
 }
