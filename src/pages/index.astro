@@ -5,16 +5,14 @@ import ProjectCard from "../components/ProjectCard.astro";
 import { sanity } from "../lib/sanityClient";
 import { getHomePageQuery, getProjectsQuery } from "../lib/queries";
 import { normaliseText } from "../utils/normaliseText";
+import {
+  resolveSeoDescription,
+  resolveSeoImage,
+  SITE_TITLE_SUFFIX,
+} from "../lib/seo";
 
 const home = await sanity.fetch(getHomePageQuery);
 const projects = await sanity.fetch(getProjectsQuery);
-
-// SEO
-const metaTitle =
-  home?.seo?.metaTitle || "Home | Butcher Bayley Architects (BBA)";
-const metaDescription =
-  home?.seo?.metaDescription ||
-  "Sustainable architecture across urban, inter-urban and rural contexts by Butcher Bayley Architects (BBA).";
 
 // Featured link (fallback to /studio)
 const featuredHref = home?.featuredPage?.pageSlug
@@ -46,9 +44,26 @@ const items: Array<{ label: string; project?: Project }> = [
 // Normalise intro text
 const introRaw = home?.intro ?? "";
 const intro = normaliseText(introRaw);
+const introText = intro.join(" ");
+
+const metaTitle =
+  home?.seo?.metaTitle ??
+  home?.title ??
+  `${SITE_TITLE_SUFFIX} | RIBA Chartered Practice`;
+const metaDescription = resolveSeoDescription(
+  home?.seo?.metaDescription,
+  introText,
+  "Sustainable architecture across urban, inter-urban and rural contexts by Butcher Bayley Architects."
+);
+const ogImage = resolveSeoImage(home?.seo?.ogImage?.asset?.url);
 ---
 
-<BaseLayout title={metaTitle} description={metaDescription}>
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={ogImage}
+  breadcrumbs={[{ name: "Home", path: "/" }]}
+>
   <div
     class="flex md:flex-row flex-col-reverse min-h-screen max-w-[1600px] mx-auto"
   >

@@ -20,7 +20,7 @@ const { projects } = Astro.props as { projects: Project[] };
         projects.map((project) => (
           <tr class="text-sm sm:text-lg font-light">
             <td class="pr-2">
-              <a href="#">{project.title}</a>
+              <a href={`/work/${project.slug.current}`}>{project.title}</a>
             </td>
             <td class="p-2">{project.postCode}</td>
             <td class="p-2 break-words">{project.county}</td>
