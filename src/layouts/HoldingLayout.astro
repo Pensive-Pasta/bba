@@ -1,0 +1,64 @@
+---
+import "../styles/global.css";
+import Seo from "../components/Seo.astro";
+import { SITE_NAME, DEFAULT_SEO_IMAGE } from "../lib/seo";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  preloadImageHref?: string;
+}
+
+const {
+  title = `${SITE_NAME} | New website coming soon`,
+  description = "Butcher Bayley Architects is preparing a new website. View our project archive or contact the studio in the meantime.",
+  ogImage,
+  preloadImageHref,
+} = Astro.props;
+
+const siteOrigin = Astro.site?.toString();
+
+if (!siteOrigin) {
+  throw new Error(
+    "Astro.site is required for SEO metadata. Set `site` in astro.config.mjs."
+  );
+}
+
+const canonical = new URL(Astro.url.pathname, siteOrigin).toString();
+const resolvedOgImage = ogImage
+  ? new URL(ogImage, siteOrigin).toString()
+  : new URL(DEFAULT_SEO_IMAGE, siteOrigin).toString();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <Seo
+      title={title}
+      description={description}
+      canonical={canonical}
+      siteOrigin={siteOrigin}
+      ogImage={resolvedOgImage}
+    />
+    {
+      preloadImageHref && (
+        <link
+          rel="preload"
+          as="image"
+          href={preloadImageHref}
+          type="image/webp"
+        />
+      )
+    }
+  </head>
+  <body class="min-h-screen bg-white text-primary">
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

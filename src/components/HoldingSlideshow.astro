@@ -1,0 +1,158 @@
+---
+import { Picture } from "astro:assets";
+
+interface Slide {
+  alt: string;
+  image: any;
+  path: string;
+}
+
+interface Props {
+  slides: Slide[];
+}
+
+const { slides = [] } = Astro.props;
+const hasMultipleSlides = slides.length > 1;
+const slideSizes = "(max-width: 767px) 100vw, (max-width: 1279px) 92vw, 46vw";
+const slideWidths = [640, 960, 1280, 1600, 1920];
+---
+
+<section
+  class="absolute inset-0 overflow-hidden bg-primary/10"
+  data-holding-slideshow
+  data-slide-count={slides.length}
+>
+  {
+    slides.map((slide, index) => (
+      <div
+        class={`absolute inset-0 ${index === 0 ? "opacity-100" : "opacity-0"} ${hasMultipleSlides ? "transition-opacity duration-700 ease-out motion-reduce:transition-none" : ""}`}
+        data-slide
+        data-slide-index={index}
+        aria-hidden={index === 0 ? "false" : "true"}
+      >
+        <Picture
+          src={slide.image}
+          alt={slide.alt}
+          formats={["avif", "webp"]}
+          widths={slideWidths}
+          sizes={slideSizes}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding="async"
+          fetchpriority={index === 0 ? "high" : "auto"}
+          class="h-full w-full object-cover"
+        />
+      </div>
+    ))
+  }
+
+  {
+    hasMultipleSlides && (
+      <div class="pointer-events-none absolute bottom-4 right-4 z-10 flex items-center justify-end gap-2 md:bottom-6 md:right-6">
+        {slides.map((_, index) => (
+          <span
+            class={`h-[2px] bg-white/55 transition-all duration-500 ${index === 0 ? "w-8 bg-white" : "w-4"}`}
+            data-slide-indicator
+            data-slide-indicator-index={index}
+            aria-hidden="true"
+          />
+        ))}
+      </div>
+    )
+  }
+</section>
+
+{
+  hasMultipleSlides && (
+    <script is:inline>
+      const initHoldingSlideshow = () => {
+        const root = document.querySelector("[data-holding-slideshow]");
+        if (!root) return;
+
+        const slides = Array.from(root.querySelectorAll("[data-slide]"));
+        const indicators = Array.from(
+          root.querySelectorAll("[data-slide-indicator]")
+        );
+        if (slides.length <= 1) return;
+
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+        let currentIndex = 0;
+        let timerId = null;
+
+        const setActiveSlide = (index) => {
+          slides.forEach((slide, slideIndex) => {
+            const isActive = slideIndex === index;
+            slide.classList.toggle("opacity-100", isActive);
+            slide.classList.toggle("opacity-0", !isActive);
+            slide.setAttribute("aria-hidden", String(!isActive));
+          });
+
+          indicators.forEach((indicator, indicatorIndex) => {
+            const isActive = indicatorIndex === index;
+            indicator.classList.toggle("w-8", isActive);
+            indicator.classList.toggle("w-4", !isActive);
+            indicator.classList.toggle("bg-white", isActive);
+            indicator.classList.toggle("bg-white/55", !isActive);
+          });
+        };
+
+        const stop = () => {
+          if (timerId) {
+            window.clearInterval(timerId);
+            timerId = null;
+          }
+        };
+
+        const start = () => {
+          stop();
+          if (prefersReducedMotion.matches) {
+            setActiveSlide(0);
+            currentIndex = 0;
+            return;
+          }
+
+          timerId = window.setInterval(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            setActiveSlide(currentIndex);
+          }, 4800);
+        };
+
+        setActiveSlide(0);
+        start();
+
+        root.addEventListener("mouseenter", stop);
+        root.addEventListener("mouseleave", start);
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            stop();
+          } else {
+            start();
+          }
+        });
+
+        prefersReducedMotion.addEventListener?.("change", start);
+
+        document.addEventListener(
+          "astro:before-swap",
+          () => {
+            stop();
+          },
+          { once: true }
+        );
+      };
+
+      if (document.readyState !== "loading") {
+        initHoldingSlideshow();
+      } else {
+        document.addEventListener("DOMContentLoaded", initHoldingSlideshow, {
+          once: true,
+        });
+      }
+
+      document.addEventListener("astro:page-load", initHoldingSlideshow);
+    </script>
+  )
+}

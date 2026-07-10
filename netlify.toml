@@ -1,2 +1,127 @@
 [build.environment]
   NODE_VERSION = "24"
+
+[[redirects]]
+  from = "/_astro/*"
+  to = "/_astro/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/images/*"
+  to = "/images/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/icons/*"
+  to = "/icons/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/logos/*"
+  to = "/logos/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/scripts/*"
+  to = "/scripts/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/videos/*"
+  to = "/videos/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/favicon.svg"
+  to = "/favicon.svg"
+  status = 200
+
+[[redirects]]
+  from = "/apple-touch-icon.png"
+  to = "/apple-touch-icon.png"
+  status = 200
+
+[[redirects]]
+  from = "/work"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/work/"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/work/*"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/studio"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/studio/"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/studio/*"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/insights"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/insights/"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/insights/*"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/process"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/process/"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/process/*"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/contact"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/contact/"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/contact/*"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/404"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/404.html"
+  to = "/"
+  status = 302
