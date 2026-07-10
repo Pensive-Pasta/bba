@@ -1,4 +1,6 @@
 ---
+import { DEFAULT_SEO_IMAGE } from "../lib/seo";
+
 interface Props {
   title?: string;
   description?: string;
@@ -10,7 +12,6 @@ interface Props {
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
 }
 
-const defaultOgImage = "/images/logo-og.jpg";
 const allowIndexing =
   import.meta.env.PUBLIC_ALLOW_INDEXING?.trim().toLowerCase() === "true";
 const defaultRobots = allowIndexing
@@ -33,7 +34,7 @@ const toAbsoluteUrl = (value: string) => {
   return new URL(value, siteOrigin).toString();
 };
 
-const ogImage = toAbsoluteUrl(passedOgImage ?? defaultOgImage);
+const ogImage = toAbsoluteUrl(passedOgImage ?? DEFAULT_SEO_IMAGE);
 
 const siteName = "Butcher Bayley Architects";
 const locale = "en_GB";
