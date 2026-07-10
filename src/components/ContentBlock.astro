@@ -1,0 +1,37 @@
+---
+import ImageBlock from "./ImageBlock.astro";
+import TextBlock from "./TextBlock.astro";
+
+export interface Props {
+  blocks: any[];
+}
+
+const isRenderable = (b: any) =>
+  (b?._type === "imageBlock" &&
+    Array.isArray(b.images) &&
+    b.images.some((i: any) => i?.asset?.url)) ||
+  (b?._type === "textBlock" &&
+    Array.isArray(b.content) &&
+    b.content.some(
+      (blk: any) =>
+        Array.isArray(blk?.children) &&
+        blk.children.some((s: any) => (s?.text || "").trim().length > 0)
+    ));
+
+const blocks = Astro.props.blocks.filter(isRenderable);
+---
+
+{
+  blocks.length > 0 &&
+    blocks.map((block, index) => {
+      const alignment = index % 2 === 0 ? "right" : "left";
+      switch (block._type) {
+        case "imageBlock":
+          return <ImageBlock images={block.images} alignment={alignment} />;
+        case "textBlock":
+          return <TextBlock content={block.content} alignment={alignment} />;
+        default:
+          return null;
+      }
+    })
+}

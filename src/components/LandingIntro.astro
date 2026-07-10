@@ -1,0 +1,338 @@
+---
+
+---
+
+<div class="landing-intro" data-landing-intro>
+  <div class="landing-intro__grid" aria-hidden="true"></div>
+
+  <div class="landing-intro__blueprint" aria-hidden="true">
+    <svg
+      viewBox="0 0 480 320"
+      fill="none"
+      role="presentation"
+      class="landing-intro__blueprint-svg"
+    >
+      <path
+        d="M40 260 L40 60 L220 60 L260 120 L440 120 L440 260 Z"
+        class="landing-intro__line landing-intro__line--outer"></path>
+      <path
+        d="M120 260 L120 140 L200 140 L200 260"
+        class="landing-intro__line landing-intro__line--inner"></path>
+      <path
+        d="M260 220 L260 160 L360 160 L360 220"
+        class="landing-intro__line landing-intro__line--inner"></path>
+      <path
+        d="M40 200 L440 200"
+        class="landing-intro__line landing-intro__line--detail"></path>
+      <path
+        d="M200 60 L200 120 L260 120"
+        class="landing-intro__line landing-intro__line--detail"></path>
+    </svg>
+  </div>
+
+  <div class="landing-intro__tiles" aria-hidden="true">
+    {
+      Array.from({ length: 9 }).map((_, index) => (
+        <div class={`landing-intro__tile landing-intro__tile--${index}`} />
+      ))
+    }
+  </div>
+
+  <div class="landing-intro__logo" aria-label="Butcher Bayley Architects">
+    <span>BBA</span>
+  </div>
+</div>
+
+<style>
+  .landing-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a1c2f;
+    color: white;
+    overflow: hidden;
+    pointer-events: all;
+    opacity: 1;
+    transition: opacity 400ms ease-out;
+  }
+
+  .landing-intro.is-exiting {
+    opacity: 0;
+  }
+
+  .landing-intro__grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+        rgba(43, 95, 142, 0.2) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(43, 95, 142, 0.2) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0;
+    animation: gridFade 600ms ease-out forwards 100ms;
+  }
+
+  .landing-intro__blueprint {
+    position: absolute;
+    inset: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: blueprintEnter 400ms ease-out forwards 300ms;
+  }
+
+  .landing-intro__blueprint-svg {
+    width: min(70vw, 560px);
+    height: auto;
+  }
+
+  .landing-intro__line {
+    stroke: rgba(125, 186, 235, 0.9);
+    stroke-width: 4;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: lineDraw 1600ms ease forwards 400ms;
+  }
+
+  .landing-intro__line--inner {
+    animation-delay: 600ms;
+  }
+
+  .landing-intro__line--detail {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation-delay: 950ms;
+  }
+
+  .landing-intro__tiles {
+    position: absolute;
+    inset: 50%;
+    width: min(60vw, 420px);
+    height: min(60vw, 420px);
+    max-width: 420px;
+    max-height: 420px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1px;
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
+  }
+
+  .landing-intro__tile {
+    background-size: cover;
+    background-position: center;
+    background-image: linear-gradient(
+      135deg,
+      rgba(45, 102, 153, 0.8),
+      rgba(116, 184, 225, 0.4)
+    );
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  .landing-intro.is-tiles .landing-intro__tiles {
+    animation: tilesReveal 400ms ease-out forwards;
+  }
+
+  .landing-intro.is-tiles .landing-intro__tile {
+    animation: tilePop 500ms ease-out forwards;
+  }
+
+  .landing-intro.is-tiles .landing-intro__tile:nth-child(3n + 1) {
+    animation-delay: 1000ms;
+  }
+
+  .landing-intro.is-tiles .landing-intro__tile:nth-child(3n + 2) {
+    animation-delay: 1100ms;
+  }
+
+  .landing-intro.is-tiles .landing-intro__tile:nth-child(3n) {
+    animation-delay: 1200ms;
+  }
+
+  .landing-intro__logo {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Test The Future", sans-serif;
+    font-size: clamp(32px, 6vw, 96px);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  .landing-intro.is-logo .landing-intro__logo {
+    animation: logoReveal 600ms ease-out forwards;
+  }
+
+  @keyframes gridFade {
+    to {
+      opacity: 0.55;
+    }
+  }
+
+  @keyframes blueprintEnter {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes lineDraw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes tilesReveal {
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @keyframes tilePop {
+    0% {
+      transform: scale(0.65);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes logoReveal {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .landing-intro__blueprint {
+      inset: 14%;
+    }
+
+    .landing-intro__tiles {
+      width: min(70vw, 320px);
+      height: min(70vw, 320px);
+    }
+  }
+
+  :global(body.landing-intro-lock) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  function setupLandingIntro() {
+    const overlay = document.querySelector(
+      "[data-landing-intro]"
+    ) as HTMLElement;
+    if (!overlay || overlay.dataset.bound === "1") return;
+
+    overlay.dataset.bound = "1";
+
+    const body = document.body;
+
+    let reduceMotion = false;
+    try {
+      reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+    } catch (err) {
+      reduceMotion = false;
+    }
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const forceIntro = searchParams.get("intro") === "1";
+
+    let alreadyPlayed = false;
+    let storage;
+    try {
+      storage = window.sessionStorage;
+      alreadyPlayed = storage.getItem("landingIntroPlayed") === "1";
+    } catch (err) {
+      storage = null;
+      alreadyPlayed = false;
+    }
+
+    const finishIntro = () => {
+      overlay.classList.add("is-exiting");
+      overlay.addEventListener(
+        "transitionend",
+        () => {
+          overlay.remove();
+          body.classList.remove("landing-intro-lock");
+          document.dispatchEvent(new CustomEvent("landing:intro-end"));
+        },
+        { once: true }
+      );
+    };
+
+    const skipIntro = reduceMotion || (alreadyPlayed && !forceIntro);
+
+    if (skipIntro) {
+      overlay.remove();
+      body.classList.remove("landing-intro-lock");
+      document.dispatchEvent(new CustomEvent("landing:intro-end"));
+      return;
+    }
+
+    body.classList.add("landing-intro-lock");
+    if (storage) {
+      try {
+        storage.setItem("landingIntroPlayed", "1");
+      } catch (err) {
+        /* ignore write failures */
+      }
+    }
+
+    overlay.classList.add("is-playing");
+
+    window.setTimeout(() => {
+      if (!document.body.contains(overlay)) return;
+      overlay.classList.add("is-tiles");
+    }, 850);
+
+    window.setTimeout(() => {
+      if (!document.body.contains(overlay)) return;
+      overlay.classList.add("is-logo");
+    }, 1750);
+
+    window.setTimeout(() => {
+      if (!document.body.contains(overlay)) return;
+      finishIntro();
+    }, 2600);
+  }
+
+  function initLandingIntro() {
+    setupLandingIntro();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initLandingIntro, {
+      once: true,
+    });
+  } else {
+    initLandingIntro();
+  }
+
+  document.removeEventListener("astro:page-load", initLandingIntro);
+  document.addEventListener("astro:page-load", initLandingIntro);
+</script>

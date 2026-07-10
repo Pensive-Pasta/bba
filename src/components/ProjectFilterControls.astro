@@ -1,0 +1,50 @@
+<div class="flex items-center text-lg p-4 md:p-8 max-w-[1600px] mx-auto">
+  <div
+    class="filter-toggle-group w-full max-w-[660px] relative flex flex-nowrap whitespace-nowrap items-center justify-between md:justify-end sm:gap-2 border-2 border-primary rounded-full below-xs:text-xs text-sm md:text-xl"
+  >
+    <button
+      class="filter-btn rounded-full px-2 sm:px-5 lg:px-8 py-2 active-filter min-w-[50px] sm:min-w-[68px] w-full"
+      data-type="both">All</button
+    >
+    <button
+      class="filter-btn rounded-full px-3 sm:px-5 lg:px-8 py-2 w-full"
+      data-type="urban">Urban</button
+    >
+    <button
+      class="filter-btn rounded-full px-3 sm:px-5 lg:px-8 py-2 w-full"
+      data-type="inter-urban">Inter-Urban</button
+    >
+    <button
+      class="filter-btn rounded-full px-3 sm:px-5 lg:px-8 py-2 w-full"
+      data-type="rural">Rural</button
+    >
+    <span
+      id="filter-indicator"
+      class="absolute top-0 left-0 h-full rounded-full bg-primary transition-transform duration-300 ease-out pointer-events-none z-[-1]"
+    ></span>
+  </div>
+  <div class="flex flex-row justify-end pl-2 group ml-auto">
+    <button id="index-toggle" class="border-2 border-primary rounded-full p-3 sm:border-0">
+      <div
+        class="text-base md:text-lg relative z-10 flex items-center gap-2 transition-opacity duration-300 ease-in-out min-w-[16px]"
+      >
+        <span
+          id="label-index"
+          class="flex items-center gap-4 opacity-100 group-hover:scale-105 transition-all duration-300 ease-in-out"
+        >
+          <span class="hidden sm:inline text-xl">Index</span>
+          <img src="/icons/Index.svg" alt="Index" class="w-6" />
+        </span>
+      </div>
+      <span
+        id="label-grid"
+        class="items-center gap-2 opacity-0 transition-all duration-300 ease-in-out hidden group-hover:scale-105"
+      >
+        <div class="flex items-center gap-2">
+          <span class="hidden sm:inline text-xl">Grid</span>
+          <img src="/icons/Grid.svg" alt="Grid" class="w-6" />
+        </div>
+      </span>
+    </button>
+  </div>
+</div>

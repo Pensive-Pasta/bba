@@ -1,0 +1,41 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageDotGrid from "../../components/PageDotGrid.astro";
+import ContentBlock from "../../components/ContentBlock.astro";
+import { sanity } from "../../lib/sanityClient";
+import { getInsightBySlugQuery } from "../../lib/queries";
+
+const { slug } = Astro.params;
+
+export async function getStaticPaths() {
+  const insights = await sanity.fetch(
+    `*[_type == "insight"]{ "slug": slug.current }`
+  );
+  return insights.map((i: { slug: string }) => ({ params: { slug: i.slug } }));
+}
+
+const insight = await sanity.fetch(getInsightBySlugQuery, { slug });
+
+const seoTitle = insight.seo?.metaTitle ?? `${insight.title} | Insights | Butcher Bayley Architects (BBA)`;
+
+const seoDescription =
+  insight.seo?.metaDescription ??
+  `Read ${insight.title} from Butcher Bayley Architects, part of our Insights series.`;
+
+const seoOgImage = insight.seo?.ogImage?.asset?.url ?? undefined;
+---
+
+<BaseLayout title={seoTitle} description={seoDescription} ogImage={seoOgImage}>
+  <PageDotGrid />
+  <article class="max-w-[1600px] mx-auto pb-20 pt-[200px] min-h-[60vh]">
+    <h1 class="text-3xl md:text-4xl font-bold mb-4 px-4 md:px-8 md:w-1/2">
+      {insight.title}
+    </h1>
+    <p class="text-sm mb-12 px-4 md:px-8">
+      {new Date(insight.publishedAt).toLocaleDateString()}
+    </p>
+    <div class="mt-12 md:-mt-32">
+      <ContentBlock blocks={insight.contentBlocks} />
+    </div>
+  </article>
+</BaseLayout>

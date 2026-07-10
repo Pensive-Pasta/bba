@@ -1,28 +1,153 @@
+/* ---------------------------------------
+   Tailwind Imports
+--------------------------------------- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-primary: 'Test The Future', sans-serif;
-  --color-background: #ffffff;
-  --color-text: #111111;
-  --spacing-section: 4rem;
+  --dot-color: rgba(190, 220, 241, 0.4);
+}
+
+/* ---------------------------------------
+   Custom Fonts
+--------------------------------------- */
+@font-face {
+  font-family: "Test The Future";
+  src: url("../assets/fonts/test-the-future-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'Test The Future';
-  src: url('/fonts/test-the-future-medium-italic.woff2') format('woff2');
+  font-family: "Test The Future";
+  src: url("../assets/fonts/test-the-future-light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
-/* Base styles */
-body {
-  font-family: var(--font-primary);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  line-height: 1.5;
-  min-height: 100vh;
+/* ---------------------------------------
+   Base Styles
+--------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
+body {
+  @apply font-future text-primary leading-relaxed min-h-screen;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background-color: #178fe4;
+  color: white;
+}
+
+/* ---------------------------------------
+   Accessibility
+--------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.dot-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  border: 4px dotted var(--dot-color);
+}
+
+.dot-grid::before,
+.dot-grid::after {
+  content: "";
+  position: absolute;
+  background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
+  background-repeat: repeat;
+  background-position: center;
+}
+
+/* Vertical line down the center */
+.dot-grid::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 50%;
+  width: 0; /* no extra box width */
+  transform: translateX(-2px); /* centre the 4 px border */
+  border-left: 4px dotted var(--dot-color);
+  pointer-events: none;
+}
+
+/* Horizontal line across the center */
+.dot-grid::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 50%;
+  height: 0; /* no extra box height */
+  transform: translateY(-2px); /* centre the 4 px border */
+  border-top: 4px dotted var(--dot-color);
+  pointer-events: none;
+}
+
+.dot-grid-top {
+  position: relative;
+  border-top: 4px dotted var(--dot-color);
+}
+
+.dot-grid-internal {
+  position: relative;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.dot-grid-internal::before,
+.dot-grid-internal::after {
+  content: "";
+  position: absolute;
+  background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
+  background-repeat: repeat;
+  background-position: center;
+}
+
+/* Vertical line down the center */
+.dot-grid-internal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 0; /* no extra box width */
+  transform: translateX(-2px); /* centre the 4 px border */
+  border-left: 4px dotted var(--dot-color);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.row-divider {
+  grid-column: 1 / -1;
+  height: 0;
+  border-top: 4px dotted var(--dot-color);
+  margin-top: 0; /* to align */
+  z-index: 0;
+}
+@layer utilities {
+  .dot-grid-right {
+    position: relative;
+    border-right: 4px dotted var(--dot-color);
+  }
+}

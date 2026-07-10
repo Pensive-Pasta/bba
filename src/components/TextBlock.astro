@@ -1,0 +1,32 @@
+---
+import type { PortableTextBlock } from "@portabletext/types";
+import { toHTML } from "@portabletext/to-html";
+
+interface Props {
+  content: PortableTextBlock[];
+  alignment: "left" | "right";
+}
+
+const { content, alignment } = Astro.props || [];
+const alignmentClass =
+  alignment === "right" ? "md:ml-auto md:mr-0" : "md:mr-auto md:ml-0";
+
+const html = toHTML(content, {
+  components: {
+    block: {
+      normal: ({ children }) =>
+        `<p class="text-lg md:text-xl text-primary font-light break-words hyphens-none">${children}</p>`,
+    },
+    marks: {
+      strong: ({ children }) =>
+        `<strong class="font-bold">${children}</strong>`,
+    },
+  },
+});
+---
+
+<section
+  class={`w-full md:w-1/2 px-4 md:pr-8 mb-12 break-words ${alignmentClass}`}
+>
+  <div set:html={html} />
+</section>

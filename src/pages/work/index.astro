@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageDotGrid from "../../components/PageDotGrid.astro";
+import { sanity } from "../../lib/sanityClient";
+import { getProjectsQuery, getWorkPageQuery } from "../../lib/queries";
+import ProjectFilterControls from "../../components/ProjectFilterControls.astro";
+import ProjectGrid from "../../components/ProjectGrid.astro";
+import ProjectIndexTable from "../../components/ProjectIndexTable.astro";
+import WorkHeader from "../../components/WorkHeader.astro";
+
+const workPage = await sanity.fetch(getWorkPageQuery);
+const projects = await sanity.fetch(getProjectsQuery);
+
+export interface Project {
+  title: string;
+  slug: { current: string };
+  postCode: string;
+  county: string;
+  year: number;
+  type: "urban" | "inter-urban" | "rural";
+  imageUrl: string;
+}
+
+const metaTitle =
+  workPage?.seo?.metaTitle ||
+  "Our work | Butcher Bayley Architects (BBA) | RIBA Chartered Practice";
+const metaDescription =
+  workPage?.seo?.metaDescription ||
+  "Explore Butcher Bayley Architects’ portfolio. Filter projects by urban, inter-urban and rural settings, showcasing our sustainable, place-making approach.";
+---
+
+<BaseLayout title={metaTitle} description={metaDescription}>
+  <section id="work-page" class="">
+    <PageDotGrid />
+    <WorkHeader title={workPage.title} description={workPage.description} />
+    <ProjectFilterControls />
+    <ProjectGrid projects={projects} />
+    <ProjectIndexTable projects={projects} />
+  </section>
+
+  <style>
+    :global(.active-filter) {
+      @apply text-white;
+    }
+  </style>
+
+  <script is:inline src="/scripts/projectToggle.js" type="module"></script>
+</BaseLayout>

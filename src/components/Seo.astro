@@ -1,0 +1,59 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: "website" | "article";
+  ogImage?: string;        // absolute URL preferred
+  robots?: string;         // e.g. "index,follow,max-image-preview:large"
+  jsonLd?: Record<string, any> | Array<Record<string, any>>;
+}
+
+// No canonical while testing
+
+// Fallback OG (served from /public/images/)
+const defaultOgImage = "/images/logo-og.jpg";
+
+const {
+  title = "Butcher Bayley Architects (BBA) | RIBA Chartered Practice",
+  description = "RIBA chartered practice designing sustainable architecture.",
+  ogType = "website",
+  ogImage: passedOgImage,
+  robots = "noindex,follow",
+  jsonLd
+} = Astro.props;
+
+const ogImage = passedOgImage ?? defaultOgImage;
+
+const siteName = "Butcher Bayley Architects";
+const locale = "en_GB";
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<!-- {canonical && <link rel="canonical" href={canonical} />} -->
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<!-- {canonical && <meta property="og:url" content={canonical} />} -->
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:locale" content={locale} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={`${title} – ${siteName}`} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<meta name="robots" content={robots} />
+
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="theme-color" content="#ffffff" />
+
+{jsonLd && (
+  Array.isArray(jsonLd)
+    ? jsonLd.map((n) => <script type="application/ld+json">{JSON.stringify(n)}</script>)
+    : <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+)}
