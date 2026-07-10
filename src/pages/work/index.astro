@@ -7,6 +7,11 @@ import ProjectFilterControls from "../../components/ProjectFilterControls.astro"
 import ProjectGrid from "../../components/ProjectGrid.astro";
 import ProjectIndexTable from "../../components/ProjectIndexTable.astro";
 import WorkHeader from "../../components/WorkHeader.astro";
+import {
+  resolveSeoDescription,
+  resolveSeoImage,
+  SITE_TITLE_SUFFIX,
+} from "../../lib/seo";
 
 const workPage = await sanity.fetch(getWorkPageQuery);
 const projects = await sanity.fetch(getProjectsQuery);
@@ -23,19 +28,32 @@ export interface Project {
 
 const metaTitle =
   workPage?.seo?.metaTitle ||
-  "Our work | Butcher Bayley Architects (BBA) | RIBA Chartered Practice";
-const metaDescription =
-  workPage?.seo?.metaDescription ||
-  "Explore Butcher Bayley Architects’ portfolio. Filter projects by urban, inter-urban and rural settings, showcasing our sustainable, place-making approach.";
+  `${workPage?.title ?? "Work"} | ${SITE_TITLE_SUFFIX}`;
+const metaDescription = resolveSeoDescription(
+  workPage?.seo?.metaDescription,
+  workPage?.description,
+  "Explore Butcher Bayley Architects’ portfolio. Filter projects by urban, inter-urban and rural settings, showcasing our sustainable, place-making approach."
+);
+const ogImage = resolveSeoImage(workPage?.seo?.ogImage?.asset?.url);
 ---
 
-<BaseLayout title={metaTitle} description={metaDescription}>
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={ogImage}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Work", path: "/work/" },
+  ]}
+>
   <section id="work-page" class="">
     <PageDotGrid />
     <WorkHeader title={workPage.title} description={workPage.description} />
     <ProjectFilterControls />
-    <ProjectGrid projects={projects} />
-    <ProjectIndexTable projects={projects} />
+    <div class="work-results lg:min-h-[960px]">
+      <ProjectGrid projects={projects} />
+      <ProjectIndexTable projects={projects} />
+    </div>
   </section>
 
   <style>

@@ -7,6 +7,12 @@ import { getProjectBySlugQuery } from "../../lib/queries";
 import ContentBlock from "../../components/ContentBlock.astro";
 import ProjectMeta from "../../components/ProjectMeta.astro";
 import Credits from "../../components/Credits.astro";
+import {
+  portableTextToPlainText,
+  resolveSeoDescription,
+  resolveSeoImage,
+  SITE_TITLE_SUFFIX,
+} from "../../lib/seo";
 
 const { slug } = Astro.params;
 
@@ -19,30 +25,41 @@ export async function getStaticPaths() {
 
 const projectInfo = await sanity.fetch(getProjectBySlugQuery, { slug });
 
-// Helper: build OG image from hero
-const ogFromHero = (url?: string) =>
-  url ? `${url}?w=1200&h=630&fit=crop&auto=format&q=80` : undefined;
-
-// Title parts (fallback if no SEO override)
-const seoTitleParts = [
-  projectInfo.title,
+const seoTitle =
+  projectInfo.seo?.metaTitle ?? `${projectInfo.title} | Work | ${SITE_TITLE_SUFFIX}`;
+const projectSummary = [
   projectInfo.type
-    ? ` ${projectInfo.type.charAt(0).toUpperCase() + projectInfo.type.slice(1)} Project`
-    : null,
-  projectInfo.county ? `in ${projectInfo.county}` : null,
-  "Butcher Bayley Architects (BBA)",
-].filter(Boolean);
-
-const seoTitle = projectInfo.seo?.metaTitle ?? seoTitleParts.join(" | ");
-const seoDescription = projectInfo.seo?.metaDescription ?? undefined;
-const ogImage = ogFromHero(projectInfo.imageUrl); // hero -> 1200x630 crop
+    ? `${projectInfo.type.charAt(0).toUpperCase() + projectInfo.type.slice(1)} project`
+    : undefined,
+  projectInfo.county ? `in ${projectInfo.county}` : undefined,
+  projectInfo.year ? `completed in ${projectInfo.year}` : undefined,
+]
+  .filter(Boolean)
+  .join(", ");
+const blockText = portableTextToPlainText(projectInfo.contentBlocks);
+const seoDescription = resolveSeoDescription(
+  projectInfo.seo?.metaDescription,
+  blockText,
+  projectSummary ? `${projectInfo.title}, ${projectSummary}.` : projectInfo.title
+);
+const heroOgImage = projectInfo.imageUrl
+  ? `${projectInfo.imageUrl}?w=1200&h=630&fit=crop&auto=format&q=80`
+  : undefined;
+const ogImage = resolveSeoImage(
+  projectInfo.seo?.ogImage?.asset?.url,
+  heroOgImage
+);
 ---
 
 <BaseLayout
   title={seoTitle}
   description={seoDescription}
-  ogType="article"
   ogImage={ogImage}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Work", path: "/work/" },
+    { name: projectInfo.title, path: `/work/${slug}/` },
+  ]}
 >
   <PageDotGrid />
   <article class="min-h-[100vh]">
