@@ -9,7 +9,7 @@ export default {
         "below-xs": { max: "374px" },
       },
       fontFamily: {
-        future: ['"Test The Future"', ...defaultTheme.fontFamily.sans],
+        future: ['"The Future"', ...defaultTheme.fontFamily.sans],
       },
       fontSize: {
         headline: ["48px", { lineHeight: "60px" }],
