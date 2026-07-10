@@ -7,17 +7,19 @@ export const getHomePageQuery = `*[_type == "homePage"][0]{
   },
   seo{
     metaTitle,
-    metaDescription
+    metaDescription,
+    ogImage{ asset->{ url } }
   }
 }`;
 
 export const getWorkPageQuery = `*[_type == "workPage"][0]{
   title,
   description,
-        seo{
+  seo{
     metaTitle,
     metaDescription,
-  },
+    ogImage{ asset->{ url } }
+  }
 }`;
 
 export const getProjectsQuery = `*[_type == "project"] | order(year desc){
@@ -40,9 +42,10 @@ export const getProjectBySlugQuery = `
   type,
   "imageUrl": heroImage.asset->url,
   "altText": heroImage.altText,
-      seo{
+  seo{
     metaTitle,
     metaDescription,
+    ogImage{ asset->{ url } }
   },
   // Default to [] if missing
   "contentBlocks": coalesce(contentBlocks, [])[]{
@@ -130,7 +133,8 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
   // SEO
   seo{
     metaTitle,
-    metaDescription
+    metaDescription,
+    ogImage{ asset->{ url } }
   }
 }`;
 
@@ -138,7 +142,8 @@ export const getInsightPageQuery = `*[_type == "insightPage"][0]{
   title,
   seo{
     metaTitle,
-    metaDescription
+    metaDescription,
+    ogImage{ asset->{ url } }
   }
 }`;
 
@@ -153,7 +158,7 @@ export const getInsightBySlugQuery = `
 *[_type == "insight" && slug.current == $slug][0]{
   title,
   "publishedAt": coalesce(publishedAt, _createdAt),
-    seo{
+  seo{
     metaTitle,
     metaDescription,
     ogImage{ asset->{ url } }
@@ -184,6 +189,10 @@ export const getContactPageQuery = `
     locationA{ label, addressLines, postcodeBadge, mapsLink, embedSrc },
     locationB{ label, addressLines, postcodeBadge, mapsLink, embedSrc }
   },
-  seo{ metaTitle, metaDescription }
+  seo{
+    metaTitle,
+    metaDescription,
+    ogImage{ asset->{ url } }
+  }
 }
 `;

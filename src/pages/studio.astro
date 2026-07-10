@@ -7,17 +7,34 @@ import { getStudioPageQuery } from "../lib/queries";
 import PeopleGrid from "../components/PeopleGrid.astro";
 import StudioHeader from "../components/StudioHeader.astro";
 import TextBlock from "../components/TextBlock.astro";
+import {
+  portableTextToPlainText,
+  resolveSeoDescription,
+  resolveSeoImage,
+  SITE_TITLE_SUFFIX,
+} from "../lib/seo";
 
 const studioPage = await sanity.fetch(getStudioPageQuery);
 
 const metaTitle =
-  studioPage?.seo?.metaTitle || "Studio | Butcher Bayley Architects (BBA)";
-const metaDescription =
-  studioPage?.seo?.metaDescription ||
-  "Meet our team, discover our values, and explore the profile of Butcher Bayley Architects, a RIBA Chartered Practice.";
+  studioPage?.seo?.metaTitle || `${studioPage?.title ?? "Studio"} | ${SITE_TITLE_SUFFIX}`;
+const metaDescription = resolveSeoDescription(
+  studioPage?.seo?.metaDescription,
+  portableTextToPlainText(studioPage?.profileBlocks),
+  "Meet our team, discover our values, and explore the profile of Butcher Bayley Architects, a RIBA Chartered Practice."
+);
+const ogImage = resolveSeoImage(studioPage?.seo?.ogImage?.asset?.url);
 ---
 
-<BaseLayout title={metaTitle} description={metaDescription}>
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={ogImage}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Studio", path: "/studio/" },
+  ]}
+>
   <PageDotGrid />
   <StudioHeader
     title="Studio"
@@ -50,5 +67,5 @@ const metaDescription =
     </div>
   </section>
 
-  <script type="module" src="/scripts/studioTabs.js"></script>
+  <script is:inline type="module" src="/scripts/studioTabs.js"></script>
 </BaseLayout>

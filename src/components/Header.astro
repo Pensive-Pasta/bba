@@ -11,6 +11,7 @@ const navItems = [
 const currentYear = new Date().getFullYear();
 
 const textColor = "text-primary";
+const privacyUrl = "https://wearebba.co.uk/privacy-policy/";
 ---
 
 <header
@@ -23,13 +24,21 @@ const textColor = "text-primary";
     <a
       href="/"
       class="text-xl font-light tracking-tighter z-40 header-link text-current"
+      aria-label="Butcher Bayley Architects home"
     >
       <span class="header-text">
         <Logo class="logo" />
       </span>
     </a>
 
-    <button class="z-40 relative" id="menu-toggle" aria-label="Toggle menu">
+    <button
+      class="z-40 relative"
+      id="menu-toggle"
+      type="button"
+      aria-label="Toggle menu"
+      aria-controls="nav-menu"
+      aria-expanded="false"
+    >
       <div class="w-12 h-10 flex flex-col justify-between overflow-hidden">
         <span
           class="w-full h-1 transform transition-all duration-300 origin-left menu-line-1 bg-current"
@@ -45,50 +54,53 @@ const textColor = "text-primary";
   </div>
 
   <div
-    class="nav-menu fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto max-w-[1600px] mx-auto isolate"
+    class="nav-menu fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto isolate bg-[#178FE4]"
     id="nav-menu"
+    aria-hidden="true"
   >
     <div
       id="nav-bg"
       class="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#178FE4]"
     >
     </div>
-    <div
-      class="relative z-10 flex flex-col items-center justify-between h-full bg-primary pt-[160px] px-4 md:px-8 pb-8"
-    >
-      <div class="dot-grid w-full max-w-[600px] aspect-square">
-        {
-          navItems.map((item) => (
-            <a
-              href={item.url}
-              class="group aspect-square flex items-start justify-start text-white p-4 text-2xl lg:text-4xl text-center"
-            >
-              <p class="relative group transition-transform duration-500 mt-1">
-                {item.name}
-                <span class="hidden lg:block absolute left-0 -bottom-1 w-0 h-[2px] bg-current transition-all duration-300 group-hover:w-full" />
+    <div class="relative z-10 h-full max-w-[1600px] mx-auto">
+      <div
+        class="flex flex-col items-center justify-between h-full bg-primary pt-[160px] px-4 md:px-8 pb-8"
+      >
+        <nav class="dot-grid w-full max-w-[600px] aspect-square" aria-label="Primary">
+          {
+            navItems.map((item) => (
+              <a
+                href={item.url}
+                class="group aspect-square flex items-start justify-start text-white p-4 text-2xl lg:text-4xl text-center"
+              >
+                <p class="relative group transition-transform duration-500 mt-1">
+                  {item.name}
+                  <span class="hidden lg:block absolute left-0 -bottom-1 w-0 h-[2px] bg-current transition-all duration-300 group-hover:w-full" />
+                </p>
+              </a>
+            ))
+          }
+        </nav>
+        <div class="mb-1 w-full">
+          <ul
+            class="flex justify-between items-center text-white text-sm lg:text-lg transition-colors font-light"
+          >
+            <li>
+              <p>
+                &copy; {currentYear} Butcher Bayley Architects
               </p>
-            </a>
-          ))
-        }
-      </div>
-      <div class="mb-1 w-full">
-        <ul
-          class="flex justify-between items-center text-white text-sm lg:text-lg transition-colors font-light"
-        >
-          <li>
-            <p>
-              &copy; {currentYear} Butcher Bayley Architects
-            </p>
-          </li>
-          <li>
-            <a class="flex items-center gap-2" href="/privacy">
-              Our Privacy Policy
-              <span class="inline-block text-white mt-1">
-                <img src="/icons/policy-arrow.svg" alt="Arrow" class="w-4" />
-              </span>
-            </a>
-          </li>
-        </ul>
+            </li>
+            <li>
+              <a class="flex items-center gap-2" href={privacyUrl}>
+                Our Privacy Policy
+                <span class="inline-block text-white mt-1">
+                  <img src="/icons/policy-arrow.svg" alt="Arrow" class="w-4" />
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -103,31 +115,69 @@ const textColor = "text-primary";
     const menuLine2 = document.querySelector(".menu-line-2");
     const menuLine3 = document.querySelector(".menu-line-3");
     const logo = document.querySelector(".logo");
-
-    if (!menuToggle || !mobileMenu) return;
-    if (menuToggle.dataset.bound) return;
-    menuToggle.dataset.bound = "true";
-
-    const handleToggle = (e: { preventDefault: () => void }) => {
-      e.preventDefault();
-      mobileMenu.classList.toggle("hidden");
-      body.classList.toggle("overflow-hidden");
-      logo?.classList.toggle("text-white");
-      logo?.classList.toggle("text-primary");
-
-      menuLine1?.classList.toggle("rotate-45");
-      menuLine1?.classList.toggle("translate-x-1");
-      menuLine1?.classList.toggle("translate-y-[1px]");
-      menuLine2?.classList.toggle("scale-x-0");
-      menuLine3?.classList.toggle("-rotate-45");
-      menuLine3?.classList.toggle("translate-x-1");
-      menuLine1?.classList.toggle("!bg-white");
-      menuLine2?.classList.toggle("!bg-white");
-      menuLine3?.classList.toggle("!bg-white");
+    const navWindow = window as Window & {
+      __bbaNavController?: AbortController;
     };
 
-    menuToggle.addEventListener("click", handleToggle);
-    menuToggle.addEventListener("touchstart", handleToggle);
+    if (!menuToggle || !mobileMenu) return;
+    navWindow.__bbaNavController?.abort();
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    navWindow.__bbaNavController = controller;
+
+    const setMenuState = (isOpen: boolean) => {
+      mobileMenu.classList.toggle("hidden", !isOpen);
+      mobileMenu.setAttribute("aria-hidden", String(!isOpen));
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      body.classList.toggle("overflow-hidden", isOpen);
+      logo?.classList.toggle("text-white", isOpen);
+      logo?.classList.toggle("text-primary", !isOpen);
+
+      menuLine1?.classList.toggle("rotate-45", isOpen);
+      menuLine1?.classList.toggle("translate-x-1", isOpen);
+      menuLine1?.classList.toggle("translate-y-[1px]", isOpen);
+      menuLine2?.classList.toggle("scale-x-0", isOpen);
+      menuLine3?.classList.toggle("-rotate-45", isOpen);
+      menuLine3?.classList.toggle("translate-x-1", isOpen);
+      menuLine1?.classList.toggle("!bg-white", isOpen);
+      menuLine2?.classList.toggle("!bg-white", isOpen);
+      menuLine3?.classList.toggle("!bg-white", isOpen);
+    };
+
+    const closeMenu = () => setMenuState(false);
+
+    menuToggle.addEventListener(
+      "click",
+      (event) => {
+        event.preventDefault();
+        setMenuState(mobileMenu.classList.contains("hidden"));
+      },
+      { signal }
+    );
+
+    mobileMenu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu, { signal });
+    });
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape") closeMenu();
+      },
+      { signal }
+    );
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        closeMenu();
+        controller.abort();
+      },
+      { once: true, signal }
+    );
+
+    closeMenu();
   };
 
   if (document.readyState !== "loading") {
@@ -186,10 +236,6 @@ const textColor = "text-primary";
     const applyTheme = () => {
       bgEl.className =
         "fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#178FE4]";
-    };
-
-    const resetTheme = () => {
-      applyTheme();
     };
 
     applyTheme(); // correct background on load

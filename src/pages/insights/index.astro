@@ -4,19 +4,34 @@ import InsightGrid from "../../components/InsightGrid.astro";
 import PageDotGrid from "../../components/PageDotGrid.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getInsightsQuery, getInsightPageQuery } from "../../lib/queries";
+import {
+  resolveSeoDescription,
+  resolveSeoImage,
+  SITE_TITLE_SUFFIX,
+} from "../../lib/seo";
 
 const insightPage = await sanity.fetch(getInsightPageQuery);
 const insights = await sanity.fetch(getInsightsQuery);
 const filterTypes = ["all", "news", "projects", "thinking"];
 
 const metaTitle =
-  insightPage?.seo?.metaTitle || "Insights | Butcher Bayley Architects (BBA)";
-const metaDescription =
-  insightPage?.seo?.metaDescription ||
-  "Latest news, projects, and thinking from Butcher Bayley Architects.";
+  insightPage?.seo?.metaTitle || `${insightPage?.title ?? "Insights"} | ${SITE_TITLE_SUFFIX}`;
+const metaDescription = resolveSeoDescription(
+  insightPage?.seo?.metaDescription,
+  "Latest news, projects, and thinking from Butcher Bayley Architects."
+);
+const ogImage = resolveSeoImage(insightPage?.seo?.ogImage?.asset?.url);
 ---
 
-<BaseLayout title={metaTitle} description={metaDescription}>
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={ogImage}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Insights", path: "/insights/" },
+  ]}
+>
   <section id="insights-page" class="">
     <PageDotGrid />
 
