@@ -5,6 +5,7 @@ import Footer from "../components/Footer.astro";
 import { ClientRouter } from "astro:transitions";
 import Seo from "../components/Seo.astro";
 import { SITE_NAME, DEFAULT_SEO_IMAGE } from "../lib/seo";
+import theFutureRegularUrl from "../assets/fonts/the-future-regular.woff2";
 
 const {
   title,
@@ -95,10 +96,12 @@ const structuredData = [
       robots={robots}
       jsonLd={structuredData}
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
+    <link
+      rel="preload"
+      href={theFutureRegularUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
     /></head
   >
 
