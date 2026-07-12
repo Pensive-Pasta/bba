@@ -8,6 +8,9 @@ interface Props {
   description?: string;
   ogImage?: string;
   preloadImageHref?: string;
+  robots?: string;
+  robotsComment?: string;
+  themeColor?: string;
 }
 
 const {
@@ -15,6 +18,9 @@ const {
   description = "Butcher Bayley Architects is preparing a new website. View our project archive or contact the studio in the meantime.",
   ogImage,
   preloadImageHref,
+  robots,
+  robotsComment,
+  themeColor,
 } = Astro.props;
 
 const siteOrigin = Astro.site?.toString();
@@ -44,6 +50,9 @@ const resolvedOgImage = ogImage
       canonical={canonical}
       siteOrigin={siteOrigin}
       ogImage={resolvedOgImage}
+      robots={robots}
+      robotsComment={robotsComment}
+      themeColor={themeColor}
     />
     {
       preloadImageHref && (

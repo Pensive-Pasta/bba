@@ -9,6 +9,8 @@ interface Props {
   canonical?: string;
   siteOrigin: string;
   robots?: string;
+  robotsComment?: string;
+  themeColor?: string;
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
 }
 
@@ -26,6 +28,8 @@ const {
   canonical,
   siteOrigin,
   robots = defaultRobots,
+  robotsComment,
+  themeColor = "#ffffff",
   jsonLd,
 } = Astro.props;
 
@@ -64,11 +68,12 @@ const jsonLdEntries = jsonLd
 <meta name="twitter:image" content={ogImage} />
 <meta name="twitter:image:alt" content={`${title} – ${siteName}`} />
 
+{robotsComment && <Fragment set:html={`<!-- ${robotsComment} -->`} />}
 <meta name="robots" content={robots} />
 
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/images/BBA-Logo.png" />
-<meta name="theme-color" content="#ffffff" />
+<meta name="theme-color" content={themeColor} />
 
 {
   jsonLdEntries.map((entry) => (

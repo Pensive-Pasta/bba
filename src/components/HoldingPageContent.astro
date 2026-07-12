@@ -5,77 +5,119 @@ import HoldingSlideshow from "./HoldingSlideshow.astro";
 import { sanity } from "../lib/sanityClient";
 import { getContactPageQuery } from "../lib/queries";
 
+type HoldingSlide = {
+  code: string;
+  title: string;
+  alt: string;
+  image: ImageMetadata;
+  mobileImage?: ImageMetadata;
+};
+
 type ContactData = {
   email?: string;
 };
 
+interface Props {
+  slides: HoldingSlide[];
+}
+
+const { slides = [] } = Astro.props;
 const contactData = (await sanity.fetch(getContactPageQuery)) as ContactData;
 const email = contactData?.email ?? "hello@wearebba.co.uk";
-
 const archiveUrl = "https://archived.wearebba.co.uk";
-
-const holdingImageModules = import.meta.glob("../assets/holding/*.{jpg,jpeg,png,webp,avif}", {
-  eager: true,
-  import: "default",
-});
-
-const holdingSlides = Object.entries(holdingImageModules)
-  .sort(([left], [right]) => left.localeCompare(right))
-  .map(([path, image]) => {
-    const filename = path.split("/").pop() ?? "holding image";
-    const baseName = filename.replace(/\.[^.]+$/, "");
-    const humanLabel = baseName
-      .replace(/^[0-9_-]+/, "")
-      .replace(/[-_]+/g, " ")
-      .trim();
-
-    return {
-      path,
-      image: image as ImageMetadata,
-      alt: humanLabel
-        ? `${humanLabel} by Butcher Bayley Architects`
-        : "Butcher Bayley Architects project image",
-    };
-  });
 ---
 
 <section class="relative min-h-[100svh] overflow-hidden bg-white text-white md:min-h-screen">
-  <HoldingSlideshow slides={holdingSlides} />
+  <HoldingSlideshow slides={slides} />
   <div class="absolute inset-0 bg-black/20"></div>
+  <div class="pointer-events-none absolute inset-x-0 top-0 h-[34%] bg-gradient-to-b from-black/46 via-black/22 to-transparent md:hidden"></div>
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/58 via-black/24 to-transparent md:hidden"></div>
+  <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-[42vw] bg-gradient-to-r from-black/30 to-transparent md:block"></div>
+  <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[32vw] bg-gradient-to-l from-black/26 to-transparent md:block"></div>
 
   <div class="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:min-h-screen md:px-8 md:pb-10 md:pt-8">
     <header class="flex items-start justify-between gap-4 text-white">
       <Logo class="w-24 md:w-32" />
-      <p class="pt-1 text-right text-[0.7rem] uppercase tracking-[0.22em] md:pt-2 md:text-sm">
-        Butcher Bayley Architects
-      </p>
+      <div class="flex max-w-[14rem] flex-col items-end pt-1 text-right md:max-w-[18rem] md:pt-2">
+        <p class="text-[18px] md:text-bodyPrimary">
+          Butcher Bayley Architects
+        </p>
+        <div class="relative mt-2 min-h-[1.25rem] w-full md:mt-3 md:min-h-[1.5rem]">
+          {
+            slides.map((slide, index) => (
+              <p
+                class={`absolute inset-0 text-[18px] md:text-bodyPrimary transition-opacity duration-500 motion-reduce:transition-none ${index === 0 ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                data-slide-meta
+                data-slide-meta-index={index}
+                aria-hidden={index === 0 ? "false" : "true"}
+              >
+                <span class="text-[18px] font-bold text-[#178fe4] md:text-bodyPrimary">{slide.code}</span>
+                <span class="px-4 text-[18px] font-light text-white md:text-bodyPrimary" aria-hidden="true">&bull;</span>
+                <span class="text-[18px] font-light md:text-bodyPrimary">{slide.title}</span>
+              </p>
+            ))
+          }
+        </div>
+      </div>
     </header>
 
-    <div class="mt-auto max-w-[28rem] pb-2 md:pb-4">
-      <h1 class="text-[clamp(2.4rem,6vw,5.25rem)] leading-[0.92] tracking-[-0.04em]">
-        We're building something between towns.
+    <div class="mt-auto max-w-[34rem] pb-2 md:max-w-[40rem] md:pb-4">
+      <h1 class="text-[40px] leading-[48px] md:text-headline">
+        Progressive places
+        <br />
+        for living, working,
+        <br />
+        learning and community.
       </h1>
-      <p class="mt-4 max-w-[22rem] text-base font-light leading-snug md:mt-5 md:text-lg">
-        Our new website is on its way.
+      <p class="mt-4 max-w-[22rem] text-[18px] md:mt-5 md:text-bodyPrimary">
+        We're building something new.
+        <br />
+        Website launch in September.
       </p>
-      <div class="mt-6 space-y-2 text-base md:mt-8 md:text-lg">
+      <div class="mt-6 flex flex-col gap-4 text-[18px] md:mt-8 md:text-bodyPrimary">
         <p>
           <a
             href={archiveUrl}
-            class="underline decoration-current underline-offset-4 transition-colors duration-300 hover:text-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            class="holding-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white focus-visible:underline focus-visible:decoration-current focus-visible:underline-offset-4"
           >
-            View our project archive ↗
+            Until then, explore our project archive ↗
           </a>
         </p>
         <p>
           <a
             href={`mailto:${email}`}
-            class="underline decoration-white/0 underline-offset-4 transition-colors duration-300 hover:text-white/80 hover:decoration-current focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            class="holding-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white focus-visible:underline focus-visible:decoration-current focus-visible:underline-offset-4"
           >
             {email}
           </a>
         </p>
       </div>
     </div>
+
+    <p class="mt-8 text-[18px] md:mt-10 md:text-bodyPrimary">
+      <span>Oundle</span>
+      <span class="px-2 text-[#178fe4]" aria-hidden="true">&bull;</span>
+      <span>Manchester</span>
+    </p>
   </div>
 </section>
+
+<style>
+  @media (hover: hover) and (pointer: fine) {
+    .holding-link {
+      background-image: linear-gradient(#178fe4, #178fe4);
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      background-size: 0 2px;
+      text-decoration: none;
+      transition:
+        background-size 220ms ease,
+        color 220ms ease;
+    }
+
+    .holding-link:hover {
+      background-size: 100% 2px;
+      color: rgb(255 255 255 / 0.8);
+    }
+  }
+</style>

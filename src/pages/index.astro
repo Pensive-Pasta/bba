@@ -3,30 +3,47 @@ import type { ImageMetadata } from "astro";
 import { getImage } from "astro:assets";
 import HoldingPageContent from "../components/HoldingPageContent.astro";
 import HoldingLayout from "../layouts/HoldingLayout.astro";
+import lakesideImage from "../assets/holding/01-lakeside.jpg";
+import eastCroftExteriorDesktopImage from "../assets/holding/02-east-croft-exterior-desktop.jpg";
+import eastCroftExteriorMobileImage from "../assets/holding/02-east-croft-exterior-mobile.jpg";
+import copperHouseImage from "../assets/holding/03-copper-house.jpg";
+import eastCroftInteriorImage from "../assets/holding/04-east-croft-interior.jpg";
 
-const holdingImageModules = import.meta.glob("../assets/holding/*.{jpg,jpeg,png,webp,avif}", {
-  eager: true,
-  import: "default",
-});
+type HoldingSlide = {
+  code: string;
+  title: string;
+  alt: string;
+  image: ImageMetadata;
+  mobileImage?: ImageMetadata;
+};
 
-const holdingSlides = Object.entries(holdingImageModules)
-  .sort(([left], [right]) => left.localeCompare(right))
-  .map(([path, image]) => {
-    const filename = path.split("/").pop() ?? "holding image";
-    const baseName = filename.replace(/\.[^.]+$/, "");
-    const humanLabel = baseName
-      .replace(/^[0-9_-]+/, "")
-      .replace(/[-_]+/g, " ")
-      .trim();
-
-    return {
-      path,
-      image: image as ImageMetadata,
-      alt: humanLabel
-        ? `${humanLabel} by Butcher Bayley Architects`
-        : "Butcher Bayley Architects project image",
-    };
-  });
+const holdingSlides: HoldingSlide[] = [
+  {
+    code: "PE2",
+    title: "Lakeside",
+    alt: "Visualisation of the Nene Park Trust climbing centre at Lakeside, Peterborough, showing its climbing wall and lakeside setting, by Butcher Bayley Architects",
+    image: lakesideImage,
+  },
+  {
+    code: "PE27",
+    title: "East Croft",
+    alt: "East Croft, a playful timber addition with a standing-seam roof, set among neighbouring listed thatched cottages and tiled roofs",
+    image: eastCroftExteriorDesktopImage,
+    mobileImage: eastCroftExteriorMobileImage,
+  },
+  {
+    code: "CB2",
+    title: "Copper House",
+    alt: "Copper House, a patinated-copper extension set within a conservation area, opening onto a landscaped setting",
+    image: copperHouseImage,
+  },
+  {
+    code: "PE27",
+    title: "East Croft",
+    alt: "Interior of East Croft, showing a steel staircase, exposed brick and a rooflight above the hallway",
+    image: eastCroftInteriorImage,
+  },
+];
 
 const firstSlidePreload = holdingSlides[0]
   ? await getImage({
@@ -36,15 +53,18 @@ const firstSlidePreload = holdingSlides[0]
     })
   : undefined;
 
-const metaTitle = "Butcher Bayley Architects | New website coming soon";
+const metaTitle = "Butcher Bayley Architects | An inter-urban architecture studio";
 const metaDescription =
-  "A new Butcher Bayley Architects website is coming soon. In the meantime, view the project archive or contact the studio directly.";
+  "Butcher Bayley Architects is an inter-urban architecture studio. Our new website launches in September — explore our project archive in the meantime.";
 ---
 
 <HoldingLayout
   title={metaTitle}
   description={metaDescription}
   preloadImageHref={firstSlidePreload?.src}
+  robots="noindex,follow"
+  robotsComment="Remove this robots noindex tag when the full September website launches."
+  themeColor="#178fe4"
 >
-  <HoldingPageContent />
+  <HoldingPageContent slides={holdingSlides} />
 </HoldingLayout>

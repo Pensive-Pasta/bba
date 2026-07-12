@@ -1,10 +1,14 @@
 ---
-import { Picture } from "astro:assets";
+import { Picture, getImage } from "astro:assets";
+import type { GetImageResult } from "astro";
 
 interface Slide {
   alt: string;
   image: any;
-  path: string;
+  mobileImage?: any;
+  mobileObjectClass?: string;
+  code: string;
+  title: string;
 }
 
 interface Props {
@@ -15,6 +19,99 @@ const { slides = [] } = Astro.props;
 const hasMultipleSlides = slides.length > 1;
 const slideSizes = "(max-width: 767px) 100vw, (max-width: 1279px) 92vw, 46vw";
 const slideWidths = [640, 960, 1280, 1600, 1920];
+
+type ResponsiveSource = {
+  media: string;
+  type: string;
+  srcset: string;
+};
+
+type PreparedSlide =
+  | (Slide & {
+      variant: "single";
+    })
+  | (Slide & {
+      variant: "responsive";
+      responsiveSources: ResponsiveSource[];
+      fallbackImage: GetImageResult;
+    });
+
+const slidePictures = await Promise.all(
+  slides.map(async (slide) => {
+    if (!slide.mobileImage) {
+      return {
+        ...slide,
+        variant: "single",
+      } satisfies PreparedSlide;
+    }
+
+    const [
+      mobileAvif,
+      mobileWebp,
+      desktopAvif,
+      desktopWebp,
+      fallbackImage,
+    ] = await Promise.all([
+      getImage({
+        src: slide.mobileImage,
+        format: "avif",
+        widths: slideWidths,
+        sizes: slideSizes,
+      }),
+      getImage({
+        src: slide.mobileImage,
+        format: "webp",
+        widths: slideWidths,
+        sizes: slideSizes,
+      }),
+      getImage({
+        src: slide.image,
+        format: "avif",
+        widths: slideWidths,
+        sizes: slideSizes,
+      }),
+      getImage({
+        src: slide.image,
+        format: "webp",
+        widths: slideWidths,
+        sizes: slideSizes,
+      }),
+      getImage({
+        src: slide.image,
+        widths: slideWidths,
+        sizes: slideSizes,
+      }),
+    ]);
+
+    return {
+      ...slide,
+      variant: "responsive",
+      responsiveSources: [
+        {
+          media: "(max-width: 767px)",
+          type: "image/avif",
+          srcset: mobileAvif.srcSet.attribute,
+        },
+        {
+          media: "(max-width: 767px)",
+          type: "image/webp",
+          srcset: mobileWebp.srcSet.attribute,
+        },
+        {
+          media: "(min-width: 768px)",
+          type: "image/avif",
+          srcset: desktopAvif.srcSet.attribute,
+        },
+        {
+          media: "(min-width: 768px)",
+          type: "image/webp",
+          srcset: desktopWebp.srcSet.attribute,
+        },
+      ],
+      fallbackImage,
+    } satisfies PreparedSlide;
+  }),
+);
 ---
 
 <section
@@ -23,38 +120,66 @@ const slideWidths = [640, 960, 1280, 1600, 1920];
   data-slide-count={slides.length}
 >
   {
-    slides.map((slide, index) => (
+    slidePictures.map((slide, index) => (
       <div
         class={`absolute inset-0 ${index === 0 ? "opacity-100" : "opacity-0"} ${hasMultipleSlides ? "transition-opacity duration-700 ease-out motion-reduce:transition-none" : ""}`}
         data-slide
         data-slide-index={index}
         aria-hidden={index === 0 ? "false" : "true"}
       >
-        <Picture
-          src={slide.image}
-          alt={slide.alt}
-          formats={["avif", "webp"]}
-          widths={slideWidths}
-          sizes={slideSizes}
-          loading={index === 0 ? "eager" : "lazy"}
-          decoding="async"
-          fetchpriority={index === 0 ? "high" : "auto"}
-          class="h-full w-full object-cover"
-        />
+        {
+          slide.variant === "responsive" ? (
+            <picture>
+              {slide.responsiveSources.map((source: ResponsiveSource) => (
+                <source
+                  srcset={source.srcset}
+                  sizes={slideSizes}
+                  media={source.media}
+                  type={source.type}
+                />
+              ))}
+              <img
+                src={slide.fallbackImage.src}
+                srcset={slide.fallbackImage.srcSet.attribute}
+                sizes={slideSizes}
+                width={slide.fallbackImage.attributes.width}
+                height={slide.fallbackImage.attributes.height}
+                alt={slide.alt}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+                fetchpriority={index === 0 ? "high" : "auto"}
+                class={`h-full w-full object-cover ${slide.mobileObjectClass ?? ""}`}
+              />
+            </picture>
+          ) : (
+            <Picture
+              src={slide.image}
+              alt={slide.alt}
+              formats={["avif", "webp"]}
+              widths={slideWidths}
+              sizes={slideSizes}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+              fetchpriority={index === 0 ? "high" : "auto"}
+              class={`h-full w-full object-cover ${slide.mobileObjectClass ?? ""}`}
+            />
+          )
+        }
       </div>
     ))
   }
 
   {
     hasMultipleSlides && (
-      <div class="pointer-events-none absolute bottom-4 right-4 z-10 flex items-center justify-end gap-2 md:bottom-6 md:right-6">
+      <div class="absolute bottom-4 right-4 z-20 flex items-center justify-end gap-2 md:bottom-6 md:right-6">
         {slides.map((_, index) => (
-          <span
-            class={`h-[2px] bg-white/55 transition-all duration-500 ${index === 0 ? "w-8 bg-white" : "w-4"}`}
+          <button
+            type="button"
+            class={`h-[3px] bg-white/55 transition-all duration-500 ${index === 0 ? "w-8 bg-[#178fe4]" : "w-4"}`}
             data-slide-indicator
             data-slide-indicator-index={index}
-            aria-hidden="true"
-          />
+            aria-label={`Show slide ${index + 1}`}
+          ></button>
         ))}
       </div>
     )
@@ -72,6 +197,9 @@ const slideWidths = [640, 960, 1280, 1600, 1920];
         const indicators = Array.from(
           root.querySelectorAll("[data-slide-indicator]")
         );
+        const slideMeta = Array.from(
+          document.querySelectorAll("[data-slide-meta]")
+        );
         if (slides.length <= 1) return;
 
         const prefersReducedMotion = window.matchMedia(
@@ -80,6 +208,7 @@ const slideWidths = [640, 960, 1280, 1600, 1920];
 
         let currentIndex = 0;
         let timerId = null;
+        let isManuallyLocked = false;
 
         const setActiveSlide = (index) => {
           slides.forEach((slide, slideIndex) => {
@@ -93,8 +222,16 @@ const slideWidths = [640, 960, 1280, 1600, 1920];
             const isActive = indicatorIndex === index;
             indicator.classList.toggle("w-8", isActive);
             indicator.classList.toggle("w-4", !isActive);
-            indicator.classList.toggle("bg-white", isActive);
+            indicator.classList.toggle("bg-[#178fe4]", isActive);
             indicator.classList.toggle("bg-white/55", !isActive);
+          });
+
+          slideMeta.forEach((meta, metaIndex) => {
+            const isActive = metaIndex === index;
+            meta.classList.toggle("opacity-100", isActive);
+            meta.classList.toggle("opacity-0", !isActive);
+            meta.classList.toggle("pointer-events-none", !isActive);
+            meta.setAttribute("aria-hidden", String(!isActive));
           });
         };
 
@@ -107,6 +244,7 @@ const slideWidths = [640, 960, 1280, 1600, 1920];
 
         const start = () => {
           stop();
+          if (isManuallyLocked) return;
           if (prefersReducedMotion.matches) {
             setActiveSlide(0);
             currentIndex = 0;
@@ -116,7 +254,7 @@ const slideWidths = [640, 960, 1280, 1600, 1920];
           timerId = window.setInterval(() => {
             currentIndex = (currentIndex + 1) % slides.length;
             setActiveSlide(currentIndex);
-          }, 4800);
+          }, 9000);
         };
 
         setActiveSlide(0);
@@ -124,6 +262,15 @@ const slideWidths = [640, 960, 1280, 1600, 1920];
 
         root.addEventListener("mouseenter", stop);
         root.addEventListener("mouseleave", start);
+
+        indicators.forEach((indicator, indicatorIndex) => {
+          indicator.addEventListener("click", () => {
+            isManuallyLocked = true;
+            stop();
+            currentIndex = indicatorIndex;
+            setActiveSlide(indicatorIndex);
+          });
+        });
 
         document.addEventListener("visibilitychange", () => {
           if (document.hidden) {
