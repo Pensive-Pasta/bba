@@ -27,7 +27,7 @@ const email = contactData?.email ?? "hello@wearebba.co.uk";
 const archiveUrl = "https://archived.wearebba.co.uk";
 ---
 
-<section class="relative h-full overflow-hidden bg-white text-white">
+<section class="relative min-h-[100dvh] overflow-hidden bg-white text-white">
   <HoldingSlideshow slides={slides} />
   <div class="absolute inset-0 bg-black/20"></div>
   <div class="pointer-events-none absolute inset-x-0 top-0 h-[34%] bg-gradient-to-b from-black/46 via-black/22 to-transparent md:hidden"></div>
@@ -35,25 +35,25 @@ const archiveUrl = "https://archived.wearebba.co.uk";
   <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-[42vw] bg-gradient-to-r from-black/30 to-transparent md:block"></div>
   <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[32vw] bg-gradient-to-l from-black/26 to-transparent md:block"></div>
 
-  <div class="relative z-10 mx-auto flex h-full w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:px-8 md:pb-10 md:pt-8">
-    <header class="flex items-start justify-between gap-4 text-white">
+  <div class="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:px-8 md:pb-10 md:pt-8">
+    <header class="flex items-stretch justify-between gap-4 text-white">
       <Logo class="w-24 md:w-32" />
-      <div class="flex max-w-[14rem] flex-col items-end pt-1 text-right md:max-w-[18rem] md:pt-2">
-        <p class="text-[18px] md:text-bodyPrimary">
+      <div class="flex max-w-[14rem] flex-col items-end justify-between text-right md:max-w-[18rem]">
+        <p class="text-bodySecondary md:text-bodyPrimary">
           Butcher Bayley Architects
         </p>
-        <div class="relative mt-2 min-h-[1.25rem] w-full md:mt-3 md:min-h-[1.5rem]">
+        <div class="relative min-h-[1.25rem] w-full md:min-h-[1.5rem]">
           {
             slides.map((slide, index) => (
               <p
-                class={`absolute inset-0 text-[18px] md:text-bodyPrimary transition-opacity duration-500 motion-reduce:transition-none ${index === 0 ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                class={`absolute inset-0 text-bodySecondary md:text-bodyPrimary transition-opacity duration-500 motion-reduce:transition-none ${index === 0 ? "opacity-100" : "pointer-events-none opacity-0"}`}
                 data-slide-meta
                 data-slide-meta-index={index}
                 aria-hidden={index === 0 ? "false" : "true"}
               >
-                <span class="text-[18px] font-bold text-[#178fe4] md:text-bodyPrimary">{slide.code}</span>
-                <span class="px-4 text-[18px] font-light text-white md:text-bodyPrimary" aria-hidden="true">&bull;</span>
-                <span class="text-[18px] font-light md:text-bodyPrimary">{slide.title}</span>
+                <span class="text-bodySecondary font-bold text-white md:text-bodyPrimary">{slide.code}</span>
+                <span class="px-4 text-bodySecondary font-light text-white md:text-bodyPrimary" aria-hidden="true">&bull;</span>
+                <span class="text-bodySecondary font-light md:text-bodyPrimary">{slide.title}</span>
               </p>
             ))
           }
@@ -62,23 +62,23 @@ const archiveUrl = "https://archived.wearebba.co.uk";
     </header>
 
     <div class="mt-auto max-w-[34rem] pb-2 md:max-w-[40rem] md:pb-4">
-      <h1 class="text-[40px] leading-[48px] md:text-headline">
+      <h1 class="text-[36px] leading-[44px] md:text-headline">
         Progressive places
         <br />
         for living, working,
         <br />
         learning and community.
       </h1>
-      <p class="mt-4 max-w-[22rem] text-[18px] md:mt-5 md:text-bodyPrimary">
+      <p class="mt-4 max-w-[22rem] text-bodySecondary md:mt-5 md:text-bodyPrimary">
         We're building something new.
         <br />
         Website launch in September.
       </p>
-      <div class="mt-6 flex flex-col gap-4 text-[18px] md:mt-8 md:text-bodyPrimary">
+      <div class="mt-6 flex flex-col gap-4 text-bodySecondary md:mt-8 md:text-bodyPrimary">
         <p>
           <a
             href={archiveUrl}
-            class="holding-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white focus-visible:underline focus-visible:decoration-current focus-visible:underline-offset-4"
+            class="holding-link"
           >
             Until then, explore our project archive ↗
           </a>
@@ -86,7 +86,7 @@ const archiveUrl = "https://archived.wearebba.co.uk";
         <p>
           <a
             href={`mailto:${email}`}
-            class="holding-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white focus-visible:underline focus-visible:decoration-current focus-visible:underline-offset-4"
+            class="holding-link"
           >
             {email}
           </a>
@@ -94,15 +94,19 @@ const archiveUrl = "https://archived.wearebba.co.uk";
       </div>
     </div>
 
-    <p class="mt-8 text-[18px] md:mt-10 md:text-bodyPrimary">
+    <p class="mt-8 text-bodySecondary md:mt-10 md:text-bodyPrimary">
       <span>Oundle</span>
-      <span class="px-2 text-[#178fe4]" aria-hidden="true">&bull;</span>
+      <span class="px-2 text-white" aria-hidden="true">&bull;</span>
       <span>Manchester</span>
     </p>
   </div>
 </section>
 
 <style>
+  .holding-link {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .holding-link {
       background-image: linear-gradient(#178fe4, #178fe4);
@@ -118,6 +122,14 @@ const archiveUrl = "https://archived.wearebba.co.uk";
     .holding-link:hover {
       background-size: 100% 2px;
       color: rgb(255 255 255 / 0.8);
+    }
+
+    .holding-link:focus-visible {
+      outline: 1px solid white;
+      outline-offset: 2px;
+      text-decoration: underline;
+      text-decoration-color: currentColor;
+      text-underline-offset: 4px;
     }
   }
 </style>
