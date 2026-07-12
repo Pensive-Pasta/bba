@@ -39,7 +39,7 @@ const archiveUrl = "https://archived.wearebba.co.uk";
     <header class="flex items-stretch justify-between gap-4 text-white">
       <Logo class="w-24 md:w-32" />
       <div class="flex max-w-[14rem] flex-col items-end justify-between text-right md:max-w-[18rem]">
-        <p class="text-bodySecondary md:text-bodyPrimary">
+        <p class="text-bodySecondary font-medium md:text-bodyPrimary">
           Butcher Bayley Architects
         </p>
         <div class="relative min-h-[1.25rem] w-full md:min-h-[1.5rem]">
@@ -51,9 +51,9 @@ const archiveUrl = "https://archived.wearebba.co.uk";
                 data-slide-meta-index={index}
                 aria-hidden={index === 0 ? "false" : "true"}
               >
-                <span class="text-bodySecondary font-light text-white md:text-bodyPrimary">{slide.code}</span>
-                <span class="px-4 text-bodySecondary font-light text-white md:text-bodyPrimary" aria-hidden="true">&bull;</span>
-                <span class="text-bodySecondary font-light md:text-bodyPrimary">{slide.title}</span>
+                <span class="text-bodySecondary font-medium text-white md:text-bodyPrimary">{slide.code}</span>
+                <span class="px-4 text-bodySecondary font-medium text-white md:text-bodyPrimary" aria-hidden="true">&bull;</span>
+                <span class="text-bodySecondary font-medium md:text-bodyPrimary">{slide.title}</span>
               </p>
             ))
           }
@@ -62,19 +62,19 @@ const archiveUrl = "https://archived.wearebba.co.uk";
     </header>
 
     <div class="mt-auto max-w-[34rem] pb-2 md:max-w-[40rem] md:pb-4">
-      <h1 class="text-[36px] leading-[44px] md:text-headline">
+      <h1 class="text-[30px] leading-[38px] font-medium md:text-headline">
         Progressive places
         <br />
         for living, working,
         <br />
         learning and community.
       </h1>
-      <p class="mt-4 max-w-[22rem] text-bodySecondary md:mt-5 md:text-bodyPrimary">
+      <p class="mt-4 max-w-[22rem] text-bodySecondary font-light md:mt-5 md:text-bodyPrimary">
         We're building something new.
         <br />
         Website launch in September.
       </p>
-      <div class="mt-6 flex flex-col gap-4 text-bodySecondary md:mt-8 md:text-bodyPrimary">
+      <div class="mt-6 flex flex-col gap-4 text-bodySecondary font-light md:mt-8 md:text-bodyPrimary">
         <p>
           <a
             href={archiveUrl}
@@ -94,7 +94,7 @@ const archiveUrl = "https://archived.wearebba.co.uk";
       </div>
     </div>
 
-    <p class="mt-8 text-bodySecondary md:mt-10 md:text-bodyPrimary">
+    <p class="mt-8 text-bodySecondary font-light md:mt-10 md:text-bodyPrimary">
       <span>Oundle</span>
       <span class="px-2 text-white" aria-hidden="true">&bull;</span>
       <span>Manchester</span>
