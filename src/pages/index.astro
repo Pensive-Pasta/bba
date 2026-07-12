@@ -17,6 +17,9 @@ type HoldingSlide = {
   alt: string;
   image: ImageMetadata;
   mobileImage?: ImageMetadata;
+  widths?: number[];
+  formats?: ("avif" | "webp")[];
+  quality?: number;
 };
 
 const holdingSlides: HoldingSlide[] = [
@@ -25,6 +28,9 @@ const holdingSlides: HoldingSlide[] = [
     title: "Lakeside",
     alt: "Visualisation of the Nene Park Trust climbing centre at Lakeside, Peterborough, showing its climbing wall and lakeside setting, by Butcher Bayley Architects",
     image: lakesideImage,
+    widths: [960, 1280, 1600, 1920, 2400, 3200],
+    formats: ["webp"],
+    quality: 100,
   },
   {
     code: "PE27",
@@ -52,8 +58,9 @@ const holdingSlides: HoldingSlide[] = [
 const firstSlidePreload = holdingSlides[0]
   ? await getImage({
       src: holdingSlides[0].image,
-      width: 1600,
+      width: 2400,
       format: "webp",
+      quality: holdingSlides[0].quality,
     })
   : undefined;
 

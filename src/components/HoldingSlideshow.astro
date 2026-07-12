@@ -7,6 +7,9 @@ interface Slide {
   image: any;
   mobileImage?: any;
   mobileObjectClass?: string;
+  widths?: number[];
+  formats?: ("avif" | "webp")[];
+  quality?: number;
   code: string;
   title: string;
 }
@@ -18,7 +21,7 @@ interface Props {
 const { slides = [] } = Astro.props;
 const hasMultipleSlides = slides.length > 1;
 const slideSizes = "(max-width: 767px) 100vw, (max-width: 1279px) 92vw, 46vw";
-const slideWidths = [640, 960, 1280, 1600, 1920];
+const defaultSlideWidths = [640, 960, 1280, 1600, 1920];
 
 type ResponsiveSource = {
   media: string;
@@ -38,6 +41,8 @@ type PreparedSlide =
 
 const slidePictures = await Promise.all(
   slides.map(async (slide) => {
+    const slideWidths = slide.widths ?? defaultSlideWidths;
+    const slideQuality = slide.quality;
     if (!slide.mobileImage) {
       return {
         ...slide,
@@ -57,29 +62,34 @@ const slidePictures = await Promise.all(
         format: "avif",
         widths: slideWidths,
         sizes: slideSizes,
+        quality: slideQuality,
       }),
       getImage({
         src: slide.mobileImage,
         format: "webp",
         widths: slideWidths,
         sizes: slideSizes,
+        quality: slideQuality,
       }),
       getImage({
         src: slide.image,
         format: "avif",
         widths: slideWidths,
         sizes: slideSizes,
+        quality: slideQuality,
       }),
       getImage({
         src: slide.image,
         format: "webp",
         widths: slideWidths,
         sizes: slideSizes,
+        quality: slideQuality,
       }),
       getImage({
         src: slide.image,
         widths: slideWidths,
         sizes: slideSizes,
+        quality: slideQuality,
       }),
     ]);
 
@@ -155,9 +165,10 @@ const slidePictures = await Promise.all(
             <Picture
               src={slide.image}
               alt={slide.alt}
-              formats={["avif", "webp"]}
-              widths={slideWidths}
+              formats={slide.formats ?? ["avif", "webp"]}
+              widths={slide.widths ?? defaultSlideWidths}
               sizes={slideSizes}
+              quality={slide.quality}
               loading={index === 0 ? "eager" : "lazy"}
               decoding="async"
               fetchpriority={index === 0 ? "high" : "auto"}
