@@ -186,7 +186,7 @@ const slidePictures = await Promise.all(
         {slides.map((_, index) => (
           <button
             type="button"
-            class={`h-[3px] bg-white/55 transition-all duration-500 ${index === 0 ? "w-8 bg-[#178fe4]" : "w-4"}`}
+            class={`h-[3px] bg-white/55 transition-all duration-500 ${index === 0 ? "w-8 bg-white" : "w-4"}`}
             data-slide-indicator
             data-slide-indicator-index={index}
             aria-label={`Show slide ${index + 1}`}
@@ -233,7 +233,7 @@ const slidePictures = await Promise.all(
             const isActive = indicatorIndex === index;
             indicator.classList.toggle("w-8", isActive);
             indicator.classList.toggle("w-4", !isActive);
-            indicator.classList.toggle("bg-[#178fe4]", isActive);
+            indicator.classList.toggle("bg-white", isActive);
             indicator.classList.toggle("bg-white/55", !isActive);
           });
 
