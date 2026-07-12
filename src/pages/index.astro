@@ -18,7 +18,7 @@ type HoldingSlide = {
   image: ImageMetadata;
   mobileImage?: ImageMetadata;
   widths?: number[];
-  formats?: ("avif" | "webp")[];
+  formats?: ("avif" | "webp" | "jpg")[];
   quality?: number;
 };
 
@@ -28,7 +28,7 @@ const holdingSlides: HoldingSlide[] = [
     title: "Lakeside",
     alt: "Visualisation of the Nene Park Trust climbing centre at Lakeside, Peterborough, showing its climbing wall and lakeside setting, by Butcher Bayley Architects",
     image: lakesideImage,
-    widths: [960, 1280, 1600, 1920, 2400, 3200],
+    widths: [960, 1280, 1600, 1920, 2400, 3200, 3840],
     formats: ["webp"],
     quality: 100,
   },
@@ -64,7 +64,8 @@ const firstSlidePreload = holdingSlides[0]
     })
   : undefined;
 
-const metaTitle = "Butcher Bayley Architects | An inter-urban architecture studio";
+const metaTitle =
+  "Butcher Bayley Architects | An inter-urban architecture studio";
 const metaDescription =
   "Butcher Bayley Architects is an inter-urban architecture studio. Our new website launches in September — explore our project archive in the meantime.";
 ---

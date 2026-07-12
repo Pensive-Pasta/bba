@@ -8,7 +8,7 @@ interface Slide {
   mobileImage?: any;
   mobileObjectClass?: string;
   widths?: number[];
-  formats?: ("avif" | "webp")[];
+  formats?: ("avif" | "webp" | "jpg")[];
   quality?: number;
   code: string;
   title: string;
@@ -20,7 +20,7 @@ interface Props {
 
 const { slides = [] } = Astro.props;
 const hasMultipleSlides = slides.length > 1;
-const slideSizes = "(max-width: 767px) 100vw, (max-width: 1279px) 92vw, 46vw";
+const slideSizes = "100vw";
 const defaultSlideWidths = [640, 960, 1280, 1600, 1920];
 
 type ResponsiveSource = {
