@@ -27,7 +27,7 @@ const email = contactData?.email ?? "hello@wearebba.co.uk";
 const archiveUrl = "https://archived.wearebba.co.uk";
 ---
 
-<section class="relative min-h-[100svh] overflow-hidden bg-white text-white md:min-h-screen">
+<section class="relative h-full overflow-hidden bg-white text-white">
   <HoldingSlideshow slides={slides} />
   <div class="absolute inset-0 bg-black/20"></div>
   <div class="pointer-events-none absolute inset-x-0 top-0 h-[34%] bg-gradient-to-b from-black/46 via-black/22 to-transparent md:hidden"></div>
@@ -35,7 +35,7 @@ const archiveUrl = "https://archived.wearebba.co.uk";
   <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-[42vw] bg-gradient-to-r from-black/30 to-transparent md:block"></div>
   <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[32vw] bg-gradient-to-l from-black/26 to-transparent md:block"></div>
 
-  <div class="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:min-h-screen md:px-8 md:pb-10 md:pt-8">
+  <div class="relative z-10 mx-auto flex h-full w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:px-8 md:pb-10 md:pt-8">
     <header class="flex items-start justify-between gap-4 text-white">
       <Logo class="w-24 md:w-32" />
       <div class="flex max-w-[14rem] flex-col items-end pt-1 text-right md:max-w-[18rem] md:pt-2">
