@@ -1,0 +1,84 @@
+---
+import HoldingLayout from "../layouts/HoldingLayout.astro";
+import Footer from "../components/Footer.astro";
+import Logo from "../components/Logo.astro";
+import PortablePageContent from "../components/PortablePageContent.astro";
+import { sanity } from "../lib/sanityClient";
+import { getLegalPageQuery } from "../lib/queries";
+import {
+  portableTextToPlainText,
+  resolveSeoDescription,
+  resolveSeoImage,
+  SITE_TITLE_SUFFIX,
+} from "../lib/seo";
+
+const legalPage = await sanity.fetch(getLegalPageQuery);
+
+const metaTitle =
+  legalPage?.seo?.metaTitle ||
+  `${legalPage?.title ?? "Legal Information"} | ${SITE_TITLE_SUFFIX}`;
+const metaDescription = resolveSeoDescription(
+  legalPage?.seo?.metaDescription,
+  portableTextToPlainText(legalPage?.body),
+  "Legal information, privacy notice, cookie information and website terms for Butcher Bayley Architects.",
+);
+const ogImage = resolveSeoImage(legalPage?.seo?.ogImage?.asset?.url);
+const canonical = "https://www.wearebba.co.uk/legal";
+
+const formattedDate = legalPage?.lastUpdated
+  ? new Date(`${legalPage.lastUpdated}T00:00:00Z`).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    })
+  : undefined;
+---
+
+<HoldingLayout
+  title={metaTitle}
+  description={metaDescription}
+  canonical={canonical}
+  ogImage={ogImage}
+  robots="noindex,follow"
+  themeColor="#178fe4"
+>
+  <section class="min-h-[100dvh] bg-white text-primary">
+    <div class="mx-auto w-full max-w-[1600px]">
+      <header class="flex items-start justify-between gap-4 p-4 md:p-8">
+        <a href="/" aria-label="Butcher Bayley Architects home">
+          <Logo class="w-24 md:w-32" />
+        </a>
+      </header>
+
+      <div class="px-4 pb-16 pt-12 md:px-8 md:pb-24 md:pt-16">
+        {
+          legalPage && (
+            <article class="w-full max-w-[48rem]">
+              {legalPage.title && (
+                <h1 class="text-bodyPrimary font-medium md:text-headline">
+                  {legalPage.title}
+                </h1>
+              )}
+
+              {formattedDate && (
+                <p class="mt-2 text-caption font-medium md:text-bodyTertiary">
+                  Last updated: {formattedDate}
+                </p>
+              )}
+
+              {Array.isArray(legalPage.body) && legalPage.body.length > 0 && (
+                <>
+                  <div class="mt-12 md:mt-16">
+                    <PortablePageContent content={legalPage.body} />
+                  </div>
+                </>
+              )}
+            </article>
+          )
+        }
+      </div>
+    </div>
+  </section>
+  <Footer />
+</HoldingLayout>
