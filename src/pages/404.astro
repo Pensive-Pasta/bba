@@ -1,15 +1,5 @@
 ---
-import HoldingLayout from "../layouts/HoldingLayout.astro";
+import HoldingPage from "../components/HoldingPage.astro";
 ---
 
-<HoldingLayout
-  title="Redirecting | Butcher Bayley Architects"
-  description="Redirecting to the Butcher Bayley Architects holding page."
-  robots="noindex,follow"
-  themeColor="#178fe4"
->
-  <meta http-equiv="refresh" content="0;url=/" />
-  <script is:inline>
-    window.location.replace("/");
-  </script>
-</HoldingLayout>
+<HoldingPage />

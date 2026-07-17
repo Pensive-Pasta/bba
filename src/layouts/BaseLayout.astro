@@ -29,7 +29,6 @@ const resolvedOgImage =
   ogImage
     ? new URL(ogImage, siteOrigin).toString()
     : new URL(DEFAULT_SEO_IMAGE, siteOrigin).toString();
-const effectiveRobots = robots ?? "noindex,follow";
 
 const organizationId = `${normalizedSiteOrigin}/#organization`;
 const websiteId = `${normalizedSiteOrigin}/#website`;
@@ -92,10 +91,9 @@ const structuredData = [
       ogImage={resolvedOgImage}
       canonical={canonical}
       siteOrigin={siteOrigin}
-      robots={effectiveRobots}
+      robots={robots}
       jsonLd={structuredData}
     />
-    <meta http-equiv="refresh" content="0;url=/" />
     <link
       rel="preload"
       href={theFutureRegularUrl}
@@ -109,9 +107,7 @@ const structuredData = [
 
   <body class="w-full min-h-screen bg-white flex flex-col">
     <main>
-      <script is:inline>
-        window.location.replace("/");
-      </script>
+      <slot />
     </main>
   </body>
 </html>
