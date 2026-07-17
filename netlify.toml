@@ -122,6 +122,21 @@
   status = 302
 
 [[redirects]]
+  from = "/bba"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/bba/"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/bba/*"
+  to = "/"
+  status = 302
+
+[[redirects]]
   from = "/404"
   to = "/"
   status = 302
