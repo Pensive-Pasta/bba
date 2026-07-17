@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node scripts/prepare-holding-deploy.mjs",
     "check": "astro check",
     "preview": "astro preview",
     "astro": "astro"
