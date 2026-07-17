@@ -2,6 +2,11 @@
   NODE_VERSION = "24"
 
 [[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
   from = "/_astro/*"
   to = "/_astro/:splat"
   status = 200
@@ -125,3 +130,9 @@
   from = "/404.html"
   to = "/"
   status = 302
+
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 302
+  force = true
