@@ -2,6 +2,7 @@ import { defineMiddleware } from "astro:middleware";
 
 const passthroughPrefixes = [
   "/_astro/",
+  "/_image",
   "/@",
   "/src/",
   "/node_modules/",
