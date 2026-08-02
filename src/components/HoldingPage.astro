@@ -6,10 +6,12 @@ import HoldingLayout from "../layouts/HoldingLayout.astro";
 import lakesideImage from "../assets/holding/01-lakeside.jpg";
 import eastCroftExteriorDesktopImage from "../assets/holding/02-east-croft-exterior-desktop.jpg";
 import eastCroftExteriorMobileImage from "../assets/holding/02-east-croft-exterior-mobile.jpg";
-import copperHouseImage from "../assets/holding/03-copper-house.jpg";
-import copperHouseMobileImage from "../assets/holding/03-copper-house-mobile.jpeg";
-import eastCroftInteriorImage from "../assets/holding/04-east-croft-interior.jpg";
-import eastCroftInteriorMobileImage from "../assets/holding/04-east-croft-interior-mobile.jpeg";
+import axsonOfficeWesternParkImage from "../assets/holding/03-axson-office-western-park.jpg";
+import axsonOfficeWesternParkMobileImage from "../assets/holding/03-axson-office-western-park-mobile.jpg";
+import copperHouseImage from "../assets/holding/04-copper-house.jpg";
+import copperHouseMobileImage from "../assets/holding/04-copper-house-mobile.jpeg";
+import eastCroftInteriorImage from "../assets/holding/05-east-croft-interior.jpg";
+import eastCroftInteriorMobileImage from "../assets/holding/05-east-croft-interior-mobile.jpeg";
 
 type HoldingSlide = {
   code: string;
@@ -38,6 +40,13 @@ const holdingSlides: HoldingSlide[] = [
     alt: "East Croft, a playful timber addition with a standing-seam roof, set among neighbouring listed thatched cottages and tiled roofs",
     image: eastCroftExteriorDesktopImage,
     mobileImage: eastCroftExteriorMobileImage,
+  },
+  {
+    code: "LE3",
+    title: "Western Park",
+    alt: "Visualisation of Western Park, showing new homes arranged around a landscaped neighbourhood street in Leicester",
+    image: axsonOfficeWesternParkImage,
+    mobileImage: axsonOfficeWesternParkMobileImage,
   },
   {
     code: "CB2",
