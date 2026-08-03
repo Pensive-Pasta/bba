@@ -1,13 +1,11 @@
 ---
-import {
-  NETLIFY_FIELD_NAMES,
-  NETLIFY_PDF_FIELD_NAME,
-} from "../../scripts/initial-project-brief-netlify";
+import { NETLIFY_FIELD_NAMES } from "../../scripts/initial-project-brief-netlify";
 
 // Programmatic submission fields must also exist in the built HTML for Netlify's form scanner.
-// `title` is an ordered, visually hidden text input so Netlify uses it for dashboard summaries.
+// `subject` is an ordered, visually hidden text input used for dashboard and email summaries.
 // The visible contact step already renders a real input with name="email".
-const separatelyDeclaredFields = new Set(["title", "email"]);
+// `Location format` and `Name` are also declared by their real form controls.
+const separatelyDeclaredFields = new Set(["subject", "Location format", "Name", "email"]);
 ---
 
 <div hidden aria-hidden="true" data-netlify-field-declarations>
@@ -16,5 +14,4 @@ const separatelyDeclaredFields = new Set(["title", "email"]);
       (field) => <input type="hidden" name={field} value="" />,
     )
   }
-  <input type="file" name={NETLIFY_PDF_FIELD_NAME} tabindex="-1" />
 </div>

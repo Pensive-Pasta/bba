@@ -48,7 +48,7 @@ const values = (formData: FormData, name: string) =>
 const collectBrief = (form: HTMLFormElement, submittedAt = new Date()): InitialProjectBrief => {
   const formData = new FormData(form);
   return {
-    locationFormat: value(formData, "location_format"),
+    locationFormat: value(formData, "Location format"),
     projectAddressLine: value(formData, "project_address_line"),
     projectTownCity: value(formData, "project_town_city"),
     projectCounty: value(formData, "project_county"),
@@ -75,7 +75,7 @@ const collectBrief = (form: HTMLFormElement, submittedAt = new Date()): InitialP
     servicesNeeded: values(formData, "services_needed[]"),
     servicesOther: value(formData, "services_other"),
     companyOrganisation: value(formData, "company_organisation"),
-    contactName: value(formData, "contact_name"),
+    contactName: value(formData, "Name"),
     contactAddress: value(formData, "contact_address"),
     email: value(formData, "email"),
     phone: value(formData, "phone"),
@@ -557,12 +557,16 @@ export const initialiseInitialProjectBrief = () => {
 
       retainedPdf = nextRetainedPdf;
       if (!reusedRetainedPdf || !retainedPdfBrief) retainedPdfBrief = currentBrief;
-      appendInitialProjectBriefPdf(payload, retainedPdf.blob, retainedPdf.filename);
+      const submissionPayload = appendInitialProjectBriefPdf(
+        payload,
+        retainedPdf.blob,
+        retainedPdf.filename,
+      ).payload;
 
       submissionStage = "network";
       const response = await fetch(form.action, {
         method: "POST",
-        body: payload,
+        body: submissionPayload,
         headers: { Accept: "text/html" },
       });
       if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);

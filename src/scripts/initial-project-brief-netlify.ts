@@ -5,7 +5,6 @@ import type { InitialProjectBrief } from "./initial-project-brief.types";
  * Keep these names in sync with buildInitialProjectBriefNetlifyPayload().
  */
 export const NETLIFY_FIELD_NAMES = [
-  "title",
   "subject",
   "Location format",
   "Project address",
@@ -82,7 +81,6 @@ export const buildInitialProjectBriefNetlifyPayload = (
   payload.set("bot-field", honeypotValue);
 
   const identifier = getInitialProjectBriefSubmissionIdentifier(data);
-  payload.set("title", identifier);
   payload.set("subject", `New BBA project brief — ${identifier}`);
 
   const add = (field: (typeof NETLIFY_FIELD_NAMES)[number], fieldValue: string) => {
@@ -194,8 +192,12 @@ export const assertInitialProjectBriefPdfSize = (blob: Blob) => {
 export const appendInitialProjectBriefPdf = (payload: FormData, blob: Blob, filename: string) => {
   assertInitialProjectBriefPdfSize(blob);
   const file = new File([blob], filename, { type: "application/pdf" });
-  payload.set(NETLIFY_PDF_FIELD_NAME, file);
-  return file;
+  const submissionPayload = new FormData();
+  submissionPayload.set(NETLIFY_PDF_FIELD_NAME, file);
+  for (const [field, fieldValue] of payload.entries()) {
+    submissionPayload.append(field, fieldValue);
+  }
+  return { file, payload: submissionPayload };
 };
 
 export const getOrCreateRetainedProjectBriefPdf = async (

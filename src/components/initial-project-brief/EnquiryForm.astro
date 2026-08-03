@@ -15,6 +15,7 @@ import FormProgress from "./FormProgress.astro";
 import ReviewSection from "./ReviewSection.astro";
 import SubmissionSuccess from "./SubmissionSuccess.astro";
 import NetlifyFieldDeclarations from "./NetlifyFieldDeclarations.astro";
+import { NETLIFY_PDF_FIELD_NAME } from "../../scripts/initial-project-brief-netlify";
 ---
 
 <div class="brief-shell">
@@ -28,17 +29,25 @@ import NetlifyFieldDeclarations from "./NetlifyFieldDeclarations.astro";
     novalidate
   >
     <input type="hidden" name="form-name" value="initial-project-brief" />
-    <!-- Netlify uses the first non-hidden text input as the dashboard summary title. -->
+    <!-- Keep the uploaded brief first in Netlify's notification field order. -->
+    <input
+      class="hidden"
+      type="file"
+      name={NETLIFY_PDF_FIELD_NAME}
+      tabindex="-1"
+      aria-hidden="true"
+    />
+    <!-- Netlify uses the first non-hidden text input for its dashboard summary. -->
     <input
       class="sr-only"
       type="text"
-      name="title"
+      name="subject"
       value=""
       tabindex="-1"
       aria-hidden="true"
       autocomplete="off"
       readonly
-      data-netlify-summary-title
+      data-netlify-summary-subject
     />
     <NetlifyFieldDeclarations />
     <p class="sr-only" aria-hidden="true">

@@ -51,14 +51,25 @@ test("declares the PDF field statically and wires one retained Blob to upload an
     "utf8",
   );
   const controller = await readFile(new URL("./initial-project-brief.ts", import.meta.url), "utf8");
+  const contactMarkup = await readFile(
+    new URL("../components/initial-project-brief/steps/ContactStep.astro", import.meta.url),
+    "utf8",
+  );
+  const locationMarkup = await readFile(
+    new URL("../components/initial-project-brief/steps/LocationStep.astro", import.meta.url),
+    "utf8",
+  );
 
-  const summaryTitleIndex = formMarkup.indexOf('type="text"\n      name="title"');
-  assert.notEqual(summaryTitleIndex, -1);
-  assert.ok(summaryTitleIndex < formMarkup.indexOf("<LocationStep />"));
-  assert.match(declarations, /type="file" name=\{NETLIFY_PDF_FIELD_NAME\}/);
+  const summarySubjectIndex = formMarkup.indexOf('type="text"\n      name="subject"');
+  assert.notEqual(summarySubjectIndex, -1);
+  assert.ok(summarySubjectIndex < formMarkup.indexOf("<LocationStep />"));
+  assert.match(contactMarkup, /id="contact_name" name="Name"/);
+  assert.match(locationMarkup, /name="Location format" value="Postal address"/);
+  assert.match(declarations, /new Set\(\["subject", "Location format", "Name", "email"\]\)/);
+  assert.match(formMarkup, /type="file"\n      name=\{NETLIFY_PDF_FIELD_NAME\}/);
   assert.match(
     controller,
-    /appendInitialProjectBriefPdf\(payload, retainedPdf\.blob, retainedPdf\.filename\)/,
+    /appendInitialProjectBriefPdf\(\s*payload,\s*retainedPdf\.blob,\s*retainedPdf\.filename/,
   );
   assert.match(
     controller,

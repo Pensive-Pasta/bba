@@ -63,7 +63,6 @@ test("serialises the complete clean text payload with human-readable values", ()
   assert.deepEqual(Object.fromEntries(payload), {
     "form-name": "initial-project-brief",
     "bot-field": "bot-value",
-    title: "Alex Example — PE8 4BQ",
     subject: "New BBA project brief — Alex Example — PE8 4BQ",
     "Location format": "Postal address",
     "Project address": "1 Market Place, Oundle, Northamptonshire, PE8 4BQ",
@@ -99,7 +98,7 @@ test("serialises the complete clean text payload with human-readable values", ()
   });
 });
 
-test("builds title and subject metadata without malformed separators", () => {
+test("builds subject metadata without malformed separators", () => {
   const townBrief = completeBrief({ projectPostcode: "", projectTownCity: "Oundle" });
   const gridBrief = completeBrief({
     locationFormat: "Grid reference",
@@ -126,13 +125,14 @@ test("builds title and subject metadata without malformed separators", () => {
     buildInitialProjectBriefNetlifyPayload(unnamedBrief).get("subject"),
     "New BBA project brief — Grid reference",
   );
+  assert.equal(buildInitialProjectBriefNetlifyPayload(townBrief).has("title"), false);
 });
 
 test("appends a genuine PDF File while retaining every clean text field", async () => {
   const payload = buildInitialProjectBriefNetlifyPayload(completeBrief(), "bot-value");
   const cleanEntries = Array.from(payload.entries());
   const blob = new Blob(["project brief pdf"], { type: "application/pdf" });
-  const file = appendInitialProjectBriefPdf(
+  const { file, payload: submissionPayload } = appendInitialProjectBriefPdf(
     payload,
     blob,
     "BBA-initial-project-brief-alex-example.pdf",
@@ -142,9 +142,10 @@ test("appends a genuine PDF File while retaining every clean text field", async 
   assert.equal(file.name, "BBA-initial-project-brief-alex-example.pdf");
   assert.equal(file.type, "application/pdf");
   assert.equal(await file.text(), await blob.text());
-  assert.equal(payload.get(NETLIFY_PDF_FIELD_NAME), file);
+  assert.equal(submissionPayload.get(NETLIFY_PDF_FIELD_NAME), file);
+  assert.equal(submissionPayload.entries().next().value?.[0], NETLIFY_PDF_FIELD_NAME);
   assert.deepEqual(
-    Array.from(payload.entries()).filter(([field]) => field !== NETLIFY_PDF_FIELD_NAME),
+    Array.from(submissionPayload.entries()).filter(([field]) => field !== NETLIFY_PDF_FIELD_NAME),
     cleanEntries,
   );
 });
