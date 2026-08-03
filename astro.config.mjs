@@ -3,5 +3,11 @@ import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   site: import.meta.env.PUBLIC_SITE_URL ?? "https://wearebba.co.uk",
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        new URL(page).pathname.replace(/\/$/, "") !==
+        "/initial-project-brief",
+    }),
+  ],
 });

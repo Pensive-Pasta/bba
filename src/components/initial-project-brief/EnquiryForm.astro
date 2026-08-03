@@ -1,0 +1,63 @@
+---
+import AnythingElseStep from "./steps/AnythingElseStep.astro";
+import BudgetStep from "./steps/BudgetStep.astro";
+import ContactStep from "./steps/ContactStep.astro";
+import LocationStep from "./steps/LocationStep.astro";
+import PrivacyStep from "./steps/PrivacyStep.astro";
+import ProjectDescriptionStep from "./steps/ProjectDescriptionStep.astro";
+import ProjectTypeStep from "./steps/ProjectTypeStep.astro";
+import ServicesStep from "./steps/ServicesStep.astro";
+import SituationStep from "./steps/SituationStep.astro";
+import SustainabilityStep from "./steps/SustainabilityStep.astro";
+import WelcomeStep from "./steps/WelcomeStep.astro";
+import FormNavigation from "./FormNavigation.astro";
+import FormProgress from "./FormProgress.astro";
+import ReviewSection from "./ReviewSection.astro";
+import SubmissionSuccess from "./SubmissionSuccess.astro";
+---
+
+<div class="brief-shell">
+  <form
+    name="initial-project-brief"
+    method="POST"
+    action="/"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    data-initial-project-brief
+    novalidate
+  >
+    <input type="hidden" name="form-name" value="initial-project-brief" />
+    <p class="sr-only" aria-hidden="true">
+      <label for="bot-field">Do not fill this field if you are human</label>
+      <input id="bot-field" name="bot-field" type="text" tabindex="-1" autocomplete="off" />
+    </p>
+
+    <FormProgress />
+    <WelcomeStep />
+    <LocationStep />
+    <ProjectTypeStep />
+    <ProjectDescriptionStep />
+    <SituationStep />
+    <BudgetStep />
+    <SustainabilityStep />
+    <ServicesStep />
+    <ContactStep />
+    <AnythingElseStep />
+    <PrivacyStep />
+    <ReviewSection />
+    <FormNavigation />
+  </form>
+  <SubmissionSuccess />
+</div>
+
+<script>
+  import { initialiseInitialProjectBrief } from "../../scripts/initial-project-brief";
+
+  const initialise = () => initialiseInitialProjectBrief();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialise, { once: true });
+  } else {
+    initialise();
+  }
+  document.addEventListener("astro:page-load", initialise);
+</script>

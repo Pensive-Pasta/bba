@@ -1,0 +1,54 @@
+---
+import type { PortableTextBlock } from "@portabletext/types";
+import { toHTML } from "@portabletext/to-html";
+
+interface Props {
+  content: PortableTextBlock[];
+}
+
+const { content } = Astro.props;
+
+const html = toHTML(content, {
+  components: {
+    block: {
+      normal: ({ children }) =>
+        `<p class="mt-4 text-bodySecondary font-light">${children}</p>`,
+      h2: ({ children }) =>
+        `<h2 class="mt-12 text-bodyPrimary font-medium md:mt-16">${children}</h2>`,
+      h3: ({ children }) =>
+        `<h3 class="mt-6 text-bodyTertiary font-medium md:text-bodySecondary">${children}</h3>`,
+      h4: ({ children }) =>
+        `<h4 class="mt-4 text-bodySecondary font-medium">${children}</h4>`,
+      blockquote: ({ children }) =>
+        `<blockquote class="mt-4 border-l-2 border-current pl-4 text-bodySecondary font-light">${children}</blockquote>`,
+    },
+    list: {
+      bullet: ({ children }) =>
+        `<ul class="mt-4 list-disc space-y-1 pl-5 text-bodySecondary font-light">${children}</ul>`,
+      number: ({ children }) =>
+        `<ol class="mt-4 list-decimal space-y-1 pl-5 text-bodySecondary font-light">${children}</ol>`,
+    },
+    listItem: {
+      bullet: ({ children }) => `<li>${children}</li>`,
+      number: ({ children }) => `<li>${children}</li>`,
+    },
+    marks: {
+      strong: ({ children }) => `<strong class="font-medium">${children}</strong>`,
+      em: ({ children }) => `<em>${children}</em>`,
+      underline: ({ children }) =>
+        `<span class="underline underline-offset-4">${children}</span>`,
+      code: ({ children }) =>
+        `<code class="rounded bg-black/5 px-1 py-0.5 text-[0.95em]">${children}</code>`,
+      link: ({ children, value }) => {
+        const href = value?.href || "#";
+        const isBlank = Boolean(value?.blank);
+        const target = isBlank ? ' target="_blank" rel="noopener noreferrer"' : "";
+
+        return `<a class="underline underline-offset-4" href="${href}"${target}>${children}</a>`;
+      },
+    },
+  },
+});
+---
+
+<div set:html={html} />

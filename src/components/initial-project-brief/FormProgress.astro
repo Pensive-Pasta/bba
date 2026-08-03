@@ -1,0 +1,30 @@
+---
+const steps = [
+  "Location",
+  "Project type",
+  "The project",
+  "Where things stand",
+  "Budget",
+  "Sustainability",
+  "Services",
+  "Contact",
+  "Anything else",
+  "Last one",
+];
+---
+
+<nav class="brief-progress" data-brief-progress aria-label="Project brief progress" hidden>
+  {
+    steps.map((label, index) => (
+      <button
+        type="button"
+        class="brief-progress-item"
+        data-progress-index={index}
+        aria-label={`Question ${index + 1}: ${label}`}
+        disabled
+      >
+        <span aria-hidden="true">{index + 1}</span>
+      </button>
+    ))
+  }
+</nav>

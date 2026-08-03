@@ -2,7 +2,7 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
-  content: ["./src/**/*.{html,js,astro}"],
+  content: ["./src/**/*.{html,js,ts,astro}"],
   theme: {
     extend: {
       screens: {

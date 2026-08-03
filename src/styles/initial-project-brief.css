@@ -1,0 +1,326 @@
+.brief-shell {
+    @apply mx-auto min-h-screen w-full max-w-[640px] px-4 pb-44 pt-36 text-primary sm:pb-32 md:px-5 md:pt-40;
+  }
+
+  .brief-shell [hidden] {
+    display: none !important;
+  }
+
+  .brief-step {
+    animation: brief-fade 250ms ease-out;
+  }
+
+  .brief-step-title {
+    @apply mb-3 text-2xl font-medium leading-tight text-primary md:text-[28px];
+  }
+
+  .brief-step-title:focus {
+    outline: none;
+  }
+
+  .brief-eyebrow {
+    @apply mb-2 text-bodyTertiary font-medium;
+  }
+
+  .brief-step-subtitle {
+    @apply mb-6 text-lg font-light leading-snug text-primary;
+  }
+
+  .brief-submission-error {
+    @apply mb-5 border-2 border-primary bg-primary/5 px-4 py-3 text-sm font-medium text-primary;
+  }
+
+  .brief-field {
+    @apply mb-5;
+  }
+
+  .brief-field > label:not(.brief-checkbox-label),
+  .brief-step legend {
+    @apply mb-1.5 block text-bodyTertiary font-medium;
+  }
+
+  .brief-field input[type="text"],
+  .brief-field input[type="email"],
+  .brief-field input[type="tel"],
+  .brief-field textarea {
+    @apply w-full rounded-sm border-2 border-primary/20 bg-white px-3.5 py-3 text-base font-light text-primary transition-colors placeholder:text-primary/50 hover:border-primary/50 focus:border-primary focus:outline-none;
+  }
+
+  .brief-field textarea {
+    @apply min-h-[110px] resize-y;
+  }
+
+  .brief-field input,
+  .brief-field textarea,
+  .brief-chip,
+  .brief-segment {
+    scroll-margin-block: 8rem;
+  }
+
+  .brief-chip-list {
+    @apply flex flex-col gap-2;
+  }
+
+  .brief-chip {
+    @apply flex w-full cursor-pointer items-center gap-3 rounded-sm border-2 border-primary/20 bg-white px-4 py-3.5 text-left text-base font-light text-primary transition-colors hover:border-primary/50;
+  }
+
+  .brief-chip:has(input:focus-visible) {
+    @apply outline outline-2 outline-offset-2 outline-primary;
+  }
+
+  .brief-chip:has(input:checked) {
+    @apply border-primary bg-primary text-white;
+  }
+
+  .brief-stage-tag {
+    @apply w-16 shrink-0 rounded-full bg-primary/5 py-1 text-center text-caption font-medium text-primary;
+  }
+
+  .brief-chip:has(input:checked) .brief-stage-tag {
+    @apply bg-white/20 text-white;
+  }
+
+  .brief-segments {
+    @apply relative flex flex-wrap gap-0.5 rounded-full border-2 border-primary bg-white p-1;
+  }
+
+  .brief-segment-highlight {
+    @apply pointer-events-none absolute z-0 rounded-full bg-primary opacity-0;
+    transition: left 250ms cubic-bezier(0.4, 0, 0.2, 1),
+      top 250ms cubic-bezier(0.4, 0, 0.2, 1),
+      width 250ms cubic-bezier(0.4, 0, 0.2, 1),
+      height 250ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 200ms ease;
+  }
+
+  .brief-segments-compact {
+    @apply flex-nowrap;
+  }
+
+  .brief-segment {
+    @apply relative z-10 min-w-0 flex-1 cursor-pointer rounded-full text-center text-sm font-light text-primary;
+  }
+
+  .brief-segment > span {
+    @apply block rounded-full px-3 py-3;
+  }
+
+  .brief-segments-compact .brief-segment > span {
+    @apply whitespace-nowrap px-0 text-caption sm:px-1 sm:text-bodyTertiary;
+  }
+
+  .brief-segment:has(input:focus-visible) {
+    @apply outline outline-2 outline-offset-2 outline-primary;
+  }
+
+  .brief-segment:has(input:checked) > span {
+    @apply font-medium text-white;
+  }
+
+  .brief-segment-readout {
+    @apply mt-3 text-center text-lg font-medium;
+  }
+
+  .brief-checkbox-label {
+    @apply flex cursor-pointer items-center gap-2.5 text-base font-light;
+  }
+
+  .brief-checkbox-label input {
+    @apply h-[22px] w-[22px] shrink-0 appearance-none rounded-sm border-2 border-primary/40 bg-white checked:border-primary checked:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+
+  .brief-checkbox-label input:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M4 12.5L9.5 18L20 6' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 14px 14px;
+  }
+
+  .brief-checkbox-label.items-start input {
+    margin-top: 2px;
+  }
+
+  .brief-link {
+    @apply -mt-1 mb-4 text-bodyTertiary font-medium underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+
+  .brief-hint {
+    @apply mt-1.5 text-bodyTertiary font-light;
+  }
+
+  .brief-divider {
+    @apply my-7 border-0 border-t-2 border-dotted border-primary/50;
+  }
+
+  .brief-progress {
+    @apply mb-7 flex gap-1 overflow-x-auto pb-1 sm:gap-1.5;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-inline: contain;
+  }
+
+  .brief-progress::-webkit-scrollbar {
+    display: none;
+  }
+
+  .brief-progress-item {
+    @apply flex h-7 w-7 shrink-0 snap-center items-center justify-center rounded-sm border-2 border-dotted border-primary/50 text-xs font-medium text-primary transition-colors disabled:cursor-default disabled:opacity-100 sm:h-[34px] sm:w-[34px] sm:text-bodyTertiary;
+  }
+
+  .brief-progress-item[data-state="current"] {
+    @apply border-solid border-primary;
+  }
+
+  .brief-progress-item[data-state="done"] {
+    @apply cursor-pointer border-solid border-primary bg-primary text-white;
+  }
+
+  .brief-progress-item[data-state="done"]:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-primary;
+  }
+
+  .brief-navigation {
+    @apply fixed inset-x-0 bottom-0 z-30 border-t-2 border-dotted border-primary/50 bg-white px-4 py-4;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  .brief-navigation-inner {
+    @apply mx-auto grid w-full max-w-[600px] grid-cols-2 items-center gap-x-3 gap-y-4;
+    grid-template-areas:
+      "back count"
+      "next next";
+  }
+
+  .brief-navigation-error {
+    @apply absolute bottom-full left-4 right-4 mx-auto mb-3 max-w-[600px] rounded-sm bg-primary px-4 py-3 text-center text-sm font-medium text-white shadow-lg;
+  }
+
+  [data-brief-back] {
+    grid-area: back;
+    justify-self: start;
+  }
+
+  [data-step-index] {
+    grid-area: count;
+    justify-self: end;
+  }
+
+  [data-brief-next] {
+    grid-area: next;
+    width: 100%;
+  }
+
+  [data-brief-navigation][data-step="welcome"] .brief-navigation-inner {
+    grid-template-areas: "next next";
+  }
+
+  .brief-button {
+    @apply rounded-sm px-5 py-3.5 text-[15px] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-wait disabled:opacity-50;
+    transition: opacity 150ms ease, transform 100ms ease;
+  }
+
+  .brief-button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .brief-button[data-brief-back] {
+    padding: 0;
+  }
+
+  [data-brief-next][aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+
+  .brief-button-primary {
+    @apply bg-primary text-white;
+  }
+
+  .brief-button-ghost {
+    @apply flex items-center gap-1.5 bg-transparent font-light text-primary;
+  }
+
+  .brief-button-outline {
+    @apply border-2 border-primary/20 bg-transparent text-primary;
+  }
+
+  .brief-review-card {
+    @apply relative mb-3 rounded-sm bg-primary/5 px-4 py-4;
+  }
+
+  .brief-review-card h3 {
+    @apply mb-2 pr-12 text-bodyTertiary font-medium;
+  }
+
+  .brief-review-card button {
+    @apply absolute right-4 top-3.5 text-xs font-medium underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+
+  .brief-review-card dt {
+    @apply mt-2 text-xs font-medium first:mt-0;
+  }
+
+  .brief-review-card dd {
+    @apply m-0 text-[15px] font-light;
+  }
+
+  .brief-success {
+    @apply pt-8 text-center;
+  }
+
+  .brief-success-tick {
+    @apply mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/5 text-primary;
+  }
+
+  .brief-print-summary {
+    @apply mt-10 hidden text-left;
+  }
+
+  .brief-print-summary h2 {
+    @apply mb-5 text-xl font-medium;
+  }
+
+  .brief-print-summary section {
+    @apply mb-4 break-inside-avoid;
+  }
+
+  .brief-print-summary h3 {
+    @apply text-sm font-medium;
+  }
+
+.brief-print-summary p {
+    @apply whitespace-pre-wrap text-sm font-light;
+}
+
+@keyframes brief-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brief-step { animation: none; }
+}
+
+@media print {
+  body.brief-printing > header,
+  body.brief-printing > footer,
+  body.brief-printing #site-header,
+  body.brief-printing [data-cookie-consent],
+  body.brief-printing [data-cookie-banner],
+  body.brief-printing [data-initial-project-brief],
+  body.brief-printing [data-submission-success] > :not([data-print-summary]) {
+    display: none !important;
+  }
+
+  body.brief-printing .brief-shell {
+    max-width: none;
+    padding: 0;
+  }
+
+  body.brief-printing [data-print-summary] {
+    display: block !important;
+    margin: 0;
+    color: theme("colors.primary.DEFAULT");
+  }
+}
