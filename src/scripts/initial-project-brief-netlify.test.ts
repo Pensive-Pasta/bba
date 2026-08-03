@@ -5,7 +5,6 @@ import {
   MAX_INITIAL_PROJECT_BRIEF_PDF_BYTES,
   NETLIFY_EMPTY_FIELD_VALUE,
   NETLIFY_PDF_FIELD_NAME,
-  addDetectedInitialProjectBriefFields,
   appendInitialProjectBriefPdf,
   assertInitialProjectBriefPdfSize,
   buildInitialProjectBriefNetlifyPayload,
@@ -267,37 +266,4 @@ test("uses grid fields and marks blank, postal, and inactive conditional fields 
       `${unansweredField} should be marked N/A`,
     );
   }
-});
-
-test("dynamically marks unanswered build-detected controls as N/A", () => {
-  const payload = buildInitialProjectBriefNetlifyPayload(completeBrief());
-  const submittedControls = new FormData();
-  submittedControls.append("project_type[]", "New build house");
-  submittedControls.append("project_type[]", "Residential development (2+ homes)");
-  submittedControls.set("project_description", "A completed answer");
-  submittedControls.set("company_organisation", "");
-
-  addDetectedInitialProjectBriefFields(
-    payload,
-    [
-      "project_type[]",
-      "project_type[]",
-      "project_description",
-      "company_organisation",
-      "unchecked_or_disabled_control",
-      NETLIFY_PDF_FIELD_NAME,
-    ],
-    submittedControls,
-  );
-
-  assert.equal(
-    payload.get("project_type[]"),
-    "New build house, Residential development (2+ homes)",
-  );
-  assert.equal(payload.get("project_description"), "A completed answer");
-  assert.equal(payload.get("company_organisation"), NETLIFY_EMPTY_FIELD_VALUE);
-  assert.equal(payload.get("unchecked_or_disabled_control"), NETLIFY_EMPTY_FIELD_VALUE);
-  assert.equal(payload.has(NETLIFY_PDF_FIELD_NAME), false);
-  assert.equal(payload.get("Name"), "Alex Example");
-  assert.equal(payload.get("email"), "alex@example.com");
 });

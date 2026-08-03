@@ -7,7 +7,6 @@ import { formatCharacterCount } from "./initial-project-brief-character-limits";
 import type { InitialProjectBrief } from "./initial-project-brief.types";
 import {
   InitialProjectBriefPdfSizeError,
-  addDetectedInitialProjectBriefFields,
   appendInitialProjectBriefPdf,
   buildInitialProjectBriefNetlifyPayload,
   getInitialProjectBriefPayloadSignature,
@@ -558,11 +557,6 @@ export const initialiseInitialProjectBrief = () => {
 
       retainedPdf = nextRetainedPdf;
       if (!reusedRetainedPdf || !retainedPdfBrief) retainedPdfBrief = currentBrief;
-      addDetectedInitialProjectBriefFields(
-        payload,
-        Array.from(form.elements, (element) => (element as HTMLInputElement).name),
-        new FormData(form),
-      );
       const submissionPayload = appendInitialProjectBriefPdf(
         payload,
         retainedPdf.blob,

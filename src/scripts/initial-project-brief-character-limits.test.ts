@@ -41,13 +41,13 @@ test("formats the live project-description character counter", () => {
   assert.equal(formatCharacterCount("x".repeat(800), 800), "800 / 800 characters");
 });
 
-test("declares the PDF field statically and wires one retained Blob to upload and download", async () => {
+test("uses a clean static Netlify blueprint and wires one retained PDF Blob", async () => {
   const formMarkup = await readFile(
     new URL("../components/initial-project-brief/EnquiryForm.astro", import.meta.url),
     "utf8",
   );
-  const declarations = await readFile(
-    new URL("../components/initial-project-brief/NetlifyFieldDeclarations.astro", import.meta.url),
+  const blueprint = await readFile(
+    new URL("../components/initial-project-brief/NetlifyFormBlueprint.astro", import.meta.url),
     "utf8",
   );
   const controller = await readFile(new URL("./initial-project-brief.ts", import.meta.url), "utf8");
@@ -60,13 +60,18 @@ test("declares the PDF field statically and wires one retained Blob to upload an
     "utf8",
   );
 
-  const summarySubjectIndex = formMarkup.indexOf('type="text"\n      name="subject"');
+  const summarySubjectIndex = blueprint.indexOf('type="text" name="subject"');
   assert.notEqual(summarySubjectIndex, -1);
-  assert.ok(summarySubjectIndex < formMarkup.indexOf("<LocationStep />"));
+  assert.ok(summarySubjectIndex < blueprint.indexOf("NETLIFY_FIELD_NAMES.filter"));
   assert.match(contactMarkup, /id="contact_name" name="Name"/);
   assert.match(locationMarkup, /name="Location format" value="Postal address"/);
-  assert.match(declarations, /new Set\(\["subject", "Location format", "Name", "email"\]\)/);
-  assert.match(formMarkup, /type="file"\n      name=\{NETLIFY_PDF_FIELD_NAME\}/);
+  assert.match(blueprint, /field !== "subject"/);
+  assert.match(blueprint, /field === "email"/);
+  assert.match(blueprint, /type="file" name=\{NETLIFY_PDF_FIELD_NAME\}/);
+  assert.match(blueprint, /name="initial-project-brief"/);
+  assert.match(blueprint, /data-netlify="true"/);
+  assert.match(blueprint, /type="email" name=\{field\}/);
+  assert.doesNotMatch(formMarkup, /data-netlify=|netlify-honeypot=|name="initial-project-brief"/);
   assert.match(
     controller,
     /appendInitialProjectBriefPdf\(\s*payload,\s*retainedPdf\.blob,\s*retainedPdf\.filename/,

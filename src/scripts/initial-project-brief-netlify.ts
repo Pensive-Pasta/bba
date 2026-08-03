@@ -171,29 +171,6 @@ export const buildInitialProjectBriefNetlifyPayload = (
   return payload;
 };
 
-export const addDetectedInitialProjectBriefFields = (
-  payload: FormData,
-  detectedFieldNames: Iterable<string>,
-  submittedControls: FormData,
-) => {
-  for (const field of new Set(detectedFieldNames)) {
-    if (!field || field === NETLIFY_PDF_FIELD_NAME || payload.has(field)) continue;
-
-    const submittedValues = submittedControls
-      .getAll(field)
-      .filter((fieldValue): fieldValue is string => typeof fieldValue === "string")
-      .map((fieldValue) => fieldValue.trim())
-      .filter(Boolean);
-
-    payload.set(
-      field,
-      submittedValues.length ? submittedValues.join(", ") : NETLIFY_EMPTY_FIELD_VALUE,
-    );
-  }
-
-  return payload;
-};
-
 export const getInitialProjectBriefPayloadSignature = (payload: FormData) =>
   JSON.stringify(
     Array.from(payload.entries(), ([field, fieldValue]) => [

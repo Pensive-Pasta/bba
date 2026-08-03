@@ -1,0 +1,37 @@
+---
+import {
+  NETLIFY_FIELD_NAMES,
+  NETLIFY_PDF_FIELD_NAME,
+} from "../../scripts/initial-project-brief-netlify";
+
+// Netlify discovers form fields from generated HTML at build time. Keeping this blueprint
+// separate prevents the interactive controls from creating duplicate or misleading fields.
+---
+
+<form
+  name="initial-project-brief"
+  method="POST"
+  action="/"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  hidden
+  aria-hidden="true"
+  data-netlify-form-blueprint
+>
+  <input type="hidden" name="form-name" value="initial-project-brief" />
+  <!-- Keep the uploaded brief first in Netlify's notification field order. -->
+  <input type="file" name={NETLIFY_PDF_FIELD_NAME} tabindex="-1" />
+  <!-- Netlify uses the first text field for its dashboard and email summary. -->
+  <input type="text" name="subject" value="" tabindex="-1" autocomplete="off" readonly />
+  {
+    NETLIFY_FIELD_NAMES.filter((field) => field !== "subject").map((field) =>
+      field === "email" ? (
+        // Keep lowercase `email` so Netlify can use it as the notification Reply-To address.
+        <input type="email" name={field} value="" tabindex="-1" autocomplete="off" />
+      ) : (
+        <input type="hidden" name={field} value="" />
+      ),
+    )
+  }
+  <input type="text" name="bot-field" value="" tabindex="-1" autocomplete="off" />
+</form>
