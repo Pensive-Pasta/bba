@@ -1,7 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildInitialProjectBriefNetlifyPayload } from "./initial-project-brief-netlify.ts";
+import {
+  MAX_INITIAL_PROJECT_BRIEF_PDF_BYTES,
+  NETLIFY_PDF_FIELD_NAME,
+  appendInitialProjectBriefPdf,
+  assertInitialProjectBriefPdfSize,
+  buildInitialProjectBriefNetlifyPayload,
+  getInitialProjectBriefPayloadSignature,
+  getInitialProjectBriefPdfFilename,
+  getInitialProjectBriefSubmissionIdentifier,
+  getOrCreateRetainedProjectBriefPdf,
+} from "./initial-project-brief-netlify.ts";
 import type { InitialProjectBrief } from "./initial-project-brief.types.ts";
 
 const completeBrief = (overrides: Partial<InitialProjectBrief> = {}): InitialProjectBrief => ({
@@ -49,10 +59,12 @@ const completeBrief = (overrides: Partial<InitialProjectBrief> = {}): InitialPro
 test("serialises the complete clean text payload with human-readable values", () => {
   const payload = buildInitialProjectBriefNetlifyPayload(completeBrief(), "bot-value");
 
-  assert.ok(payload instanceof URLSearchParams);
+  assert.ok(payload instanceof FormData);
   assert.deepEqual(Object.fromEntries(payload), {
     "form-name": "initial-project-brief",
     "bot-field": "bot-value",
+    title: "Alex Example — PE8 4BQ",
+    subject: "New BBA project brief — Alex Example — PE8 4BQ",
     "Location format": "Postal address",
     "Project address": "1 Market Place, Oundle, Northamptonshire, PE8 4BQ",
     "Project types": "Residential development (2+ homes), Other",
@@ -85,6 +97,106 @@ test("serialises the complete clean text payload with human-readable values", ()
     "Referral detail": "A local event",
     "Privacy acknowledgement": "Acknowledged",
   });
+});
+
+test("builds title and subject metadata without malformed separators", () => {
+  const townBrief = completeBrief({ projectPostcode: "", projectTownCity: "Oundle" });
+  const gridBrief = completeBrief({
+    locationFormat: "Grid reference",
+    projectPostcode: "",
+    projectTownCity: "",
+  });
+  const unnamedBrief = completeBrief({
+    contactName: "",
+    projectPostcode: "",
+    projectTownCity: "",
+  });
+
+  assert.equal(getInitialProjectBriefSubmissionIdentifier(townBrief), "Alex Example — Oundle");
+  assert.equal(
+    buildInitialProjectBriefNetlifyPayload(townBrief).get("subject"),
+    "New BBA project brief — Alex Example — Oundle",
+  );
+  assert.equal(
+    getInitialProjectBriefSubmissionIdentifier(gridBrief),
+    "Alex Example — Grid reference",
+  );
+  assert.equal(getInitialProjectBriefSubmissionIdentifier(unnamedBrief), "Grid reference");
+  assert.equal(
+    buildInitialProjectBriefNetlifyPayload(unnamedBrief).get("subject"),
+    "New BBA project brief — Grid reference",
+  );
+});
+
+test("appends a genuine PDF File while retaining every clean text field", async () => {
+  const payload = buildInitialProjectBriefNetlifyPayload(completeBrief(), "bot-value");
+  const cleanEntries = Array.from(payload.entries());
+  const blob = new Blob(["project brief pdf"], { type: "application/pdf" });
+  const file = appendInitialProjectBriefPdf(
+    payload,
+    blob,
+    "BBA-initial-project-brief-alex-example.pdf",
+  );
+
+  assert.ok(file instanceof File);
+  assert.equal(file.name, "BBA-initial-project-brief-alex-example.pdf");
+  assert.equal(file.type, "application/pdf");
+  assert.equal(await file.text(), await blob.text());
+  assert.equal(payload.get(NETLIFY_PDF_FIELD_NAME), file);
+  assert.deepEqual(
+    Array.from(payload.entries()).filter(([field]) => field !== NETLIFY_PDF_FIELD_NAME),
+    cleanEntries,
+  );
+});
+
+test("creates safe project brief filenames with a client-name fallback", () => {
+  assert.equal(
+    getInitialProjectBriefPdfFilename("  Alex / Éxample:*?  "),
+    "BBA-initial-project-brief-alex-example.pdf",
+  );
+  assert.equal(getInitialProjectBriefPdfFilename(" /:*? "), "BBA-initial-project-brief.pdf");
+});
+
+test("rejects a generated PDF above the 500 KB safeguard", () => {
+  assert.doesNotThrow(() => {
+    assertInitialProjectBriefPdfSize(
+      new Blob([new Uint8Array(MAX_INITIAL_PROJECT_BRIEF_PDF_BYTES)]),
+    );
+  });
+  assert.throws(
+    () =>
+      assertInitialProjectBriefPdfSize(
+        new Blob([new Uint8Array(MAX_INITIAL_PROJECT_BRIEF_PDF_BYTES + 1)]),
+      ),
+    /exceeds the 500 KB limit/,
+  );
+});
+
+test("reuses the retained PDF Blob when an unchanged submission is retried", async () => {
+  const payload = buildInitialProjectBriefNetlifyPayload(completeBrief());
+  const signature = getInitialProjectBriefPayloadSignature(payload);
+  let generationCount = 0;
+  const generatePdf = async () => {
+    generationCount += 1;
+    return new Blob([`pdf ${generationCount}`], { type: "application/pdf" });
+  };
+
+  const first = await getOrCreateRetainedProjectBriefPdf(
+    signature,
+    "Alex Example",
+    null,
+    generatePdf,
+  );
+  const retry = await getOrCreateRetainedProjectBriefPdf(
+    signature,
+    "Alex Example",
+    first,
+    generatePdf,
+  );
+
+  assert.equal(retry, first);
+  assert.equal(retry.blob, first.blob);
+  assert.equal(generationCount, 1);
 });
 
 test("uses grid fields and omits blank, postal, and inactive conditional fields", () => {

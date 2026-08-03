@@ -105,12 +105,6 @@ const imageToDataUrl = async (url: string): Promise<string> => {
   });
 };
 
-const fileSlug = (name: string) =>
-  (name || "form")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-
 export const createInitialProjectBriefPdfBlob = async (data: InitialProjectBrief) => {
   const [{ jsPDF }, logoDataUrl] = await Promise.all([
     import("jspdf"),
@@ -212,12 +206,4 @@ export const downloadInitialProjectBriefPdfBlob = (blob: Blob, filename: string)
   link.click();
   link.remove();
   globalThis.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
-};
-
-export const downloadInitialProjectBriefPdf = async (data: InitialProjectBrief) => {
-  const blob = await createInitialProjectBriefPdfBlob(data);
-  downloadInitialProjectBriefPdfBlob(
-    blob,
-    `BBA-initial-enquiry-${fileSlug(data.contactName)}.pdf`,
-  );
 };

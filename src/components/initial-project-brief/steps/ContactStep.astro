@@ -1,5 +1,7 @@
 ---
 import FormStep from "../FormStep.astro";
+import CharacterCounter from "../CharacterCounter.astro";
+import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../../../scripts/initial-project-brief-character-limits";
 ---
 
 <FormStep
@@ -10,24 +12,25 @@ import FormStep from "../FormStep.astro";
 >
   <div class="brief-field">
     <label for="company_organisation">Company / organisation</label>
-    <input id="company_organisation" name="company_organisation" type="text" placeholder="If applicable" autocomplete="organization" />
+    <input id="company_organisation" name="company_organisation" type="text" placeholder="If applicable" autocomplete="organization" maxlength={CHARACTER_LIMITS.companyOrganisation} />
   </div>
   <div class="brief-field">
     <label for="contact_name">Name <span aria-hidden="true">*</span></label>
-    <input id="contact_name" name="contact_name" type="text" placeholder="Full name" autocomplete="name" required />
+    <input id="contact_name" name="contact_name" type="text" placeholder="Full name" autocomplete="name" maxlength={CHARACTER_LIMITS.contactName} required />
   </div>
   <div class="brief-field">
     <label for="contact_address">Address</label>
-    <input id="contact_address" name="contact_address" type="text" placeholder="If different from the project site" autocomplete="street-address" />
+    <input id="contact_address" name="contact_address" type="text" placeholder="If different from the project site" autocomplete="street-address" maxlength={CHARACTER_LIMITS.contactAddress} aria-describedby="contact_address-character-count" />
+    <CharacterCounter fieldId="contact_address" limit={CHARACTER_LIMITS.contactAddress} />
   </div>
   <div class="grid gap-3 sm:grid-cols-2">
     <div class="brief-field">
       <label for="email">Email <span aria-hidden="true">*</span></label>
-      <input id="email" name="email" type="email" placeholder="you@email.com" autocomplete="email" required />
+      <input id="email" name="email" type="email" placeholder="you@email.com" autocomplete="email" maxlength={CHARACTER_LIMITS.email} required />
     </div>
     <div class="brief-field">
       <label for="phone">Phone</label>
-      <input id="phone" name="phone" type="tel" placeholder="Optional" autocomplete="tel" />
+      <input id="phone" name="phone" type="tel" placeholder="Optional" autocomplete="tel" maxlength={CHARACTER_LIMITS.phone} />
     </div>
   </div>
 </FormStep>

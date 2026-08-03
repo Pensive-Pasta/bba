@@ -1,7 +1,9 @@
 ---
 import ChipOption from "../ChipOption.astro";
+import CharacterCounter from "../CharacterCounter.astro";
 import FormStep from "../FormStep.astro";
 import SegmentedOption from "../SegmentedOption.astro";
+import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../../../scripts/initial-project-brief-character-limits";
 
 const siteRelationships = [
   "Property or plot I own",
@@ -52,7 +54,8 @@ const constraints = [
   </fieldset>
   <div class="brief-field mt-3" data-site-other hidden>
     <label class="sr-only" for="relationship_to_site_other">What's your relationship to the site? Other detail</label>
-    <input id="relationship_to_site_other" name="relationship_to_site_other" type="text" placeholder="Optional" disabled />
+    <input id="relationship_to_site_other" name="relationship_to_site_other" type="text" placeholder="Optional" maxlength={CHARACTER_LIMITS.relationshipToSiteOther} aria-describedby="relationship_to_site_other-character-count" disabled />
+    <CharacterCounter fieldId="relationship_to_site_other" limit={CHARACTER_LIMITS.relationshipToSiteOther} />
   </div>
 
   <hr class="brief-divider" />
@@ -84,6 +87,7 @@ const constraints = [
   </fieldset>
   <div class="brief-field mt-3" data-constraints-other hidden>
     <label class="sr-only" for="constraints_other">Other known constraints</label>
-    <input id="constraints_other" name="constraints_other" type="text" placeholder="Optional" disabled />
+    <input id="constraints_other" name="constraints_other" type="text" placeholder="Optional" maxlength={CHARACTER_LIMITS.constraintsOther} aria-describedby="constraints_other-character-count" disabled />
+    <CharacterCounter fieldId="constraints_other" limit={CHARACTER_LIMITS.constraintsOther} />
   </div>
 </FormStep>

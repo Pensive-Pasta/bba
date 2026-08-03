@@ -8,6 +8,7 @@ test("downloads an existing client PDF Blob", async (t) => {
   let clicked = false;
   let removed = false;
   let revokedUrl = "";
+  let downloadedBlob: Blob | MediaSource | null = null;
   const link = {
     href: "",
     download: "",
@@ -21,6 +22,7 @@ test("downloads an existing client PDF Blob", async (t) => {
   };
 
   const documentDescriptor = Object.getOwnPropertyDescriptor(globalThis, "document");
+  const originalCreateObjectUrl = URL.createObjectURL;
   const originalRevokeObjectUrl = URL.revokeObjectURL;
   Object.defineProperty(globalThis, "document", {
     configurable: true,
@@ -33,6 +35,10 @@ test("downloads an existing client PDF Blob", async (t) => {
       },
     },
   });
+  URL.createObjectURL = (blob) => {
+    downloadedBlob = blob;
+    return "blob:project-brief";
+  };
   URL.revokeObjectURL = (url) => {
     revokedUrl = url;
   };
@@ -42,6 +48,7 @@ test("downloads an existing client PDF Blob", async (t) => {
     } else {
       Reflect.deleteProperty(globalThis, "document");
     }
+    URL.createObjectURL = originalCreateObjectUrl;
     URL.revokeObjectURL = originalRevokeObjectUrl;
   });
 
@@ -49,7 +56,8 @@ test("downloads an existing client PDF Blob", async (t) => {
   downloadInitialProjectBriefPdfBlob(pdf, "BBA-initial-enquiry-alex-example.pdf");
   await new Promise((resolve) => setTimeout(resolve, 0));
 
-  assert.equal(link.href.startsWith("blob:"), true);
+  assert.equal(link.href, "blob:project-brief");
+  assert.equal(downloadedBlob, pdf);
   assert.equal(link.download, "BBA-initial-enquiry-alex-example.pdf");
   assert.equal(link.hidden, true);
   assert.equal(appended, true);

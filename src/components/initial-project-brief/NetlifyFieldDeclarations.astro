@@ -1,6 +1,10 @@
 ---
-import { NETLIFY_FIELD_NAMES } from "../../scripts/initial-project-brief-netlify";
+import {
+  NETLIFY_FIELD_NAMES,
+  NETLIFY_PDF_FIELD_NAME,
+} from "../../scripts/initial-project-brief-netlify";
 
+// Programmatic submission fields must also exist in the built HTML for Netlify's form scanner.
 // The visible contact step already renders a real input with name="email".
 const separatelyDeclaredFields = new Set(["email"]);
 ---
@@ -11,4 +15,5 @@ const separatelyDeclaredFields = new Set(["email"]);
       (field) => <input type="hidden" name={field} value="" />,
     )
   }
+  <input type="file" name={NETLIFY_PDF_FIELD_NAME} tabindex="-1" />
 </div>

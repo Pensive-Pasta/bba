@@ -1,9 +1,18 @@
 import {
   buildBriefSections,
-  downloadInitialProjectBriefPdf,
+  createInitialProjectBriefPdfBlob,
+  downloadInitialProjectBriefPdfBlob,
 } from "./initial-project-brief-pdf";
+import { formatCharacterCount } from "./initial-project-brief-character-limits";
 import type { InitialProjectBrief } from "./initial-project-brief.types";
-import { buildInitialProjectBriefNetlifyPayload } from "./initial-project-brief-netlify";
+import {
+  InitialProjectBriefPdfSizeError,
+  appendInitialProjectBriefPdf,
+  buildInitialProjectBriefNetlifyPayload,
+  getInitialProjectBriefPayloadSignature,
+  getOrCreateRetainedProjectBriefPdf,
+  type RetainedProjectBriefPdf,
+} from "./initial-project-brief-netlify";
 
 const STEPS = [
   "welcome",
@@ -108,6 +117,7 @@ export const initialiseInitialProjectBrief = () => {
   const navigationError = control<HTMLElement>(navigation, "[data-navigation-error]");
   const reviewBody = control<HTMLElement>(form, "[data-review-body]");
   const submissionError = control<HTMLElement>(form, "[data-submission-error]");
+  const submissionErrorMessage = control<HTMLElement>(submissionError, "[data-submission-error-message]");
   const submitButton = control<HTMLButtonElement>(form, "[data-submit-button]");
   const success = control<HTMLElement>(document, "[data-submission-success]");
   const downloadButton = control<HTMLButtonElement>(success, "[data-download-pdf]");
@@ -115,12 +125,15 @@ export const initialiseInitialProjectBrief = () => {
   const downloadStatus = control<HTMLElement>(success, "[data-download-status]");
   const printSummary = control<HTMLElement>(success, "[data-print-summary]");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const defaultSubmissionErrorMessage = submissionErrorMessage.textContent ?? "";
 
   let currentStep: StepName = "welcome";
   let editingFromReview = false;
   let submitting = false;
   let submitted = false;
   let completedBrief: InitialProjectBrief | null = null;
+  let retainedPdf: RetainedProjectBriefPdf | null = null;
+  let retainedPdfBrief: InitialProjectBrief | null = null;
   let navigationErrorTimer: number | undefined;
 
   const hideNavigationError = () => {
@@ -146,6 +159,18 @@ export const initialiseInitialProjectBrief = () => {
     fieldsByName(name).filter((input) => input.checked).map((input) => input.value);
 
   const checkedValue = (name: string) => checkedValues(name)[0] ?? "";
+
+  const characterCounters = Array.from(
+    form.querySelectorAll<HTMLElement>("[data-character-count-for]"),
+  );
+  const updateCharacterCounters = (changed?: HTMLInputElement | HTMLTextAreaElement) => {
+    for (const counter of characterCounters) {
+      const fieldId = counter.dataset.characterCountFor;
+      if (!fieldId || (changed && changed.id !== fieldId)) continue;
+      const field = control<HTMLInputElement | HTMLTextAreaElement>(form, `#${fieldId}`);
+      counter.textContent = formatCharacterCount(field.value, field.maxLength);
+    }
+  };
 
   const segmentControls = Array.from(form.querySelectorAll<HTMLElement>(".brief-segments"));
   for (const segmentControl of segmentControls) {
@@ -420,9 +445,7 @@ export const initialiseInitialProjectBrief = () => {
     control<HTMLElement>(form, "[data-budget-readout]").textContent = checkedValue("total_budget") || "Tap to set your budget";
     control<HTMLElement>(form, "[data-programme-readout]").textContent = checkedValue("programme") || "Tap to set a rough timeline";
 
-    const projectDescription = control<HTMLTextAreaElement>(form, "#project_description");
-    const words = projectDescription.value.trim() ? projectDescription.value.trim().split(/\s+/).length : 0;
-    control<HTMLElement>(form, "[data-word-count]").textContent = String(words);
+    updateCharacterCounters(changed);
 
     control<HTMLInputElement>(form, "[data-location-format]").value = usingGrid ? "Grid reference" : "Postal address";
     updateNavigation();
@@ -513,20 +536,38 @@ export const initialiseInitialProjectBrief = () => {
 
     submitting = true;
     submissionError.hidden = true;
+    submissionErrorMessage.textContent = defaultSubmissionErrorMessage;
     submitButton.disabled = true;
     submitButton.textContent = "Submitting…";
 
+    let submissionStage: "pdf" | "network" = "pdf";
     try {
-      const submissionBrief = collectBrief(form);
+      const currentBrief = collectBrief(form, new Date());
       const honeypotValue = control<HTMLInputElement>(form, "#bot-field").value;
+      const payload = buildInitialProjectBriefNetlifyPayload(currentBrief, honeypotValue);
+      const payloadSignature = getInitialProjectBriefPayloadSignature(payload);
+      const previousRetainedPdf = retainedPdf;
+      const nextRetainedPdf = await getOrCreateRetainedProjectBriefPdf(
+        payloadSignature,
+        currentBrief.contactName,
+        retainedPdf,
+        () => createInitialProjectBriefPdfBlob(currentBrief),
+      );
+      const reusedRetainedPdf = nextRetainedPdf === previousRetainedPdf;
+
+      retainedPdf = nextRetainedPdf;
+      if (!reusedRetainedPdf || !retainedPdfBrief) retainedPdfBrief = currentBrief;
+      appendInitialProjectBriefPdf(payload, retainedPdf.blob, retainedPdf.filename);
+
+      submissionStage = "network";
       const response = await fetch(form.action, {
         method: "POST",
-        body: buildInitialProjectBriefNetlifyPayload(submissionBrief, honeypotValue),
+        body: payload,
         headers: { Accept: "text/html" },
       });
       if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);
 
-      completedBrief = { ...submissionBrief, submittedAt: new Date() };
+      completedBrief = retainedPdfBrief ?? currentBrief;
       submitted = true;
       form.hidden = true;
       success.hidden = false;
@@ -535,6 +576,11 @@ export const initialiseInitialProjectBrief = () => {
       requestAnimationFrame(() => control<HTMLElement>(success, "#submission-success-title").focus({ preventScroll: true }));
     } catch (error) {
       console.error("Initial project brief submission failed", error);
+      if (error instanceof InitialProjectBriefPdfSizeError) {
+        submissionErrorMessage.textContent = "The completed PDF was unexpectedly too large to send. Nothing has been lost. Please try again.";
+      } else if (submissionStage === "pdf") {
+        submissionErrorMessage.textContent = "Nothing has been lost. We couldn't prepare the PDF to send. Please try again.";
+      }
       submissionError.hidden = false;
       submissionError.scrollIntoView({ behavior: prefersReducedMotion.matches ? "auto" : "smooth", block: "center" });
     } finally {
@@ -552,7 +598,17 @@ export const initialiseInitialProjectBrief = () => {
     downloadButton.textContent = "Preparing PDF…";
     downloadStatus.textContent = "";
     try {
-      await downloadInitialProjectBriefPdf(completedBrief);
+      if (!retainedPdf) {
+        const payload = buildInitialProjectBriefNetlifyPayload(completedBrief);
+        retainedPdf = await getOrCreateRetainedProjectBriefPdf(
+          getInitialProjectBriefPayloadSignature(payload),
+          completedBrief.contactName,
+          null,
+          () => createInitialProjectBriefPdfBlob(completedBrief!),
+        );
+        retainedPdfBrief = completedBrief;
+      }
+      downloadInitialProjectBriefPdfBlob(retainedPdf.blob, retainedPdf.filename);
       downloadStatus.textContent = "Your PDF copy has been downloaded.";
     } catch (error) {
       console.error("Initial project brief PDF generation failed", error);
