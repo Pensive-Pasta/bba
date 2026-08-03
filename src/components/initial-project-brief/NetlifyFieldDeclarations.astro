@@ -1,0 +1,14 @@
+---
+import { NETLIFY_FIELD_NAMES } from "../../scripts/initial-project-brief-netlify";
+
+// The visible contact step already renders a real input with name="email".
+const separatelyDeclaredFields = new Set(["email"]);
+---
+
+<div hidden aria-hidden="true" data-netlify-field-declarations>
+  {
+    NETLIFY_FIELD_NAMES.filter((field) => !separatelyDeclaredFields.has(field)).map(
+      (field) => <input type="hidden" name={field} value="" />,
+    )
+  }
+</div>
