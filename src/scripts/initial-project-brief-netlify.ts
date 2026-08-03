@@ -1,5 +1,9 @@
 import type { InitialProjectBrief } from "./initial-project-brief.types";
 
+/**
+ * Netlify only detects form fields that exist in the generated HTML at build time.
+ * Keep these names in sync with buildInitialProjectBriefNetlifyPayload().
+ */
 export const NETLIFY_FIELD_NAMES = [
   "Location format",
   "Project address",
