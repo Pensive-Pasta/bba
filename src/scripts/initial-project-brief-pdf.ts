@@ -34,8 +34,8 @@ export const buildBriefSections = (data: InitialProjectBrief): BriefSection[] =>
   }`;
   const heard = joinPresent([
     data.heardAboutUs.length ? data.heardAboutUs.join(", ") : undefined,
-    data.heardAboutUsOther,
-    data.previousClientProject,
+    data.heardAboutUs.includes("Other") ? data.heardAboutUsOther : undefined,
+    data.heardAboutUs.includes("Previous client") ? data.previousClientProject : undefined,
   ], " — ");
 
   return [
@@ -78,6 +78,20 @@ export const buildBriefSections = (data: InitialProjectBrief): BriefSection[] =>
   ];
 };
 
+const optionalPdfAnswers: Record<string, keyof InitialProjectBrief> = {
+  "Anything else": "anythingElse",
+  "Questions for us": "questionsForUs",
+  "How they heard about us": "heardAboutUs",
+};
+
+const buildPdfBriefSections = (data: InitialProjectBrief) =>
+  buildBriefSections(data).filter((section) => {
+    const answer = optionalPdfAnswers[section.label];
+    if (!answer) return true;
+    const value = data[answer];
+    return Array.isArray(value) ? value.length > 0 : Boolean(value);
+  });
+
 const imageToDataUrl = async (url: string): Promise<string> => {
   const response = await fetch(url);
   if (!response.ok) throw new Error("Could not load the BBA logo for the PDF.");
@@ -97,7 +111,7 @@ const fileSlug = (name: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-export const downloadInitialProjectBriefPdf = async (data: InitialProjectBrief) => {
+export const createInitialProjectBriefPdfBlob = async (data: InitialProjectBrief) => {
   const [{ jsPDF }, logoDataUrl] = await Promise.all([
     import("jspdf"),
     imageToDataUrl("/images/BBA-Logo.png"),
@@ -163,7 +177,7 @@ export const downloadInitialProjectBriefPdf = async (data: InitialProjectBrief) 
   doc.setLineDashPattern([], 0);
   y += 9;
 
-  for (const section of buildBriefSections(data)) {
+  for (const section of buildPdfBriefSections(data)) {
     label(section.label);
     value(section.value);
   }
@@ -185,5 +199,25 @@ export const downloadInitialProjectBriefPdf = async (data: InitialProjectBrief) 
     doc.text(`Page ${page} of ${totalPages}`, pageWidth - marginX, footerRuleY + 6, { align: "right" });
   }
 
-  doc.save(`BBA-initial-enquiry-${fileSlug(data.contactName)}.pdf`);
+  return doc.output("blob");
+};
+
+export const downloadInitialProjectBriefPdfBlob = (blob: Blob, filename: string) => {
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = objectUrl;
+  link.download = filename;
+  link.hidden = true;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  globalThis.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+};
+
+export const downloadInitialProjectBriefPdf = async (data: InitialProjectBrief) => {
+  const blob = await createInitialProjectBriefPdfBlob(data);
+  downloadInitialProjectBriefPdfBlob(
+    blob,
+    `BBA-initial-enquiry-${fileSlug(data.contactName)}.pdf`,
+  );
 };

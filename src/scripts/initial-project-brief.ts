@@ -3,6 +3,7 @@ import {
   downloadInitialProjectBriefPdf,
 } from "./initial-project-brief-pdf";
 import type { InitialProjectBrief } from "./initial-project-brief.types";
+import { buildInitialProjectBriefNetlifyPayload } from "./initial-project-brief-netlify";
 
 const STEPS = [
   "welcome",
@@ -516,14 +517,16 @@ export const initialiseInitialProjectBrief = () => {
     submitButton.textContent = "Submitting…";
 
     try {
+      const submissionBrief = collectBrief(form);
+      const honeypotValue = control<HTMLInputElement>(form, "#bot-field").value;
       const response = await fetch(form.action, {
         method: "POST",
-        body: new FormData(form),
+        body: buildInitialProjectBriefNetlifyPayload(submissionBrief, honeypotValue),
         headers: { Accept: "text/html" },
       });
       if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);
 
-      completedBrief = collectBrief(form, new Date());
+      completedBrief = { ...submissionBrief, submittedAt: new Date() };
       submitted = true;
       form.hidden = true;
       success.hidden = false;
