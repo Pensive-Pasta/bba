@@ -1,0 +1,183 @@
+---
+const googleAnalyticsId =
+  import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim() ?? "";
+---
+
+<aside
+  data-cookie-banner
+  data-google-analytics-id={googleAnalyticsId}
+  class="fixed inset-x-0 bottom-0 z-[100] hidden bg-primary text-white"
+  role="region"
+  aria-label="Cookie preferences"
+  aria-live="polite"
+>
+  <div
+    class="mx-auto flex w-full max-w-[1600px] flex-col gap-6 px-4 py-5 md:flex-row md:items-end md:justify-between md:px-8 md:py-6"
+  >
+    <div class="max-w-3xl">
+      <h2 class="text-lg font-medium">Your cookie preferences</h2>
+      <p class="mt-2 max-w-2xl text-sm font-light leading-relaxed md:text-base">
+        We use optional Google Analytics cookies to understand how people use
+        this website. You can accept or reject them, and change your choice at
+        any time. <a
+          href="/legal"
+          class="underline underline-offset-4 hover:no-underline"
+          >Read our legal information</a
+        >.
+      </p>
+    </div>
+
+    <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+      <button
+        type="button"
+        data-cookie-choice="rejected"
+        class="min-h-11 border border-white bg-white px-5 py-2 text-sm font-medium text-primary transition-colors hover:bg-transparent hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-w-40"
+      >
+        Reject analytics
+      </button>
+      <button
+        type="button"
+        data-cookie-choice="accepted"
+        class="min-h-11 border border-white bg-white px-5 py-2 text-sm font-medium text-primary transition-colors hover:bg-transparent hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-w-40"
+      >
+        Accept analytics
+      </button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  type CookiePreference = "accepted" | "rejected";
+
+  type ConsentWindow = Window & {
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
+    __bbaCookieConsentSetup?: () => void;
+    __bbaCookieConsentListenerBound?: boolean;
+    __bbaAnalyticsPage?: string;
+    [key: `ga-disable-${string}`]: boolean | undefined;
+  };
+
+  const consentWindow = window as unknown as ConsentWindow;
+  const preferenceCookie = "bba_cookie_consent";
+  const preferenceMaxAge = 60 * 60 * 24 * 180;
+
+  const readPreference = (): CookiePreference | undefined => {
+    const value = document.cookie
+      .split("; ")
+      .find((entry) => entry.startsWith(`${preferenceCookie}=`))
+      ?.split("=")[1];
+
+    return value === "accepted" || value === "rejected" ? value : undefined;
+  };
+
+  const writePreference = (preference: CookiePreference) => {
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${preferenceCookie}=${preference}; Max-Age=${preferenceMaxAge}; Path=/; SameSite=Lax${secure}`;
+  };
+
+  const clearAnalyticsCookies = () => {
+    const cookieNames = document.cookie
+      .split("; ")
+      .map((entry) => entry.split("=")[0])
+      .filter((name) => name === "_ga" || name.startsWith("_ga_"));
+    const rootDomain = window.location.hostname.replace(/^www\./, "");
+
+    cookieNames.forEach((name) => {
+      document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax`;
+      document.cookie = `${name}=; Max-Age=0; Path=/; Domain=${window.location.hostname}; SameSite=Lax`;
+      document.cookie = `${name}=; Max-Age=0; Path=/; Domain=.${rootDomain}; SameSite=Lax`;
+    });
+  };
+
+  const disableAnalytics = (measurementId: string) => {
+    if (measurementId) {
+      consentWindow[`ga-disable-${measurementId}`] = true;
+    }
+    clearAnalyticsCookies();
+  };
+
+  const loadAnalytics = (measurementId: string) => {
+    if (!/^G-[A-Z0-9]+$/i.test(measurementId)) return;
+
+    consentWindow[`ga-disable-${measurementId}`] = false;
+    consentWindow.dataLayer = consentWindow.dataLayer ?? [];
+    consentWindow.gtag =
+      consentWindow.gtag ??
+      ((...args: unknown[]) => {
+        consentWindow.dataLayer?.push(args);
+      });
+
+    if (!document.querySelector("script[data-bba-google-analytics]")) {
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+      script.dataset.bbaGoogleAnalytics = "true";
+      document.head.appendChild(script);
+      consentWindow.gtag("js", new Date());
+    }
+
+    const page = `${window.location.pathname}${window.location.search}`;
+    if (consentWindow.__bbaAnalyticsPage !== page) {
+      consentWindow.gtag("config", measurementId, {
+        anonymize_ip: true,
+        page_path: page,
+      });
+      consentWindow.__bbaAnalyticsPage = page;
+    }
+  };
+
+  consentWindow.__bbaCookieConsentSetup = () => {
+    const banner = document.querySelector<HTMLElement>("[data-cookie-banner]");
+    if (!banner) return;
+
+    const measurementId = banner.dataset.googleAnalyticsId?.trim() ?? "";
+    const preference = readPreference();
+
+    banner.classList.toggle("hidden", Boolean(preference));
+    if (preference === "accepted") loadAnalytics(measurementId);
+    if (preference === "rejected") disableAnalytics(measurementId);
+
+    banner.querySelectorAll<HTMLButtonElement>("[data-cookie-choice]").forEach(
+      (button) => {
+        if (button.dataset.cookieBound === "true") return;
+        button.dataset.cookieBound = "true";
+
+        button.addEventListener("click", () => {
+          const nextPreference = button.dataset.cookieChoice as CookiePreference;
+          const previousPreference = readPreference();
+          writePreference(nextPreference);
+          banner.classList.add("hidden");
+
+          if (nextPreference === "accepted") {
+            loadAnalytics(measurementId);
+          } else {
+            disableAnalytics(measurementId);
+            if (previousPreference === "accepted") window.location.reload();
+          }
+        });
+      },
+    );
+
+    document.querySelectorAll<HTMLButtonElement>("[data-cookie-settings]").forEach(
+      (button) => {
+        if (button.dataset.cookieBound === "true") return;
+        button.dataset.cookieBound = "true";
+
+        button.addEventListener("click", () => {
+          banner.classList.remove("hidden");
+          banner.querySelector<HTMLButtonElement>("[data-cookie-choice]")?.focus();
+        });
+      },
+    );
+  };
+
+  if (!consentWindow.__bbaCookieConsentListenerBound) {
+    document.addEventListener("astro:page-load", () => {
+      consentWindow.__bbaCookieConsentSetup?.();
+    });
+    consentWindow.__bbaCookieConsentListenerBound = true;
+  }
+
+  consentWindow.__bbaCookieConsentSetup();
+</script>

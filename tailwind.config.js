@@ -2,14 +2,14 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
-  content: ["./src/**/*.{html,js,astro}"],
+  content: ["./src/**/*.{html,js,ts,astro}"],
   theme: {
     extend: {
       screens: {
         "below-xs": { max: "374px" },
       },
       fontFamily: {
-        future: ['"Test The Future"', ...defaultTheme.fontFamily.sans],
+        future: ['"The Future"', ...defaultTheme.fontFamily.sans],
       },
       fontSize: {
         headline: ["48px", { lineHeight: "60px" }],

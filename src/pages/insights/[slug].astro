@@ -4,6 +4,14 @@ import PageDotGrid from "../../components/PageDotGrid.astro";
 import ContentBlock from "../../components/ContentBlock.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getInsightBySlugQuery } from "../../lib/queries";
+import {
+  findFirstImageUrl,
+  portableTextToPlainText,
+  resolveSeoDescription,
+  resolveSeoImage,
+  SITE_NAME,
+  SITE_TITLE_SUFFIX,
+} from "../../lib/seo";
 
 const { slug } = Astro.params;
 
@@ -16,23 +24,56 @@ export async function getStaticPaths() {
 
 const insight = await sanity.fetch(getInsightBySlugQuery, { slug });
 
-const seoTitle = insight.seo?.metaTitle ?? `${insight.title} | Insights | Butcher Bayley Architects (BBA)`;
-
-const seoDescription =
-  insight.seo?.metaDescription ??
-  `Read ${insight.title} from Butcher Bayley Architects, part of our Insights series.`;
-
-const seoOgImage = insight.seo?.ogImage?.asset?.url ?? undefined;
+const seoTitle =
+  insight.seo?.metaTitle ?? `${insight.title} | Insights | ${SITE_TITLE_SUFFIX}`;
+const seoDescription = resolveSeoDescription(
+  insight.seo?.metaDescription,
+  portableTextToPlainText(insight.contentBlocks),
+  `Read ${insight.title} from ${SITE_NAME}.`
+);
+const seoOgImage = resolveSeoImage(
+  insight.seo?.ogImage?.asset?.url,
+  findFirstImageUrl(insight.contentBlocks)
+);
+const publishedIso = new Date(insight.publishedAt).toISOString();
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: seoTitle,
+  description: seoDescription,
+  datePublished: publishedIso,
+  dateModified: publishedIso,
+  image: [seoOgImage],
+  author: {
+    "@type": "Organization",
+    name: SITE_NAME,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: SITE_NAME,
+  },
+};
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} ogImage={seoOgImage}>
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  ogType="article"
+  ogImage={seoOgImage}
+  jsonLd={articleJsonLd}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Insights", path: "/insights/" },
+    { name: insight.title, path: `/insights/${slug}/` },
+  ]}
+>
   <PageDotGrid />
   <article class="max-w-[1600px] mx-auto pb-20 pt-[200px] min-h-[60vh]">
     <h1 class="text-3xl md:text-4xl font-bold mb-4 px-4 md:px-8 md:w-1/2">
       {insight.title}
     </h1>
     <p class="text-sm mb-12 px-4 md:px-8">
-      {new Date(insight.publishedAt).toLocaleDateString()}
+      {new Date(insight.publishedAt).toLocaleDateString("en-GB")}
     </p>
     <div class="mt-12 md:-mt-32">
       <ContentBlock blocks={insight.contentBlocks} />

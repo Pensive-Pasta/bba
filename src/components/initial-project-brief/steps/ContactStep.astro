@@ -1,0 +1,33 @@
+---
+import FormStep from "../FormStep.astro";
+---
+
+<FormStep
+  id="contact"
+  eyebrow="08 · Contact"
+  title="Who are we talking to?"
+  subtitle="Just so we know who's on the other end of this, and who to come back to as things move forward."
+>
+  <div class="brief-field">
+    <label for="company_organisation">Company / organisation</label>
+    <input id="company_organisation" name="company_organisation" type="text" placeholder="If applicable" autocomplete="organization" />
+  </div>
+  <div class="brief-field">
+    <label for="contact_name">Name <span aria-hidden="true">*</span></label>
+    <input id="contact_name" name="contact_name" type="text" placeholder="Full name" autocomplete="name" required />
+  </div>
+  <div class="brief-field">
+    <label for="contact_address">Address</label>
+    <input id="contact_address" name="contact_address" type="text" placeholder="If different from the project site" autocomplete="street-address" />
+  </div>
+  <div class="grid gap-3 sm:grid-cols-2">
+    <div class="brief-field">
+      <label for="email">Email <span aria-hidden="true">*</span></label>
+      <input id="email" name="email" type="email" placeholder="you@email.com" autocomplete="email" required />
+    </div>
+    <div class="brief-field">
+      <label for="phone">Phone</label>
+      <input id="phone" name="phone" type="tel" placeholder="Optional" autocomplete="tel" />
+    </div>
+  </div>
+</FormStep>

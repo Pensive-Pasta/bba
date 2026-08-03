@@ -3,38 +3,54 @@ interface Props {
   title?: string;
   description?: string;
   ogType?: "website" | "article";
-  ogImage?: string;        // absolute URL preferred
-  robots?: string;         // e.g. "index,follow,max-image-preview:large"
+  ogImage?: string;
+  canonical?: string;
+  siteOrigin: string;
+  robots?: string;
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
 }
 
-// No canonical while testing
-
-// Fallback OG (served from /public/images/)
 const defaultOgImage = "/images/logo-og.jpg";
+const allowIndexing =
+  import.meta.env.PUBLIC_ALLOW_INDEXING?.trim().toLowerCase() === "true";
+const defaultRobots = allowIndexing
+  ? "index,follow,max-image-preview:large"
+  : "noindex,follow";
 
 const {
   title = "Butcher Bayley Architects (BBA) | RIBA Chartered Practice",
   description = "RIBA chartered practice designing sustainable architecture.",
   ogType = "website",
   ogImage: passedOgImage,
-  robots = "noindex,follow",
-  jsonLd
+  canonical,
+  siteOrigin,
+  robots = defaultRobots,
+  jsonLd,
 } = Astro.props;
 
-const ogImage = passedOgImage ?? defaultOgImage;
+const toAbsoluteUrl = (value: string) => {
+  if (/^https?:\/\//i.test(value)) return value;
+  return new URL(value, siteOrigin).toString();
+};
+
+const ogImage = toAbsoluteUrl(passedOgImage ?? defaultOgImage);
 
 const siteName = "Butcher Bayley Architects";
 const locale = "en_GB";
+const jsonLdEntries = jsonLd
+  ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((entry) =>
+      JSON.stringify(entry),
+    )
+  : [];
 ---
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<!-- {canonical && <link rel="canonical" href={canonical} />} -->
+{canonical && <link rel="canonical" href={canonical} />}
 
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<!-- {canonical && <meta property="og:url" content={canonical} />} -->
+{canonical && <meta property="og:url" content={canonical} />}
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={siteName} />
 <meta property="og:locale" content={locale} />
@@ -45,15 +61,18 @@ const locale = "en_GB";
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={`${title} – ${siteName}`} />
 
 <meta name="robots" content={robots} />
 
-<link rel="icon" type="image/png" href="/favicon.png" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/images/BBA-Logo.png" />
 <meta name="theme-color" content="#ffffff" />
 
-{jsonLd && (
-  Array.isArray(jsonLd)
-    ? jsonLd.map((n) => <script type="application/ld+json">{JSON.stringify(n)}</script>)
-    : <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-)}
+{
+  jsonLdEntries.map((entry) => (
+    <Fragment
+      set:html={`<script type="application/ld+json">${entry}</script>`}
+    />
+  ))
+}

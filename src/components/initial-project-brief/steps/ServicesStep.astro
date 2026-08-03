@@ -1,0 +1,53 @@
+---
+import ChipOption from "../ChipOption.astro";
+import FormStep from "../FormStep.astro";
+import SegmentedOption from "../SegmentedOption.astro";
+
+const services = [
+  { value: "Briefing", stage: "Stage 1", description: "Working out exactly what you need" },
+  { value: "Feasibility studies", stage: "Stage 1–2", description: "Checking what's possible on the site" },
+  { value: "Concept design", stage: "Stage 2–3", description: "Developing and testing design options" },
+  { value: "Planning application", stage: "Stage 3", description: "Getting planning permission" },
+  { value: "Interior design (exc. furniture)", label: "Interior design", stage: "Stage 3–5", description: "Layouts, finishes, fixtures (exc. furniture)" },
+  { value: "Technical design", stage: "Stage 4", description: "Detailed drawings for building it" },
+  { value: "Tender (finding a builder)", label: "Tender", stage: "Stage 4–5", description: "Inviting contractors to price the work and comparing their proposals" },
+  { value: "Building regulations approval", stage: "Stage 4–5", description: "Meeting building regulations requirements and obtaining approval" },
+  { value: "Contract administration", stage: "Stage 4–6", description: "Administering the building contract during construction" },
+  { value: "On-site support (construction)", label: "On-site support", stage: "Stage 5", description: "Support while it's being built" },
+  { value: "Principal Designer (CDM + Building Regulations)", stage: "Stage 1–6", description: "Coordinating health, safety and building regulations responsibilities" },
+];
+---
+
+<FormStep
+  id="services"
+  eyebrow="07 · Services"
+  title="What do you need from us?"
+  subtitle="First though — have you worked with an architect before? It helps us tailor the conversation."
+  subtitleRequired
+>
+  <fieldset aria-required="true">
+    <legend class="sr-only">Have you worked with an architect before?</legend>
+    <div class="brief-segments">
+      <SegmentedOption name="architect_experience" value="No, first time" />
+      <SegmentedOption name="architect_experience" value="Yes, previously" />
+    </div>
+  </fieldset>
+  <div class="brief-field mt-4" data-experience-notes hidden>
+    <label for="architect_experience_notes">Tell us a bit about your experience</label>
+    <textarea id="architect_experience_notes" name="architect_experience_notes" placeholder="Optional" disabled></textarea>
+  </div>
+
+  <hr class="brief-divider" />
+
+  <fieldset aria-required="true">
+    <legend>What do you need from us? Pick as many as apply — listed in roughly the order they happen on a project. <span aria-hidden="true">*</span></legend>
+    <p class="brief-hint">Don't worry if you're not sure exactly what these mean or cover — we'll talk it through when we meet.</p>
+    <div class="brief-chip-list mt-3">
+      {services.map((service) => <ChipOption name="services_needed[]" {...service} />)}
+    </div>
+  </fieldset>
+  <div class="brief-field mt-4">
+    <label for="services_other">Anything else?</label>
+    <input id="services_other" name="services_other" type="text" placeholder="Optional" />
+  </div>
+</FormStep>

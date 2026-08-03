@@ -1,0 +1,42 @@
+---
+import ChipOption from "../ChipOption.astro";
+import FormStep from "../FormStep.astro";
+
+const projectTypes = [
+  "New build house",
+  "Home extension",
+  "Home refurbishment",
+  "Residential development (2+ homes)",
+  "Community, education & leisure",
+  "Commercial",
+  "Other",
+];
+const units = ["2–4 units", "5–9 units", "10–24 units", "25–49 units", "50+ units"];
+---
+
+<FormStep
+  id="project_type"
+  eyebrow="02 · Project type"
+  title="What best describes your project?"
+  subtitle="Pick as many as apply — extensions and refurbishments often go together."
+  required
+>
+  <fieldset data-choice-group="project_type[]" aria-required="true">
+    <legend class="sr-only">What best describes your project?</legend>
+    <div class="brief-chip-list">
+      {projectTypes.map((value) => <ChipOption name="project_type[]" value={value} />)}
+    </div>
+  </fieldset>
+
+  <div class="brief-field mt-4" data-project-type-other hidden>
+    <label for="project_type_other">What kind of project, roughly?</label>
+    <input id="project_type_other" name="project_type_other" type="text" placeholder="Optional" disabled />
+  </div>
+
+  <fieldset class="mt-4" data-units-wrap hidden disabled>
+    <legend>How many units are you proposing?</legend>
+    <div class="brief-chip-list mt-2">
+      {units.map((value) => <ChipOption name="units_proposed" value={value} type="radio" />)}
+    </div>
+  </fieldset>
+</FormStep>

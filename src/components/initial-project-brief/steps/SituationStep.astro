@@ -1,0 +1,89 @@
+---
+import ChipOption from "../ChipOption.astro";
+import FormStep from "../FormStep.astro";
+import SegmentedOption from "../SegmentedOption.astro";
+
+const siteRelationships = [
+  "Property or plot I own",
+  "Property or plot I'm buying",
+  "Site with an option agreement",
+  "Looking for a site",
+  "Other",
+];
+const planningOptions = [
+  "No, not yet",
+  "We've sought informal advice",
+  "We've had pre-application discussions",
+  "A planning application has been submitted",
+  "Planning permission has been granted",
+  "Not sure",
+];
+const programmes = [
+  { value: "ASAP", label: "ASAP", ariaLabel: "ASAP" },
+  { value: "Within 6 months", label: "<6mo", ariaLabel: "Within 6 months" },
+  { value: "6–12 months", label: "6–12mo", ariaLabel: "6 to 12 months" },
+  { value: "1–2 years", label: "1–2yr", ariaLabel: "1 to 2 years" },
+  { value: "Just exploring", label: "Flexible", ariaLabel: "Just exploring" },
+];
+const constraints = [
+  "Listed building",
+  "Local heritage asset",
+  "Conservation area",
+  "Flood zone",
+  "Green belt",
+  "Protected trees (TPO)",
+  "Article 4 direction",
+  "Other",
+  "Not sure / none that I know of",
+];
+---
+
+<FormStep
+  id="situation"
+  eyebrow="04 · Where things stand"
+  title="Where things stand"
+  subtitle="This is the stuff that most affects whether and how we can help — nothing here is a dealbreaker, it just helps us prepare properly."
+>
+  <fieldset aria-required="true">
+    <legend>What's your relationship to the site? <span aria-hidden="true">*</span></legend>
+    <div class="brief-chip-list mt-2">
+      {siteRelationships.map((value) => <ChipOption name="relationship_to_site" value={value} type="radio" />)}
+    </div>
+  </fieldset>
+  <div class="brief-field mt-3" data-site-other hidden>
+    <label class="sr-only" for="relationship_to_site_other">What's your relationship to the site? Other detail</label>
+    <input id="relationship_to_site_other" name="relationship_to_site_other" type="text" placeholder="Optional" disabled />
+  </div>
+
+  <hr class="brief-divider" />
+
+  <fieldset aria-required="true">
+    <legend>Have you had any discussions with the local planning authority? <span aria-hidden="true">*</span></legend>
+    <div class="brief-chip-list mt-2">
+      {planningOptions.map((value) => <ChipOption name="planning_discussions" value={value} type="radio" />)}
+    </div>
+  </fieldset>
+
+  <hr class="brief-divider" />
+
+  <fieldset aria-required="true">
+    <legend>When are you hoping to start on site? <span aria-hidden="true">*</span></legend>
+    <div class="brief-segments brief-segments-compact mt-2">
+      {programmes.map((option) => <SegmentedOption name="programme" {...option} />)}
+    </div>
+    <p class="brief-segment-readout" data-programme-readout>Tap to set a rough timeline</p>
+  </fieldset>
+
+  <hr class="brief-divider" />
+
+  <fieldset aria-required="true">
+    <legend>Any known constraints? <span aria-hidden="true">*</span></legend>
+    <div class="brief-chip-list mt-2">
+      {constraints.map((value) => <ChipOption name="constraints[]" value={value} />)}
+    </div>
+  </fieldset>
+  <div class="brief-field mt-3" data-constraints-other hidden>
+    <label class="sr-only" for="constraints_other">Other known constraints</label>
+    <input id="constraints_other" name="constraints_other" type="text" placeholder="Optional" disabled />
+  </div>
+</FormStep>

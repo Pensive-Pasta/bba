@@ -1,0 +1,45 @@
+export type InitialProjectBrief = {
+  locationFormat: string;
+  projectAddressLine: string;
+  projectTownCity: string;
+  projectCounty: string;
+  projectPostcode: string;
+  projectEasting: string;
+  projectNorthing: string;
+  projectTypes: string[];
+  projectTypeOther: string;
+  unitsProposed: string;
+  projectDescription: string;
+  relationshipToSite: string;
+  relationshipToSiteOther: string;
+  planningDiscussions: string;
+  programme: string;
+  constraints: string[];
+  constraintsOther: string;
+  totalBudget: string;
+  budgetUnsure: boolean;
+  budgetNotes: string;
+  sustainabilityAmbitions: string[];
+  sustainabilityOther: string;
+  architectExperience: string;
+  architectExperienceNotes: string;
+  servicesNeeded: string[];
+  servicesOther: string;
+  companyOrganisation: string;
+  contactName: string;
+  contactAddress: string;
+  email: string;
+  phone: string;
+  anythingElse: string;
+  questionsForUs: string;
+  heardAboutUs: string[];
+  previousClientProject: string;
+  heardAboutUsOther: string;
+  privacyConsent: boolean;
+  submittedAt: Date;
+};
+
+export type BriefSection = {
+  label: string;
+  value: string;
+};

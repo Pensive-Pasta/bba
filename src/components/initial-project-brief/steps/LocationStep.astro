@@ -1,0 +1,48 @@
+---
+import FormStep from "../FormStep.astro";
+---
+
+<FormStep
+  id="location"
+  eyebrow="01 · Location"
+  title="Where's the project?"
+  subtitle="If there's no postal address yet — a plot without one, say — just switch to a grid reference instead."
+  required
+>
+  <input type="hidden" name="location_format" value="Postal address" data-location-format />
+  <div data-address-fields>
+    <div class="brief-field">
+      <label for="project_address_line">Address <span aria-hidden="true">*</span></label>
+      <input id="project_address_line" name="project_address_line" type="text" placeholder="Number and street" required />
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <div class="brief-field">
+        <label for="project_town_city">Town / city</label>
+        <input id="project_town_city" name="project_town_city" type="text" placeholder="e.g. Oundle" />
+      </div>
+      <div class="brief-field">
+        <label for="project_county">County</label>
+        <input id="project_county" name="project_county" type="text" placeholder="e.g. Northamptonshire" />
+      </div>
+    </div>
+    <div class="brief-field max-w-[200px]">
+      <label for="project_postcode">Postcode</label>
+      <input id="project_postcode" name="project_postcode" type="text" placeholder="e.g. PE8 4BW" />
+    </div>
+  </div>
+
+  <button type="button" class="brief-link" data-toggle-location>
+    No address yet — use a grid reference instead
+  </button>
+
+  <div class="grid gap-3 sm:grid-cols-2" data-grid-fields hidden>
+    <div class="brief-field">
+      <label for="project_easting">Easting</label>
+      <input id="project_easting" name="project_easting" type="text" placeholder="Easting" disabled />
+    </div>
+    <div class="brief-field">
+      <label for="project_northing">Northing</label>
+      <input id="project_northing" name="project_northing" type="text" placeholder="Northing" disabled />
+    </div>
+  </div>
+</FormStep>
