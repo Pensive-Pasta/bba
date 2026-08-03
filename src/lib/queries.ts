@@ -196,3 +196,16 @@ export const getContactPageQuery = `
   }
 }
 `;
+
+export const getLegalPageQuery = `
+*[_type=="legalPage"][0]{
+  title,
+  lastUpdated,
+  body,
+  seo{
+    metaTitle,
+    metaDescription,
+    ogImage{ asset->{ url } }
+  }
+}
+`;
