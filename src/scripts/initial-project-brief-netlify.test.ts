@@ -3,7 +3,9 @@ import test from "node:test";
 
 import {
   MAX_INITIAL_PROJECT_BRIEF_PDF_BYTES,
+  NETLIFY_EMPTY_FIELD_VALUE,
   NETLIFY_PDF_FIELD_NAME,
+  addDetectedInitialProjectBriefFields,
   appendInitialProjectBriefPdf,
   assertInitialProjectBriefPdfSize,
   buildInitialProjectBriefNetlifyPayload,
@@ -66,6 +68,8 @@ test("serialises the complete clean text payload with human-readable values", ()
     subject: "New BBA project brief — Alex Example — PE8 4BQ",
     "Location format": "Postal address",
     "Project address": "1 Market Place, Oundle, Northamptonshire, PE8 4BQ",
+    Easting: "N/A",
+    Northing: "N/A",
     "Project types": "Residential development (2+ homes), Other",
     "Project type other": "Community space",
     "Proposed units": "12 homes",
@@ -76,6 +80,7 @@ test("serialises the complete clean text payload with human-readable values", ()
     "Proposed start date": "Within 6 months",
     "Known constraints": "Conservation area, Other",
     "Constraint detail": "Protected trees",
+    "Total budget": "N/A",
     "Budget guidance requested": "Yes",
     "Budget notes": "Please advise",
     "Sustainability ambitions": "Low operational energy, Other",
@@ -200,7 +205,7 @@ test("reuses the retained PDF Blob when an unchanged submission is retried", asy
   assert.equal(generationCount, 1);
 });
 
-test("uses grid fields and omits blank, postal, and inactive conditional fields", () => {
+test("uses grid fields and marks blank, postal, and inactive conditional fields as N/A", () => {
   const payload = buildInitialProjectBriefNetlifyPayload(
     completeBrief({
       locationFormat: "Grid reference",
@@ -236,7 +241,7 @@ test("uses grid fields and omits blank, postal, and inactive conditional fields"
   assert.equal(payload.get("Northing"), "287654");
   assert.equal(payload.get("Total budget"), "£500k–£1m");
   assert.equal(payload.get("email"), "alex@example.com");
-  for (const omittedField of [
+  for (const unansweredField of [
     "Project address",
     "Project type other",
     "Proposed units",
@@ -256,6 +261,43 @@ test("uses grid fields and omits blank, postal, and inactive conditional fields"
     "Previous client project",
     "Referral detail",
   ]) {
-    assert.equal(payload.has(omittedField), false, `${omittedField} should be omitted`);
+    assert.equal(
+      payload.get(unansweredField),
+      NETLIFY_EMPTY_FIELD_VALUE,
+      `${unansweredField} should be marked N/A`,
+    );
   }
+});
+
+test("dynamically marks unanswered build-detected controls as N/A", () => {
+  const payload = buildInitialProjectBriefNetlifyPayload(completeBrief());
+  const submittedControls = new FormData();
+  submittedControls.append("project_type[]", "New build house");
+  submittedControls.append("project_type[]", "Residential development (2+ homes)");
+  submittedControls.set("project_description", "A completed answer");
+  submittedControls.set("company_organisation", "");
+
+  addDetectedInitialProjectBriefFields(
+    payload,
+    [
+      "project_type[]",
+      "project_type[]",
+      "project_description",
+      "company_organisation",
+      "unchecked_or_disabled_control",
+      NETLIFY_PDF_FIELD_NAME,
+    ],
+    submittedControls,
+  );
+
+  assert.equal(
+    payload.get("project_type[]"),
+    "New build house, Residential development (2+ homes)",
+  );
+  assert.equal(payload.get("project_description"), "A completed answer");
+  assert.equal(payload.get("company_organisation"), NETLIFY_EMPTY_FIELD_VALUE);
+  assert.equal(payload.get("unchecked_or_disabled_control"), NETLIFY_EMPTY_FIELD_VALUE);
+  assert.equal(payload.has(NETLIFY_PDF_FIELD_NAME), false);
+  assert.equal(payload.get("Name"), "Alex Example");
+  assert.equal(payload.get("email"), "alex@example.com");
 });

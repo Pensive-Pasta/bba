@@ -43,6 +43,7 @@ export const NETLIFY_FIELD_NAMES = [
 ] as const;
 
 export const NETLIFY_PDF_FIELD_NAME = "Project brief PDF";
+export const NETLIFY_EMPTY_FIELD_VALUE = "N/A";
 export const MAX_INITIAL_PROJECT_BRIEF_PDF_BYTES = 500 * 1024;
 
 export class InitialProjectBriefPdfSizeError extends Error {
@@ -82,6 +83,12 @@ export const buildInitialProjectBriefNetlifyPayload = (
 
   const identifier = getInitialProjectBriefSubmissionIdentifier(data);
   payload.set("subject", `New BBA project brief — ${identifier}`);
+
+  // Netlify includes every build-detected field in its dashboard and notification emails.
+  // Start each clean field with an explicit fallback, then replace it with real answers below.
+  for (const field of NETLIFY_FIELD_NAMES) {
+    if (!payload.has(field)) payload.set(field, NETLIFY_EMPTY_FIELD_VALUE);
+  }
 
   const add = (field: (typeof NETLIFY_FIELD_NAMES)[number], fieldValue: string) => {
     const trimmedValue = fieldValue.trim();
@@ -159,6 +166,29 @@ export const buildInitialProjectBriefNetlifyPayload = (
   }
   if (data.privacyConsent) {
     add("Privacy acknowledgement", "Acknowledged");
+  }
+
+  return payload;
+};
+
+export const addDetectedInitialProjectBriefFields = (
+  payload: FormData,
+  detectedFieldNames: Iterable<string>,
+  submittedControls: FormData,
+) => {
+  for (const field of new Set(detectedFieldNames)) {
+    if (!field || field === NETLIFY_PDF_FIELD_NAME || payload.has(field)) continue;
+
+    const submittedValues = submittedControls
+      .getAll(field)
+      .filter((fieldValue): fieldValue is string => typeof fieldValue === "string")
+      .map((fieldValue) => fieldValue.trim())
+      .filter(Boolean);
+
+    payload.set(
+      field,
+      submittedValues.length ? submittedValues.join(", ") : NETLIFY_EMPTY_FIELD_VALUE,
+    );
   }
 
   return payload;
