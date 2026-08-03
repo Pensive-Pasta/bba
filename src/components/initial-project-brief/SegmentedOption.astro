@@ -1,0 +1,16 @@
+---
+interface Props {
+  name: string;
+  value: string;
+  label?: string;
+  ariaLabel?: string;
+}
+
+const { name, value, label = value, ariaLabel } = Astro.props;
+const id = `${name}-${value}`.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+---
+
+<label class="brief-segment" for={id}>
+  <input id={id} class="sr-only" type="radio" name={name} value={value} aria-label={ariaLabel} />
+  <span>{label}</span>
+</label>

@@ -1,0 +1,43 @@
+---
+import ChipOption from "../ChipOption.astro";
+import FormStep from "../FormStep.astro";
+
+const sources = [
+  "Word of mouth / referral",
+  "Google / web search",
+  "Instagram",
+  "LinkedIn",
+  "Press or publication",
+  "Previous client",
+  "Other",
+];
+---
+
+<FormStep id="privacy" eyebrow="10 · Last one" title="Last couple of things" required>
+  <fieldset>
+    <legend>How did you hear about us? Pick as many as apply.</legend>
+    <div class="brief-chip-list mt-2">
+      {sources.map((value) => <ChipOption name="heard_about_us[]" value={value} />)}
+    </div>
+  </fieldset>
+  <div class="brief-field mt-4" data-previous-client hidden>
+    <label for="previous_client_project">No obligation to say, but which project — so we can say thank you to the right person?</label>
+    <input id="previous_client_project" name="previous_client_project" type="text" placeholder="Optional" disabled />
+  </div>
+  <div class="brief-field mt-4" data-heard-other hidden>
+    <label for="heard_about_us_other">Where, roughly?</label>
+    <input id="heard_about_us_other" name="heard_about_us_other" type="text" placeholder="Optional" disabled />
+  </div>
+
+  <hr class="brief-divider" />
+
+  <p class="brief-step-subtitle">We'll use the information you provide to review your enquiry, contact you about your project and work out whether we're able to help.</p>
+  <p class="brief-step-subtitle">The information you enter will be included in a PDF summary stored on your device and, if you choose to proceed, sent to Butcher Bayley Architects by email. We'll only use it in connection with your enquiry and any services we go on to provide — we won't sell it, share it with third parties for marketing purposes, or use it for marketing communications.</p>
+  <p class="brief-hint mb-5"><a class="underline" href="/legal" target="_blank" rel="noopener">See our Privacy Notice</a></p>
+  <div class="brief-field">
+    <label class="brief-checkbox-label items-start" for="privacy_consent">
+      <input id="privacy_consent" name="privacy_consent" type="checkbox" value="Acknowledged" required />
+      <span>I have read and understood the Privacy Notice and understand how Butcher Bayley Architects will use my information. <span aria-hidden="true">*</span></span>
+    </label>
+  </div>
+</FormStep>

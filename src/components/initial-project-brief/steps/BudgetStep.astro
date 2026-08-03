@@ -1,0 +1,42 @@
+---
+import FormStep from "../FormStep.astro";
+import SegmentedOption from "../SegmentedOption.astro";
+
+const budgets = [
+  { value: "£0 – £250k", label: "0-250k", ariaLabel: "£0 to £250k" },
+  { value: "£250k – £500k", label: "250-500k", ariaLabel: "£250k to £500k" },
+  { value: "£500k – £1m", label: "500k-1m", ariaLabel: "£500k to £1m" },
+  { value: "£1m – £2m", label: "1-2m", ariaLabel: "£1m to £2m" },
+  { value: "£2m – £5m", label: "2-5m", ariaLabel: "£2m to £5m" },
+  { value: "£5m+", label: "5m+", ariaLabel: "£5m or more" },
+];
+---
+
+<FormStep
+  id="budget"
+  eyebrow="05 · Budget"
+  title="What's your total budget?"
+  subtitle="The whole picture — surveys, consultant fees, construction, contingency and VAT. No wrong answer here, it just helps us pitch the right level of service."
+  required
+>
+  <fieldset data-budget-group aria-required="true">
+    <legend class="sr-only">What's your total budget?</legend>
+    <div class="brief-segments brief-segments-compact">
+      {budgets.map((option) => <SegmentedOption name="total_budget" {...option} />)}
+    </div>
+    <p class="brief-segment-readout" data-budget-readout>Tap to set your budget</p>
+  </fieldset>
+
+  <hr class="brief-divider" />
+
+  <div class="brief-field">
+    <label class="brief-checkbox-label" for="budget_unsure">
+      <input id="budget_unsure" name="budget_unsure" type="checkbox" value="Not sure yet — we'd like some guidance" />
+      <span>Not sure yet — we'd like some guidance</span>
+    </label>
+  </div>
+  <div class="brief-field" data-budget-notes hidden>
+    <label for="budget_notes">Any details or thoughts on budget so far?</label>
+    <textarea id="budget_notes" name="budget_notes" placeholder="Optional" disabled></textarea>
+  </div>
+</FormStep>

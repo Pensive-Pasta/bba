@@ -9,6 +9,7 @@ const navItems = [
 ];
 
 const currentYear = new Date().getFullYear();
+const { hideMenu = false } = Astro.props;
 
 const textColor = "text-primary";
 const legalUrl = "/legal";
@@ -31,33 +32,33 @@ const legalUrl = "/legal";
       </span>
     </a>
 
-    <button
-      class="z-40 relative"
-      id="menu-toggle"
-      type="button"
-      aria-label="Toggle menu"
-      aria-controls="nav-menu"
-      aria-expanded="false"
-    >
-      <div class="w-12 h-10 flex flex-col justify-between overflow-hidden">
-        <span
-          class="w-full h-1 transform transition-all duration-300 origin-left menu-line-1 bg-current"
-        ></span>
-        <span
-          class="w-full h-1 transition-all duration-300 origin-center menu-line-2 bg-current"
-        ></span>
-        <span
-          class="w-full h-1 transform transition-all duration-300 origin-left menu-line-3 bg-current"
-        ></span>
-      </div>
-    </button>
+    {
+      !hideMenu && (
+        <button
+          class="z-40 relative"
+          id="menu-toggle"
+          type="button"
+          aria-label="Toggle menu"
+          aria-controls="nav-menu"
+          aria-expanded="false"
+        >
+          <div class="w-12 h-10 flex flex-col justify-between overflow-hidden">
+            <span class="w-full h-1 transform transition-all duration-300 origin-left menu-line-1 bg-current" />
+            <span class="w-full h-1 transition-all duration-300 origin-center menu-line-2 bg-current" />
+            <span class="w-full h-1 transform transition-all duration-300 origin-left menu-line-3 bg-current" />
+          </div>
+        </button>
+      )
+    }
   </div>
 
-  <div
-    class="nav-menu fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto isolate bg-[#178FE4]"
-    id="nav-menu"
-    aria-hidden="true"
-  >
+  {
+    !hideMenu && (
+      <div
+        class="nav-menu fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto isolate bg-[#178FE4]"
+        id="nav-menu"
+        aria-hidden="true"
+      >
     <div
       id="nav-bg"
       class="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#178FE4]"
@@ -108,7 +109,9 @@ const legalUrl = "/legal";
         </div>
       </div>
     </div>
-  </div>
+      </div>
+    )
+  }
 </header>
 
 <script>

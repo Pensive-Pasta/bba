@@ -1,0 +1,22 @@
+---
+import FormStep from "../FormStep.astro";
+---
+
+<FormStep
+  id="project"
+  eyebrow="03 · The project"
+  title="What are you hoping to achieve?"
+  subtitle="Tell us about the dream — why the project matters and what it's really in aid of. Ideally under 100 words, though don't worry if it runs on."
+  required
+>
+  <div class="brief-field">
+    <label class="sr-only" for="project_description">What are you hoping to achieve?</label>
+    <textarea
+      id="project_description"
+      name="project_description"
+      placeholder="e.g. We want this to transform the way we live day to day — a considered, sustainable addition that feels like it's always been there…"
+      required
+    ></textarea>
+    <p class="mt-1 text-right text-xs font-light"><span data-word-count>0</span> words</p>
+  </div>
+</FormStep>

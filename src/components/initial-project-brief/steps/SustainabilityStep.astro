@@ -1,0 +1,32 @@
+---
+import ChipOption from "../ChipOption.astro";
+import FormStep from "../FormStep.astro";
+
+const ambitions = [
+  { value: "High-performance, no formal certification" },
+  { value: "Passivhaus certification" },
+  { value: "EnerPHit certification", label: "EnerPHit certification (retrofit)" },
+  { value: "Net zero / very low carbon", label: "Net zero or very low carbon" },
+  { value: "Other", label: "Other (BREEAM, LEED, etc.)" },
+  { value: "Not sure yet — we'd like guidance" },
+];
+---
+
+<FormStep
+  id="sustainability"
+  eyebrow="06 · Sustainability"
+  title="Building responsibly"
+  subtitle="It's core to how we work on every project, not an optional extra — we want everything we design to be built to last, and to tread lightly while it does. Tell us where your ambitions sit, so we can shape the brief around them."
+  required
+>
+  <fieldset aria-required="true">
+    <legend class="sr-only">Sustainability ambitions</legend>
+    <div class="brief-chip-list">
+      {ambitions.map((option) => <ChipOption name="sustainability_ambitions[]" {...option} />)}
+    </div>
+  </fieldset>
+  <div class="brief-field mt-4" data-sustainability-other hidden>
+    <label class="sr-only" for="sustainability_other">Other sustainability standard or scheme</label>
+    <input id="sustainability_other" name="sustainability_other" type="text" placeholder="Optional — which standard or scheme?" disabled />
+  </div>
+</FormStep>

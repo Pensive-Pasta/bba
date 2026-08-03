@@ -1,0 +1,19 @@
+---
+import FormStep from "../FormStep.astro";
+---
+
+<FormStep
+  id="anything_else"
+  eyebrow="09 · Anything else"
+  title="Anything else?"
+  subtitle="Two quick things — anything specific to the project, and anything you'd like to ask when we meet."
+>
+  <div class="brief-field">
+    <label for="anything_else">Anything important for us to know about the project — access, neighbours, ecology, anything unusual about the brief?</label>
+    <textarea id="anything_else" name="anything_else" placeholder="Optional"></textarea>
+  </div>
+  <div class="brief-field">
+    <label for="questions_for_us">Anything you'd like to ask us when we meet?</label>
+    <textarea id="questions_for_us" name="questions_for_us" placeholder="Optional"></textarea>
+  </div>
+</FormStep>

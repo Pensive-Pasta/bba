@@ -15,7 +15,10 @@ const {
   ogImage,
   robots,
   jsonLd,
-  breadcrumbs = []
+  breadcrumbs = [],
+  hideMenu = false,
+  hideFooter = false,
+  hideCookieConsent = false,
 } = Astro.props;
 
 const siteOrigin = Astro.site?.toString();
@@ -109,11 +112,11 @@ const structuredData = [
   <ClientRouter />
 
   <body class="w-full min-h-screen bg-white flex flex-col">
-    <Header />
+    <Header hideMenu={hideMenu} />
     <main>
       <slot />
     </main>
-    <Footer />
-    <CookieConsent />
+    {!hideFooter && <Footer />}
+    {!hideCookieConsent && <CookieConsent />}
   </body>
 </html>

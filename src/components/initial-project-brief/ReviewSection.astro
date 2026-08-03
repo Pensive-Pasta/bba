@@ -1,0 +1,22 @@
+---
+import FormStep from "./FormStep.astro";
+import SubmissionError from "./SubmissionError.astro";
+import WhatHappensNext from "./WhatHappensNext.astro";
+---
+
+<FormStep
+  id="review"
+  eyebrow="Review"
+  title="Ready to send?"
+  subtitle={'Have a quick check — tap "Edit" on anything you\'d like to change.'}
+>
+  <div data-review-body></div>
+  <SubmissionError />
+  <div class="mt-6 flex flex-col gap-3">
+    <button type="submit" class="brief-button brief-button-primary w-full" data-submit-button>
+      Send initial enquiry
+    </button>
+    <p class="brief-hint text-center">Sends your completed brief securely to Butcher Bayley Architects. After it has been received, you can download or print a copy for your records.</p>
+  </div>
+  <WhatHappensNext />
+</FormStep>

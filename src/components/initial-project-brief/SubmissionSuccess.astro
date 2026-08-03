@@ -1,0 +1,22 @@
+---
+import WhatHappensNext from "./WhatHappensNext.astro";
+---
+
+<section class="brief-success" data-submission-success aria-labelledby="submission-success-title" role="status" hidden>
+  <div class="brief-success-tick" aria-hidden="true">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path d="M4 12.5L9.5 18L20 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </div>
+  <h1 id="submission-success-title" class="brief-step-title" tabindex="-1">Thanks — your enquiry is on its way.</h1>
+  <p class="brief-step-subtitle mx-auto max-w-[44ch]">Your initial enquiry has been sent to Butcher Bayley Architects. You can now download a PDF copy to your device or print the completed brief for your records.</p>
+  <div class="mx-auto mt-6 flex max-w-md flex-col gap-3 print:hidden">
+    <button type="button" class="brief-button brief-button-primary" data-download-pdf>Download PDF copy</button>
+    <button type="button" class="brief-button brief-button-outline" data-print-brief>Print or save as PDF</button>
+    <p class="brief-hint" data-download-status role="status"></p>
+  </div>
+  <div class="brief-print-summary" data-print-summary aria-label="Completed initial enquiry"></div>
+  <div class="text-left print:hidden">
+    <WhatHappensNext />
+  </div>
+</section>
