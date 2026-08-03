@@ -1,5 +1,7 @@
 ---
 import FormStep from "../FormStep.astro";
+import CharacterCounter from "../CharacterCounter.astro";
+import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../../../scripts/initial-project-brief-character-limits";
 ---
 
 <FormStep
@@ -10,10 +12,12 @@ import FormStep from "../FormStep.astro";
 >
   <div class="brief-field">
     <label for="anything_else">Anything important for us to know about the project — access, neighbours, ecology, anything unusual about the brief?</label>
-    <textarea id="anything_else" name="anything_else" placeholder="Optional"></textarea>
+    <textarea id="anything_else" name="anything_else" placeholder="Optional" maxlength={CHARACTER_LIMITS.anythingElse} aria-describedby="anything_else-character-count"></textarea>
+    <CharacterCounter fieldId="anything_else" limit={CHARACTER_LIMITS.anythingElse} />
   </div>
   <div class="brief-field">
     <label for="questions_for_us">Anything you'd like to ask us when we meet?</label>
-    <textarea id="questions_for_us" name="questions_for_us" placeholder="Optional"></textarea>
+    <textarea id="questions_for_us" name="questions_for_us" placeholder="Optional" maxlength={CHARACTER_LIMITS.questionsForUs} aria-describedby="questions_for_us-character-count"></textarea>
+    <CharacterCounter fieldId="questions_for_us" limit={CHARACTER_LIMITS.questionsForUs} />
   </div>
 </FormStep>

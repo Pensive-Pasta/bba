@@ -1,6 +1,8 @@
 ---
 import FormStep from "../FormStep.astro";
+import CharacterCounter from "../CharacterCounter.astro";
 import SegmentedOption from "../SegmentedOption.astro";
+import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../../../scripts/initial-project-brief-character-limits";
 
 const budgets = [
   { value: "£0 – £250k", label: "0-250k", ariaLabel: "£0 to £250k" },
@@ -37,6 +39,7 @@ const budgets = [
   </div>
   <div class="brief-field" data-budget-notes hidden>
     <label for="budget_notes">Any details or thoughts on budget so far?</label>
-    <textarea id="budget_notes" name="budget_notes" placeholder="Optional" disabled></textarea>
+    <textarea id="budget_notes" name="budget_notes" placeholder="Optional" maxlength={CHARACTER_LIMITS.budgetNotes} aria-describedby="budget_notes-character-count" disabled></textarea>
+    <CharacterCounter fieldId="budget_notes" limit={CHARACTER_LIMITS.budgetNotes} />
   </div>
 </FormStep>

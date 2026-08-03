@@ -1,5 +1,7 @@
 ---
 import FormStep from "../FormStep.astro";
+import CharacterCounter from "../CharacterCounter.astro";
+import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../../../scripts/initial-project-brief-character-limits";
 ---
 
 <FormStep
@@ -13,21 +15,22 @@ import FormStep from "../FormStep.astro";
   <div data-address-fields>
     <div class="brief-field">
       <label for="project_address_line">Address <span aria-hidden="true">*</span></label>
-      <input id="project_address_line" name="project_address_line" type="text" placeholder="Number and street" required />
+      <input id="project_address_line" name="project_address_line" type="text" placeholder="Number and street" maxlength={CHARACTER_LIMITS.projectAddressLine} aria-describedby="project_address_line-character-count" required />
+      <CharacterCounter fieldId="project_address_line" limit={CHARACTER_LIMITS.projectAddressLine} />
     </div>
     <div class="grid gap-3 sm:grid-cols-2">
       <div class="brief-field">
         <label for="project_town_city">Town / city</label>
-        <input id="project_town_city" name="project_town_city" type="text" placeholder="e.g. Oundle" />
+        <input id="project_town_city" name="project_town_city" type="text" placeholder="e.g. Oundle" maxlength={CHARACTER_LIMITS.projectTownCity} />
       </div>
       <div class="brief-field">
         <label for="project_county">County</label>
-        <input id="project_county" name="project_county" type="text" placeholder="e.g. Northamptonshire" />
+        <input id="project_county" name="project_county" type="text" placeholder="e.g. Northamptonshire" maxlength={CHARACTER_LIMITS.projectCounty} />
       </div>
     </div>
     <div class="brief-field max-w-[200px]">
       <label for="project_postcode">Postcode</label>
-      <input id="project_postcode" name="project_postcode" type="text" placeholder="e.g. PE8 4BW" />
+      <input id="project_postcode" name="project_postcode" type="text" placeholder="e.g. PE8 4BW" maxlength={CHARACTER_LIMITS.projectPostcode} />
     </div>
   </div>
 
@@ -38,11 +41,11 @@ import FormStep from "../FormStep.astro";
   <div class="grid gap-3 sm:grid-cols-2" data-grid-fields hidden>
     <div class="brief-field">
       <label for="project_easting">Easting</label>
-      <input id="project_easting" name="project_easting" type="text" placeholder="Easting" disabled />
+      <input id="project_easting" name="project_easting" type="text" placeholder="Easting" maxlength={CHARACTER_LIMITS.projectEasting} disabled />
     </div>
     <div class="brief-field">
       <label for="project_northing">Northing</label>
-      <input id="project_northing" name="project_northing" type="text" placeholder="Northing" disabled />
+      <input id="project_northing" name="project_northing" type="text" placeholder="Northing" maxlength={CHARACTER_LIMITS.projectNorthing} disabled />
     </div>
   </div>
 </FormStep>

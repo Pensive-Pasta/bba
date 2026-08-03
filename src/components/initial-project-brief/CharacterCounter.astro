@@ -1,0 +1,16 @@
+---
+interface Props {
+  fieldId: string;
+  limit: number;
+}
+
+const { fieldId, limit } = Astro.props;
+---
+
+<p
+  id={`${fieldId}-character-count`}
+  class="brief-hint text-right text-caption"
+  data-character-count-for={fieldId}
+>
+  0 / {limit} characters
+</p>

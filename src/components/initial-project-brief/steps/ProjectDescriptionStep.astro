@@ -1,12 +1,14 @@
 ---
 import FormStep from "../FormStep.astro";
+import CharacterCounter from "../CharacterCounter.astro";
+import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../../../scripts/initial-project-brief-character-limits";
 ---
 
 <FormStep
   id="project"
   eyebrow="03 · The project"
   title="What are you hoping to achieve?"
-  subtitle="Tell us about the dream — why the project matters and what it's really in aid of. Ideally under 100 words, though don't worry if it runs on."
+  subtitle="Tell us about the dream — why the project matters and what it's really in aid of. Aim for up to 800 characters, but don't worry about filling all of it."
   required
 >
   <div class="brief-field">
@@ -15,8 +17,10 @@ import FormStep from "../FormStep.astro";
       id="project_description"
       name="project_description"
       placeholder="e.g. We want this to transform the way we live day to day — a considered, sustainable addition that feels like it's always been there…"
+      maxlength={CHARACTER_LIMITS.projectDescription}
+      aria-describedby="project_description-character-count"
       required
     ></textarea>
-    <p class="mt-1 text-right text-xs font-light"><span data-word-count>0</span> words</p>
+    <CharacterCounter fieldId="project_description" limit={CHARACTER_LIMITS.projectDescription} />
   </div>
 </FormStep>

@@ -1,6 +1,8 @@
 ---
 import ChipOption from "../ChipOption.astro";
+import CharacterCounter from "../CharacterCounter.astro";
 import FormStep from "../FormStep.astro";
+import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../../../scripts/initial-project-brief-character-limits";
 
 const projectTypes = [
   "New build house",
@@ -30,7 +32,8 @@ const units = ["2–4 units", "5–9 units", "10–24 units", "25–49 units", "
 
   <div class="brief-field mt-4" data-project-type-other hidden>
     <label for="project_type_other">What kind of project, roughly?</label>
-    <input id="project_type_other" name="project_type_other" type="text" placeholder="Optional" disabled />
+    <input id="project_type_other" name="project_type_other" type="text" placeholder="Optional" maxlength={CHARACTER_LIMITS.projectTypeOther} aria-describedby="project_type_other-character-count" disabled />
+    <CharacterCounter fieldId="project_type_other" limit={CHARACTER_LIMITS.projectTypeOther} />
   </div>
 
   <fieldset class="mt-4" data-units-wrap hidden disabled>
