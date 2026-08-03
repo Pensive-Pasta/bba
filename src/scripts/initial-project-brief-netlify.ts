@@ -1,47 +1,5 @@
 import type { InitialProjectBrief } from "./initial-project-brief.types";
 
-/**
- * Netlify only detects form fields that exist in the generated HTML at build time.
- * Keep these names in sync with buildInitialProjectBriefNetlifyPayload().
- */
-export const NETLIFY_FIELD_NAMES = [
-  "subject",
-  "Location format",
-  "Project address",
-  "Easting",
-  "Northing",
-  "Project types",
-  "Project type other",
-  "Proposed units",
-  "Project description",
-  "Relationship to site",
-  "Relationship detail",
-  "Planning discussions",
-  "Proposed start date",
-  "Known constraints",
-  "Constraint detail",
-  "Total budget",
-  "Budget guidance requested",
-  "Budget notes",
-  "Sustainability ambitions",
-  "Sustainability detail",
-  "Architect experience",
-  "Experience notes",
-  "Services required",
-  "Other services",
-  "Company or organisation",
-  "Name",
-  "Contact address",
-  "email",
-  "Phone",
-  "Additional project information",
-  "Questions for BBA",
-  "How they heard about BBA",
-  "Previous client project",
-  "Referral detail",
-  "Privacy acknowledgement",
-] as const;
-
 export const NETLIFY_PDF_FIELD_NAME = "Project brief PDF";
 export const MAX_INITIAL_PROJECT_BRIEF_PDF_BYTES = 500 * 1024;
 
@@ -83,7 +41,7 @@ export const buildInitialProjectBriefNetlifyPayload = (
   const identifier = getInitialProjectBriefSubmissionIdentifier(data);
   payload.set("subject", `New BBA project brief — ${identifier}`);
 
-  const add = (field: (typeof NETLIFY_FIELD_NAMES)[number], fieldValue: string) => {
+  const add = (field: string, fieldValue: string) => {
     const trimmedValue = fieldValue.trim();
     if (trimmedValue) payload.set(field, trimmedValue);
   };
