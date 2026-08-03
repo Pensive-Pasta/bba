@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { ClientRouter } from "astro:transitions";
 import Seo from "../components/Seo.astro";
+import CookieConsent from "../components/CookieConsent.astro";
 import { SITE_NAME, DEFAULT_SEO_IMAGE } from "../lib/seo";
 import theFutureRegularUrl from "../assets/fonts/the-future-regular.woff2";
 
@@ -113,5 +114,6 @@ const structuredData = [
       <slot />
     </main>
     <Footer />
+    <CookieConsent />
   </body>
 </html>

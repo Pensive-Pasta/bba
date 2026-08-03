@@ -107,49 +107,95 @@ const ogImage = resolveSeoImage(seo?.ogImage?.asset?.url);
         {cards.map(
           (loc, i) =>
             loc && (
-              <a
-                href={loc.mapsLink}
-                class="md:w-1/2 w-full aspect-square relative group"
-                target="_blank"
-                rel="noopener"
-              >
+              <div class="md:w-1/2 w-full aspect-square relative group">
                 <div class="absolute inset-0 z-0">
                   <iframe
-                    src={loc.embedSrc}
-                    class="w-full h-full border-0"
+                    data-map-embed
+                    data-src={loc.embedSrc}
+                    title={`Interactive map for ${loc.label ?? "our studio"}`}
+                    class="hidden w-full h-full border-0"
                     allowfullscreen=""
                     loading="lazy"
                   />
                   <div
-                    class={`absolute inset-0 opacity-80 mix-blend-multiply ${overlayForIndex(i)}`}
+                    class={`absolute inset-0 pointer-events-none opacity-80 mix-blend-multiply ${overlayForIndex(i)}`}
                   />
+                  <div
+                    data-map-placeholder
+                    class="absolute inset-0 z-20 flex items-center justify-center px-6 text-center"
+                  >
+                    <button
+                      type="button"
+                      data-load-map
+                      class="max-w-xs border border-white bg-primary px-5 py-4 text-sm font-medium text-white transition-colors hover:bg-white hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    >
+                      Load interactive map
+                      <span class="mt-2 block text-xs font-light">
+                        This loads content from Google Maps, which may use cookies.
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
                 {loc.postcodeBadge && (
-                  <div class="absolute top-4 left-4 md:top-8 md:left-8 z-10">
+                  <div class="pointer-events-none absolute top-4 left-4 md:top-8 md:left-8 z-10">
                     <p class="text-white font-light text-[40px]">
                       {loc.postcodeBadge}
                     </p>
                   </div>
                 )}
 
-                <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+                <a
+                  href={loc.mapsLink}
+                  class="absolute top-4 right-4 md:top-8 md:right-8 z-30"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${loc.label ?? "location"} in Google Maps`}
+                >
                   <img
                     src="/icons/arrow-up-right.svg"
-                    alt="Open map"
+                    alt=""
+                    aria-hidden="true"
                     class="w-8"
                   />
-                </div>
+                </a>
 
-                <div class="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm">
+                <div class="pointer-events-none absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white z-10 text-sm">
                   {loc.label && <div>#{loc.label}</div>}
                   {Array.isArray(loc.addressLines) &&
                     loc.addressLines.map((line) => <div>{line}</div>)}
                 </div>
-              </a>
+              </div>
             )
         )}
       </section>
     )
   }
+
+  <script>
+    const setupMapEmbeds = () => {
+      document.querySelectorAll<HTMLButtonElement>("[data-load-map]").forEach(
+        (button) => {
+          if (button.dataset.mapBound === "true") return;
+          button.dataset.mapBound = "true";
+
+          button.addEventListener("click", () => {
+            const placeholder = button.closest<HTMLElement>("[data-map-placeholder]");
+            const container = placeholder?.parentElement;
+            const iframe = container?.querySelector<HTMLIFrameElement>("[data-map-embed]");
+            const source = iframe?.dataset.src;
+
+            if (!iframe || !source) return;
+            iframe.src = source;
+            iframe.classList.remove("hidden");
+            placeholder?.remove();
+          });
+        },
+      );
+    };
+
+    if (document.readyState !== "loading") setupMapEmbeds();
+    else document.addEventListener("DOMContentLoaded", setupMapEmbeds);
+    document.addEventListener("astro:page-load", setupMapEmbeds);
+  </script>
 </BaseLayout>
