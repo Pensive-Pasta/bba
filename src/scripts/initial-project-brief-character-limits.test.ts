@@ -42,12 +42,19 @@ test("formats the live project-description character counter", () => {
 });
 
 test("declares the PDF field statically and wires one retained Blob to upload and download", async () => {
+  const formMarkup = await readFile(
+    new URL("../components/initial-project-brief/EnquiryForm.astro", import.meta.url),
+    "utf8",
+  );
   const declarations = await readFile(
     new URL("../components/initial-project-brief/NetlifyFieldDeclarations.astro", import.meta.url),
     "utf8",
   );
   const controller = await readFile(new URL("./initial-project-brief.ts", import.meta.url), "utf8");
 
+  const summaryTitleIndex = formMarkup.indexOf('type="text"\n      name="title"');
+  assert.notEqual(summaryTitleIndex, -1);
+  assert.ok(summaryTitleIndex < formMarkup.indexOf("<LocationStep />"));
   assert.match(declarations, /type="file" name=\{NETLIFY_PDF_FIELD_NAME\}/);
   assert.match(
     controller,

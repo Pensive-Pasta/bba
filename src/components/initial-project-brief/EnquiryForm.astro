@@ -28,6 +28,18 @@ import NetlifyFieldDeclarations from "./NetlifyFieldDeclarations.astro";
     novalidate
   >
     <input type="hidden" name="form-name" value="initial-project-brief" />
+    <!-- Netlify uses the first non-hidden text input as the dashboard summary title. -->
+    <input
+      class="sr-only"
+      type="text"
+      name="title"
+      value=""
+      tabindex="-1"
+      aria-hidden="true"
+      autocomplete="off"
+      readonly
+      data-netlify-summary-title
+    />
     <NetlifyFieldDeclarations />
     <p class="sr-only" aria-hidden="true">
       <label for="bot-field">Do not fill this field if you are human</label>

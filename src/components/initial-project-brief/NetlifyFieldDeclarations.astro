@@ -5,8 +5,9 @@ import {
 } from "../../scripts/initial-project-brief-netlify";
 
 // Programmatic submission fields must also exist in the built HTML for Netlify's form scanner.
+// `title` is an ordered, visually hidden text input so Netlify uses it for dashboard summaries.
 // The visible contact step already renders a real input with name="email".
-const separatelyDeclaredFields = new Set(["email"]);
+const separatelyDeclaredFields = new Set(["title", "email"]);
 ---
 
 <div hidden aria-hidden="true" data-netlify-field-declarations>
