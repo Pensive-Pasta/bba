@@ -4,10 +4,17 @@ import test from "node:test";
 
 import { downloadInitialProjectBriefPdfBlob } from "./initial-project-brief-pdf.ts";
 
-test("uses the blue BBA logo asset in generated PDFs", async () => {
+test("uses a BBA logo matching the PDF typography blue", async () => {
   const source = await readFile(new URL("./initial-project-brief-pdf.ts", import.meta.url), "utf8");
+  const logo = await readFile(
+    new URL("../../public/images/BBA-Logo-Blue.svg", import.meta.url),
+    "utf8",
+  );
   assert.match(source, /imageToPngDataUrl\("\/images\/BBA-Logo-Blue\.svg"\)/);
   assert.doesNotMatch(source, /imageToPngDataUrl\("\/images\/BBA-Logo\.png"\)/);
+  assert.match(source, /const blue: \[number, number, number\] = \[23, 143, 228\]/);
+  assert.match(logo, /fill="#178FE4"/g);
+  assert.doesNotMatch(logo, /#6081B4/i);
 });
 
 test("downloads an existing client PDF Blob", async (t) => {

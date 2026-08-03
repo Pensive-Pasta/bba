@@ -41,6 +41,20 @@ test("formats the live project-description character counter", () => {
   assert.equal(formatCharacterCount("x".repeat(800), 800), "800 / 800 characters");
 });
 
+test("places required asterisks directly against their labels", async () => {
+  const stepsUrl = new URL("../components/initial-project-brief/steps/", import.meta.url);
+  const markup = [
+    await readFile(
+      new URL("../components/initial-project-brief/FormStep.astro", import.meta.url),
+      "utf8",
+    ),
+    ...(await Promise.all(stepFiles.map((file) => readFile(new URL(file, stepsUrl), "utf8")))),
+  ].join("\n");
+
+  assert.doesNotMatch(markup, /[A-Za-z0-9?.!] <span aria-hidden="true">\*<\/span>/);
+  assert.doesNotMatch(markup, /<span aria-hidden="true">\s+\*<\/span>/);
+});
+
 test("uses a clean static Netlify blueprint and wires one retained PDF Blob", async () => {
   const formMarkup = await readFile(
     new URL("../components/initial-project-brief/EnquiryForm.astro", import.meta.url),

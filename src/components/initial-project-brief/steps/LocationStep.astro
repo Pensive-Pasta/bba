@@ -14,7 +14,7 @@ import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../.
   <input type="hidden" name="Location format" value="Postal address" data-location-format />
   <div data-address-fields>
     <div class="brief-field">
-      <label for="project_address_line">Address <span aria-hidden="true">*</span></label>
+      <label for="project_address_line">Address<span aria-hidden="true">*</span></label>
       <input id="project_address_line" name="project_address_line" type="text" placeholder="Number and street" maxlength={CHARACTER_LIMITS.projectAddressLine} aria-describedby="project_address_line-character-count" required />
       <CharacterCounter fieldId="project_address_line" limit={CHARACTER_LIMITS.projectAddressLine} />
     </div>

@@ -31,12 +31,12 @@ const Heading = titleLevel;
 >
   {eyebrow && <p class="brief-eyebrow">{eyebrow}</p>}
   <Heading id={`${id}-title`} class="brief-step-title" tabindex="-1">
-    {title}{required && <span aria-hidden="true"> *</span>}
+    {title}{required && <span aria-hidden="true">*</span>}
   </Heading>
   {
     subtitle && (
       <p class="brief-step-subtitle">
-        {subtitle}{subtitleRequired && <span aria-hidden="true"> *</span>}
+        {subtitle}{subtitleRequired && <span aria-hidden="true">*</span>}
       </p>
     )
   }

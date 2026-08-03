@@ -47,7 +47,7 @@ const constraints = [
   subtitle="This is the stuff that most affects whether and how we can help — nothing here is a dealbreaker, it just helps us prepare properly."
 >
   <fieldset aria-required="true">
-    <legend>What's your relationship to the site? <span aria-hidden="true">*</span></legend>
+    <legend>What's your relationship to the site?<span aria-hidden="true">*</span></legend>
     <div class="brief-chip-list mt-2">
       {siteRelationships.map((value) => <ChipOption name="relationship_to_site" value={value} type="radio" />)}
     </div>
@@ -61,7 +61,7 @@ const constraints = [
   <hr class="brief-divider" />
 
   <fieldset aria-required="true">
-    <legend>Have you had any discussions with the local planning authority? <span aria-hidden="true">*</span></legend>
+    <legend>Have you had any discussions with the local planning authority?<span aria-hidden="true">*</span></legend>
     <div class="brief-chip-list mt-2">
       {planningOptions.map((value) => <ChipOption name="planning_discussions" value={value} type="radio" />)}
     </div>
@@ -70,7 +70,7 @@ const constraints = [
   <hr class="brief-divider" />
 
   <fieldset aria-required="true">
-    <legend>When are you hoping to start on site? <span aria-hidden="true">*</span></legend>
+    <legend>When are you hoping to start on site?<span aria-hidden="true">*</span></legend>
     <div class="brief-segments brief-segments-compact mt-2">
       {programmes.map((option) => <SegmentedOption name="programme" {...option} />)}
     </div>
@@ -80,7 +80,7 @@ const constraints = [
   <hr class="brief-divider" />
 
   <fieldset aria-required="true">
-    <legend>Any known constraints? <span aria-hidden="true">*</span></legend>
+    <legend>Any known constraints?<span aria-hidden="true">*</span></legend>
     <div class="brief-chip-list mt-2">
       {constraints.map((value) => <ChipOption name="constraints[]" value={value} />)}
     </div>
