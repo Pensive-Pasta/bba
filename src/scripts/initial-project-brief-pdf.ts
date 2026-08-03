@@ -92,10 +92,35 @@ const buildPdfBriefSections = (data: InitialProjectBrief) =>
     return Array.isArray(value) ? value.length > 0 : Boolean(value);
   });
 
-const imageToDataUrl = async (url: string): Promise<string> => {
+const imageToPngDataUrl = async (url: string): Promise<string> => {
   const response = await fetch(url);
   if (!response.ok) throw new Error("Could not load the BBA logo for the PDF.");
   const blob = await response.blob();
+
+  if (blob.type === "image/svg+xml" || url.endsWith(".svg")) {
+    const objectUrl = URL.createObjectURL(blob);
+    try {
+      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const element = new Image();
+        element.addEventListener("load", () => resolve(element), { once: true });
+        element.addEventListener(
+          "error",
+          () => reject(new Error("Could not render the BBA logo for the PDF.")),
+          { once: true },
+        );
+        element.src = objectUrl;
+      });
+      const canvas = document.createElement("canvas");
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Could not prepare the BBA logo for the PDF.");
+      context.drawImage(image, 0, 0);
+      return canvas.toDataURL("image/png");
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
+  }
 
   return await new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -108,7 +133,7 @@ const imageToDataUrl = async (url: string): Promise<string> => {
 export const createInitialProjectBriefPdfBlob = async (data: InitialProjectBrief) => {
   const [{ jsPDF }, logoDataUrl] = await Promise.all([
     import("jspdf"),
-    imageToDataUrl("/images/BBA-Logo.png"),
+    imageToPngDataUrl("/images/BBA-Logo-Blue.svg"),
   ]);
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const pageWidth = 210;

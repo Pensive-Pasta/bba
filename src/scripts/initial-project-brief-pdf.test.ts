@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import { downloadInitialProjectBriefPdfBlob } from "./initial-project-brief-pdf.ts";
+
+test("uses the blue BBA logo asset in generated PDFs", async () => {
+  const source = await readFile(new URL("./initial-project-brief-pdf.ts", import.meta.url), "utf8");
+  assert.match(source, /imageToPngDataUrl\("\/images\/BBA-Logo-Blue\.svg"\)/);
+  assert.doesNotMatch(source, /imageToPngDataUrl\("\/images\/BBA-Logo\.png"\)/);
+});
 
 test("downloads an existing client PDF Blob", async (t) => {
   let appended = false;
