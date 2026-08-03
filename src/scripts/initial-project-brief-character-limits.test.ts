@@ -41,9 +41,13 @@ test("formats the live project-description character counter", () => {
   assert.equal(formatCharacterCount("x".repeat(800), 800), "800 / 800 characters");
 });
 
-test("wires one retained Blob to upload and download without an explicit content type", async () => {
+test("declares the PDF field statically and wires one retained Blob to upload and download", async () => {
   const formMarkup = await readFile(
     new URL("../components/initial-project-brief/EnquiryForm.astro", import.meta.url),
+    "utf8",
+  );
+  const declarations = await readFile(
+    new URL("../components/initial-project-brief/NetlifyFieldDeclarations.astro", import.meta.url),
     "utf8",
   );
   const controller = await readFile(new URL("./initial-project-brief.ts", import.meta.url), "utf8");
@@ -56,9 +60,13 @@ test("wires one retained Blob to upload and download without an explicit content
     "utf8",
   );
 
+  const summarySubjectIndex = formMarkup.indexOf('type="text"\n      name="subject"');
+  assert.notEqual(summarySubjectIndex, -1);
+  assert.ok(summarySubjectIndex < formMarkup.indexOf("<LocationStep />"));
   assert.match(contactMarkup, /id="contact_name" name="Name"/);
   assert.match(locationMarkup, /name="Location format" value="Postal address"/);
-  assert.doesNotMatch(formMarkup, /NetlifyFieldDeclarations|NETLIFY_PDF_FIELD_NAME/);
+  assert.match(declarations, /new Set\(\["subject", "Location format", "Name", "email"\]\)/);
+  assert.match(formMarkup, /type="file"\n      name=\{NETLIFY_PDF_FIELD_NAME\}/);
   assert.match(
     controller,
     /appendInitialProjectBriefPdf\(\s*payload,\s*retainedPdf\.blob,\s*retainedPdf\.filename/,

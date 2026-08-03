@@ -14,6 +14,8 @@ import FormNavigation from "./FormNavigation.astro";
 import FormProgress from "./FormProgress.astro";
 import ReviewSection from "./ReviewSection.astro";
 import SubmissionSuccess from "./SubmissionSuccess.astro";
+import NetlifyFieldDeclarations from "./NetlifyFieldDeclarations.astro";
+import { NETLIFY_PDF_FIELD_NAME } from "../../scripts/initial-project-brief-netlify";
 ---
 
 <div class="brief-shell">
@@ -27,6 +29,27 @@ import SubmissionSuccess from "./SubmissionSuccess.astro";
     novalidate
   >
     <input type="hidden" name="form-name" value="initial-project-brief" />
+    <!-- Keep the uploaded brief first in Netlify's notification field order. -->
+    <input
+      class="hidden"
+      type="file"
+      name={NETLIFY_PDF_FIELD_NAME}
+      tabindex="-1"
+      aria-hidden="true"
+    />
+    <!-- Netlify uses the first non-hidden text input for its dashboard summary. -->
+    <input
+      class="sr-only"
+      type="text"
+      name="subject"
+      value=""
+      tabindex="-1"
+      aria-hidden="true"
+      autocomplete="off"
+      readonly
+      data-netlify-summary-subject
+    />
+    <NetlifyFieldDeclarations />
     <p class="sr-only" aria-hidden="true">
       <label for="bot-field">Do not fill this field if you are human</label>
       <input id="bot-field" name="bot-field" type="text" tabindex="-1" autocomplete="off" />
