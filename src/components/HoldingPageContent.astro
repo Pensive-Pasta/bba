@@ -45,7 +45,7 @@ const archiveUrl = "https://archived.wearebba.co.uk";
           {
             slides.map((slide, index) => (
               <p
-                class={`absolute inset-0 text-bodySecondary md:text-bodyPrimary transition-opacity duration-500 motion-reduce:transition-none ${index === 0 ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                class={`absolute inset-0 whitespace-nowrap text-bodySecondary md:text-bodyPrimary transition-opacity duration-500 motion-reduce:transition-none ${index === 0 ? "opacity-100" : "pointer-events-none opacity-0"}`}
                 data-slide-meta
                 data-slide-meta-index={index}
                 aria-hidden={index === 0 ? "false" : "true"}
