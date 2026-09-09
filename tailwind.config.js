@@ -16,7 +16,7 @@ export default {
         intro: ["36px", { lineHeight: "44px" }],
         bodyPrimary: ["21px", { lineHeight: "28px" }],
         bodySecondary: ["16px", { lineHeight: "22px" }],
-        bodyTertiary: ["13px", { lineHeight: "18px" }],
+        bodyTertiary: ["16px", { lineHeight: "18px" }],
         caption: ["11px", { lineHeight: "14px" }],
       },
       colors: {

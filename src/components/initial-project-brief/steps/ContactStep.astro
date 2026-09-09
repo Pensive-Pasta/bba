@@ -29,8 +29,8 @@ import { INITIAL_PROJECT_BRIEF_CHARACTER_LIMITS as CHARACTER_LIMITS } from "../.
       <input id="email" name="email" type="email" placeholder="you@email.com" autocomplete="email" maxlength={CHARACTER_LIMITS.email} required />
     </div>
     <div class="brief-field">
-      <label for="phone">Phone</label>
-      <input id="phone" name="phone" type="tel" placeholder="Optional" autocomplete="tel" maxlength={CHARACTER_LIMITS.phone} />
+      <label for="phone">Phone<span aria-hidden="true">*</span></label>
+      <input id="phone" name="phone" type="tel" placeholder="Phone number" autocomplete="tel" maxlength={CHARACTER_LIMITS.phone} required />
     </div>
   </div>
 </FormStep>

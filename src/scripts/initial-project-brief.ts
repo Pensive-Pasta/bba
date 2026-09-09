@@ -230,7 +230,7 @@ export const initialiseInitialProjectBrief = () => {
       return Boolean(data.architectExperience && data.servicesNeeded.length > 0);
     }
     if (step === "contact") {
-      return Boolean(data.contactName && /\S+@\S+\.\S+/.test(data.email));
+      return Boolean(data.contactName && /\S+@\S+\.\S+/.test(data.email) && data.phone);
     }
     if (step === "privacy") return data.privacyConsent;
     return true;
