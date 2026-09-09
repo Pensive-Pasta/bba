@@ -78,6 +78,10 @@ test("uses a clean static Netlify blueprint and wires one retained PDF Blob", as
   assert.notEqual(summarySubjectIndex, -1);
   assert.ok(summarySubjectIndex < blueprint.indexOf("NETLIFY_FIELD_NAMES.filter"));
   assert.match(contactMarkup, /id="contact_name" name="Name"/);
+  assert.match(contactMarkup, /<label for="phone">Phone<span aria-hidden="true">\*<\/span><\/label>/);
+  assert.match(contactMarkup, /<input id="phone"[^>]*\brequired\s*\/>/);
+  assert.doesNotMatch(contactMarkup, /id="phone"[^>]*placeholder="Optional"/);
+  assert.match(controller, /data\.contactName && \/\\S\+@\\S\+\\\.\\S\+\/\.test\(data\.email\) && data\.phone/);
   assert.match(locationMarkup, /name="Location format" value="Postal address"/);
   assert.match(blueprint, /field !== "subject"/);
   assert.match(blueprint, /field === "email"/);
