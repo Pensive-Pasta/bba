@@ -29,15 +29,31 @@ const archiveUrl = "https://archived.wearebba.co.uk";
 
 <section class="relative min-h-[100dvh] overflow-hidden bg-white text-white">
   <HoldingSlideshow slides={slides} />
-  <div class="pointer-events-none absolute inset-x-0 top-0 h-[34%] bg-gradient-to-b from-black/46 via-black/22 to-transparent md:hidden"></div>
-  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/58 via-black/24 to-transparent md:hidden"></div>
-  <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-[42vw] bg-gradient-to-r from-black/20 to-transparent md:block"></div>
-  <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[32vw] bg-gradient-to-l from-black/10 to-transparent md:block"></div>
+  <div
+    class="pointer-events-none absolute inset-x-0 top-0 h-[34%] bg-gradient-to-b from-black/46 via-black/22 to-transparent md:hidden"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/58 via-black/24 to-transparent md:hidden"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute inset-y-0 left-0 hidden w-[42vw] bg-gradient-to-r from-black/20 to-transparent md:block"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute inset-y-0 right-0 hidden w-[32vw] bg-gradient-to-l from-black/10 to-transparent md:block"
+  >
+  </div>
 
-  <div class="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:px-8 md:pb-10 md:pt-8">
+  <div
+    class="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[1600px] flex-col px-4 pb-8 pt-6 md:px-8 md:pb-10 md:pt-8"
+  >
     <header class="flex items-stretch justify-between gap-4 text-white">
       <Logo class="w-24 md:w-32" />
-      <div class="flex max-w-[14rem] flex-col items-end justify-between text-right md:max-w-[18rem]">
+      <div
+        class="flex max-w-[14rem] flex-col items-end justify-between text-right md:max-w-[18rem]"
+      >
         <p class="text-bodySecondary font-medium md:text-bodyPrimary">
           Butcher Bayley Architects
         </p>
@@ -50,9 +66,18 @@ const archiveUrl = "https://archived.wearebba.co.uk";
                 data-slide-meta-index={index}
                 aria-hidden={index === 0 ? "false" : "true"}
               >
-                <span class="text-bodySecondary font-medium text-white md:text-bodyPrimary">{slide.code}</span>
-                <span class="px-4 text-bodySecondary font-medium text-white md:text-bodyPrimary" aria-hidden="true">&bull;</span>
-                <span class="text-bodySecondary font-medium md:text-bodyPrimary">{slide.title}</span>
+                <span class="text-bodySecondary font-medium text-white md:text-bodyPrimary">
+                  {slide.code}
+                </span>
+                <span
+                  class="px-4 text-bodySecondary font-medium text-white md:text-bodyPrimary"
+                  aria-hidden="true"
+                >
+                  &bull;
+                </span>
+                <span class="text-bodySecondary font-medium md:text-bodyPrimary">
+                  {slide.title}
+                </span>
               </p>
             ))
           }
@@ -68,25 +93,23 @@ const archiveUrl = "https://archived.wearebba.co.uk";
         <br />
         learning and community.
       </h1>
-      <p class="mt-4 max-w-[22rem] text-bodySecondary font-light md:mt-5 md:text-bodyPrimary">
+      <p
+        class="mt-4 max-w-[22rem] text-bodySecondary font-light md:mt-5 md:text-bodyPrimary"
+      >
         We're building something new.
         <br />
-        Website launch in September.
+        Website launch in November.
       </p>
-      <div class="mt-6 flex flex-col gap-4 text-bodySecondary font-light md:mt-8 md:text-bodyPrimary">
+      <div
+        class="mt-6 flex flex-col gap-4 text-bodySecondary font-light md:mt-8 md:text-bodyPrimary"
+      >
         <p>
-          <a
-            href={archiveUrl}
-            class="holding-link"
-          >
+          <a href={archiveUrl} class="holding-link">
             Until then, explore our project archive ↗
           </a>
         </p>
         <p>
-          <a
-            href={`mailto:${email}`}
-            class="holding-link"
-          >
+          <a href={`mailto:${email}`} class="holding-link">
             {email}
           </a>
         </p>
