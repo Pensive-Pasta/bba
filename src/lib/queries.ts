@@ -44,6 +44,7 @@ export const getProjectsQuery = `*[_type == "project"] | order(year desc){
   year,
   type,
   heroImage{ crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  "heroVideo": heroVideo.asset->{ url, mimeType },
   "imageUrl": heroImage.asset->url
 }`;
 

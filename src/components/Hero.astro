@@ -19,37 +19,40 @@ const mobileImage = resolveImage(mobileHeroImage, desktopImage.url);
 // A missing mobile image must inherit the desktop focal position as well.
 const mobilePosition = mobileHeroImage?.asset?.url ? mobileImage.position : desktopImage.position;
 const videos = heroVideos(heroVideo, mobileHeroVideo, Boolean(mobileHeroImage?.asset?.url));
+const hasVideo = Boolean(videos.desktop || videos.mobile);
 ---
 
 <section
-  class="relative overflow-hidden w-full bg-cover bg-center bg-blend-color-burn h-screen flex items-center justify-center mb-32"
+  class={`relative overflow-hidden w-full bg-cover bg-center bg-blend-color-burn h-screen flex items-center justify-center mb-32 ${hasVideo ? "bg-black" : ""}`}
   style={`--hero-position: ${desktopImage.position}; --mobile-hero-position: ${mobilePosition};`}
   id="hero"
   data-hero-media
   data-desktop-video={videos.desktop || undefined}
   data-mobile-video={videos.mobile || undefined}
-  data-desktop-poster={desktopImage.url}
-  data-mobile-poster={mobileImage.url}
 >
   {(desktopImage.url || mobileImage.url) && (
-    <picture class="absolute inset-0 block">
+    <picture class="hero-picture absolute inset-0 block">
       {mobileImage.url && <source media="(max-width: 767.98px)" srcset={mobileImage.url} />}
       <img
         src={desktopImage.url || mobileImage.url}
         alt={alt}
         class="hero-still w-full h-full object-cover"
-        fetchpriority="high"
+        loading={hasVideo ? "lazy" : "eager"}
+        fetchpriority={hasVideo ? "auto" : "high"}
         decoding="async"
       />
     </picture>
   )}
-  {(videos.desktop || videos.mobile) && (
+  {hasVideo && (
     <>
-      {/* No src/source until the selected viewport is visible and motion is allowed. */}
+      {/* Native source selection starts the appropriate video before JS initialises. */}
       <video
-        class="hero-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
-        muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"
-      />
+        class="hero-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-opacity duration-300 motion-reduce:transition-none"
+        muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"
+      >
+        {videos.desktop && <source src={videos.desktop} media="(min-width: 768px) and (prefers-reduced-motion: no-preference)" />}
+        {videos.mobile && <source src={videos.mobile} media="(max-width: 767.98px) and (prefers-reduced-motion: no-preference)" />}
+      </video>
       <button
         type="button"
         data-hero-playback
@@ -71,10 +74,24 @@ const videos = heroVideos(heroVideo, mobileHeroVideo, Boolean(mobileHeroImage?.a
 <style>
   .hero-still { object-position: var(--hero-position); }
   .hero-video { object-position: center; }
+  /* Never flash the unrelated image while a selected video is buffering. */
+  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    section[data-desktop-video]:not([data-video-fallback]) .hero-picture { display: none; }
+  }
+  @media (max-width: 767.98px) and (prefers-reduced-motion: no-preference) {
+    section[data-mobile-video]:not([data-video-fallback]) .hero-picture { display: none; }
+  }
   @media (max-width: 767.98px) {
     .hero-still { object-position: var(--mobile-hero-position); }
   }
 </style>
+
+<noscript>
+  <style is:inline>
+    #hero .hero-picture { display: block !important; }
+    #hero .hero-video { display: none; }
+  </style>
+</noscript>
 
 <script>
   import { initHeroVideo } from "../scripts/hero-video";

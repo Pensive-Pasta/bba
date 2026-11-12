@@ -6,7 +6,7 @@ import { sanity } from "../lib/sanityClient";
 import { getHomePageQuery, getProjectsQuery } from "../lib/queries";
 import { normaliseText } from "../utils/normaliseText";
 import { squareProjectImage } from "../lib/heroMedia";
-import type { HeroImage } from "../types/HeroMedia";
+import type { HeroImage, HeroVideo } from "../types/HeroMedia";
 import {
   resolveSeoDescription,
   resolveSeoImage,
@@ -34,6 +34,7 @@ type Project = {
   slug: { current: string };
   imageUrl?: string;
   heroImage?: HeroImage;
+  heroVideo?: HeroVideo;
 };
 
 const items: Array<{ label: string; project?: Project }> = [
@@ -86,8 +87,8 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage?.asset?.url);
                   <span class="block p-4 text-4xl">{label}</span>
                   {(i - 1) % 4 < 2 && i > 0 && proj && (
                     <div
-                      class="absolute inset-0 z-0 opacity-0 pointer-events-none transition-opacity duration-500"
-                      data-project-tile
+                      class={`absolute inset-0 z-0 ${proj.heroVideo?.url ? "" : "opacity-0 pointer-events-none transition-opacity duration-500"}`}
+                      data-project-tile={proj.heroVideo?.url ? undefined : ""}
                     >
                       <ProjectCard
                         title={proj.title}
@@ -96,6 +97,7 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage?.asset?.url);
                         type={proj.type}
                         slug={proj.slug}
                         imageUrl={img}
+                        previewVideoUrl={proj.heroVideo?.url}
                       />
                     </div>
                   )}

@@ -1,0 +1,19 @@
+---
+interface Props { videoUrl: string; imageUrl?: string; colourClass: string; }
+const { videoUrl, imageUrl, colourClass } = Astro.props;
+---
+
+<bba-video-preview data-video-url={videoUrl} class="relative block w-full h-full">
+  {imageUrl && <div class="preview-image w-full h-full bg-center bg-cover filter grayscale" style={`background-image: url('${imageUrl}');`} />}
+  <div class={`absolute inset-0 z-10 ${colourClass} opacity-95 mix-blend-multiply pointer-events-none`} />
+  <video class="preview-video absolute inset-0 z-20 w-full h-full object-cover opacity-0 transition-opacity duration-300 motion-reduce:transition-none"
+    muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" />
+</bba-video-preview>
+
+<style>
+  .preview-video { pointer-events: none; }
+</style>
+
+<script>
+  import "../scripts/project-video-preview";
+</script>

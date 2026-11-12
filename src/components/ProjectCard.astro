@@ -1,5 +1,7 @@
 ---
-const { title, postCode, county, imageUrl, slug, type } = Astro.props;
+import ProjectVideoPreview from "./ProjectVideoPreview.astro";
+const { title, postCode, county, imageUrl, slug, type, previewVideoUrl } = Astro.props;
+const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-cornflower" : "bg-pink";
 ---
 
 <a
@@ -8,7 +10,7 @@ const { title, postCode, county, imageUrl, slug, type } = Astro.props;
 >
   <div class="absolute inset-0 z-0">
     {
-      imageUrl && (
+      previewVideoUrl ? <ProjectVideoPreview videoUrl={previewVideoUrl} imageUrl={imageUrl} colourClass={colourClass} /> : imageUrl && (
         <div
           class="w-full h-full bg-center bg-cover transition-all duration-500 filter grayscale group-hover:grayscale-0 ease-in-out"
           style={`background-image: url('${imageUrl}');`}
@@ -17,16 +19,9 @@ const { title, postCode, county, imageUrl, slug, type } = Astro.props;
     }
   </div>
 
-  <div
-    class={`absolute inset-0 z-10 ${
-      type === "rural"
-        ? "bg-aqua"
-        : type === "inter-urban"
-          ? "bg-cornflower"
-          : "bg-pink"
-    } ${imageUrl ? "opacity-95 group-hover:opacity-0 mix-blend-multiply transition-opacity duration-500 " : ""}`}
-  >
-  </div>
+  {!previewVideoUrl && <div
+    class={`absolute inset-0 z-10 ${colourClass} ${imageUrl ? "opacity-95 group-hover:opacity-0 mix-blend-multiply transition-opacity duration-500 " : ""}`}
+  />}
 
   <div class="relative z-20 flex flex-col justify-between h-full">
     

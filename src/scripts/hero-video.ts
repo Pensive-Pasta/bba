@@ -1,4 +1,4 @@
-// One element and one selected source: no duplicate desktop/mobile downloads.
+// Adopt the browser-selected source; keep one video across responsive changes.
 export function initHeroVideo(root: HTMLElement) {
   const video = root.querySelector<HTMLVideoElement>("video");
   const button = root.querySelector<HTMLButtonElement>("[data-hero-playback]");
@@ -9,7 +9,10 @@ export function initHeroVideo(root: HTMLElement) {
   const options = { signal: events.signal };
   const desktop = matchMedia("(min-width: 768px)");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  let selected = "";
+  const expectedSource = () => reduced.matches ? "" :
+    (desktop.matches ? root.dataset.desktopVideo : root.dataset.mobileVideo) || "";
+  let selected = video.currentSrc || Array.from(video.querySelectorAll("source"))
+    .find((source) => source.src === expectedSource())?.src || "";
   let inView = !("IntersectionObserver" in window);
   let userPaused = false;
   let blocked = false;
@@ -25,8 +28,10 @@ export function initHeroVideo(root: HTMLElement) {
     generation++;
     video!.pause();
     video!.classList.add("opacity-0");
-    if (video!.hasAttribute("src")) {
-      video!.removeAttribute("src");
+    const hasSource = video!.hasAttribute("src") || Boolean(video!.querySelector("source"));
+    video!.removeAttribute("src");
+    video!.querySelectorAll("source").forEach((source) => source.remove());
+    if (hasSource) {
       video!.load();
     }
   }
@@ -35,7 +40,7 @@ export function initHeroVideo(root: HTMLElement) {
     if (!selected || reduced.matches || userPaused || blocked || !inView || document.hidden) return;
     if (!video!.paused) return;
     const attempt = generation;
-    if (!video!.hasAttribute("src")) {
+    if (!video!.hasAttribute("src") && !video!.querySelector("source")) {
       video!.muted = true;
       video!.src = selected;
     }
@@ -43,48 +48,56 @@ export function initHeroVideo(root: HTMLElement) {
       await video!.play();
     } catch {
       if (attempt !== generation) return;
-      // Keep the still visible; a deliberate button press can retry playback.
+      // Autoplay rejection keeps the video's own first frame and a Play button.
       blocked = true;
-      video!.classList.add("opacity-0");
       label();
     }
   }
 
   function update() {
-    const next = reduced.matches ? "" :
-      (desktop.matches ? root.dataset.desktopVideo : root.dataset.mobileVideo) || "";
+    const next = expectedSource();
     if (next !== selected) {
       unload();
       selected = next;
       blocked = false;
+      delete root.dataset.videoFallback;
     }
-    const poster = desktop.matches ? root.dataset.desktopPoster : root.dataset.mobilePoster;
-    if (poster) video!.poster = poster;
-    else video!.removeAttribute("poster");
     button!.hidden = !selected;
     if (!inView || document.hidden || userPaused || !selected) {
       generation++;
       video!.pause();
     } else void play();
+    revealFrame();
     label();
   }
 
+  function revealFrame() {
+    if (!selected || reduced.matches || root.dataset.videoFallback || video!.readyState < 2) return;
+    video!.classList.remove("opacity-0");
+  }
+
+  video.addEventListener("loadeddata", revealFrame, options);
   video.addEventListener("playing", () => {
     // A late event after a resize/preference change must not reveal stale media.
     if (!selected || reduced.matches || !inView || document.hidden || userPaused) {
       video.pause();
       return;
     }
-    video.classList.remove("opacity-0");
+    revealFrame();
     label();
   }, options);
   video.addEventListener("pause", label, options);
-  video.addEventListener("error", () => {
-    if (!video.hasAttribute("src")) return;
+  function showFallback() {
+    if (!selected) return;
     blocked = true;
+    root.dataset.videoFallback = "true";
     unload();
     label();
-  }, options);
+  }
+  video.addEventListener("error", (event) => {
+    if (event.target !== video && (event.target as HTMLSourceElement).src !== selected) return;
+    showFallback();
+  }, { ...options, capture: true });
   button.addEventListener("click", () => {
     userPaused = !video.paused;
     if (userPaused) {
@@ -93,6 +106,7 @@ export function initHeroVideo(root: HTMLElement) {
     }
     else {
       blocked = false;
+      delete root.dataset.videoFallback;
       void play();
     }
     label();
@@ -112,5 +126,7 @@ export function initHeroVideo(root: HTMLElement) {
     unload();
     delete root.dataset.videoReady;
   }, { once: true, signal: events.signal });
+  // A cached failed response can arrive before the component script runs.
+  if (video.error && selected) showFallback();
   update();
 }
