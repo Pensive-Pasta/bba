@@ -5,6 +5,8 @@ import ProjectCard from "../components/ProjectCard.astro";
 import { sanity } from "../lib/sanityClient";
 import { getHomePageQuery, getProjectsQuery } from "../lib/queries";
 import { normaliseText } from "../utils/normaliseText";
+import { squareProjectImage } from "../lib/heroMedia";
+import type { HeroImage } from "../types/HeroMedia";
 import {
   resolveSeoDescription,
   resolveSeoImage,
@@ -31,6 +33,7 @@ type Project = {
   type?: "urban" | "inter-urban" | "rural";
   slug: { current: string };
   imageUrl?: string;
+  heroImage?: HeroImage;
 };
 
 const items: Array<{ label: string; project?: Project }> = [
@@ -75,9 +78,7 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage?.asset?.url);
       <div class="grid grid-cols-2 dot-grid-internal -mr-[2px]">
         {
           items.map(({ label, project: proj }, i) => {
-            const img = proj?.imageUrl
-              ? `${proj.imageUrl}?w=800&h=800&fit=crop&auto=format&q=75`
-              : undefined;
+            const img = squareProjectImage(proj?.heroImage, proj?.imageUrl);
 
             return (
               <>

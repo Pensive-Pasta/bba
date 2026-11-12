@@ -24,6 +24,8 @@ export async function getStaticPaths() {
 }
 
 const projectInfo = await sanity.fetch(getProjectBySlugQuery, { slug });
+const hasHero = Boolean(projectInfo.imageUrl || projectInfo.heroVideo?.url ||
+  projectInfo.mobileHeroImage?.asset?.url || projectInfo.mobileHeroVideo?.url);
 
 const seoTitle =
   projectInfo.seo?.metaTitle ?? `${projectInfo.title} | Work | ${SITE_TITLE_SUFFIX}`;
@@ -64,17 +66,21 @@ const ogImage = resolveSeoImage(
   <PageDotGrid />
   <article class="min-h-[100vh]">
     {
-      projectInfo.imageUrl && (
+      hasHero && (
         <Hero
           image={projectInfo.imageUrl}
           alt={projectInfo.altText}
+          heroImage={projectInfo.heroImage}
+          heroVideo={projectInfo.heroVideo}
+          mobileHeroImage={projectInfo.mobileHeroImage}
+          mobileHeroVideo={projectInfo.mobileHeroVideo}
           scrollTarget="projects"
         />
       )
     }
 
     <section
-      class={`${projectInfo.imageUrl ? "mt-12" : ""} ${!projectInfo.imageUrl ? "mt-32 md:mt-40" : ""} ${projectInfo.contentBlocks.length === 0 ? "mb-12" : ""} px-4 md:px-8`}
+      class={`${hasHero ? "mt-12" : ""} ${!hasHero ? "mt-32 md:mt-40" : ""} ${projectInfo.contentBlocks.length === 0 ? "mb-12" : ""} px-4 md:px-8`}
     >
       <ProjectMeta projectInfo={projectInfo} />
     </section>

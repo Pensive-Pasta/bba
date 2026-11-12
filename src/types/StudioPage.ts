@@ -1,4 +1,5 @@
 import type { PortableTextBlock } from "@portabletext/types";
+import type { GalleryBlock } from "./Gallery";
 
 export interface ImageBlockImage {
   altText?: string;
@@ -21,7 +22,7 @@ export interface TextBlock {
   content: any;
 }
 
-export type ContentBlock = ImageBlock | TextBlock;
+export type ContentBlock = ImageBlock | TextBlock | GalleryBlock;
 
 export interface Person {
   name?: string;

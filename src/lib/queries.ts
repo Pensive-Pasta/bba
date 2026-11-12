@@ -1,3 +1,17 @@
+// Shared by the existing Project, Insight and Studio block arrays.
+const galleryBlockProjection = `
+_type == "galleryBlock" => {
+  heading,
+  "images": coalesce(images, [])[]{
+    _key,
+    altText,
+    caption,
+    crop,
+    hotspot,
+    asset->{ url, metadata{ dimensions{ width, height } } }
+  }
+}`;
+
 export const getHomePageQuery = `*[_type == "homePage"][0]{
   title,
   intro,
@@ -29,6 +43,7 @@ export const getProjectsQuery = `*[_type == "project"] | order(year desc){
   county,
   year,
   type,
+  heroImage{ crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
   "imageUrl": heroImage.asset->url
 }`;
 
@@ -42,6 +57,10 @@ export const getProjectBySlugQuery = `
   type,
   "imageUrl": heroImage.asset->url,
   "altText": heroImage.altText,
+  heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  "heroVideo": heroVideo.asset->{ url, mimeType },
+  mobileHeroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  "mobileHeroVideo": mobileHeroVideo.asset->{ url, mimeType },
   seo{
     metaTitle,
     metaDescription,
@@ -61,7 +80,8 @@ export const getProjectBySlugQuery = `
       }
     },
     // textBlock
-    _type == "textBlock" => { content }
+    _type == "textBlock" => { content },
+    ${galleryBlockProjection}
   },
       credits[] {
     label,
@@ -83,7 +103,8 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
         asset->{ url }
       }
     },
-    _type == "textBlock" => { content }
+    _type == "textBlock" => { content },
+    ${galleryBlockProjection}
   },
 
   "valuesBlocks": coalesce(valuesBlocks, [])[]{
@@ -97,7 +118,8 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
         asset->{ url }
       }
     },
-    _type == "textBlock" => { content }
+    _type == "textBlock" => { content },
+    ${galleryBlockProjection}
   },
 
   "awardsBlocks": coalesce(awardsBlocks, [])[]{
@@ -111,7 +133,8 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
         asset->{ url }
       }
     },
-    _type == "textBlock" => { content }
+    _type == "textBlock" => { content },
+    ${galleryBlockProjection}
   },
 
   // Single text block for People intro
@@ -174,7 +197,8 @@ export const getInsightBySlugQuery = `
         asset->{ url }
       }
     },
-    _type == "textBlock" => { content }
+    _type == "textBlock" => { content },
+    ${galleryBlockProjection}
   }
 }
 `;

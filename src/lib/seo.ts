@@ -17,8 +17,8 @@ type ContentBlock = {
   images?: Array<{
     asset?: {
       url?: string;
-    };
-  }>;
+    } | null;
+  } | null> | null;
 };
 
 export type BreadcrumbItem = {
@@ -98,7 +98,7 @@ export const findFirstImageUrl = (
   blocks?: Array<ContentBlock | null | undefined>
 ): string | undefined => {
   for (const block of blocks ?? []) {
-    if (block?._type !== "imageBlock") continue;
+    if (block?._type !== "imageBlock" && block?._type !== "galleryBlock") continue;
 
     for (const image of block.images ?? []) {
       const url = image?.asset?.url?.trim();

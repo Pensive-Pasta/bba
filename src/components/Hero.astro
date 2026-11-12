@@ -1,12 +1,64 @@
 ---
-const { image = "", scrollTarget = "" } = Astro.props;
+import { heroImage as resolveImage, heroVideos } from "../lib/heroMedia";
+import type { HeroImage, HeroVideo } from "../types/HeroMedia";
+
+interface Props {
+  image?: string;
+  alt?: string;
+  scrollTarget?: string;
+  heroImage?: HeroImage | null;
+  heroVideo?: HeroVideo | null;
+  mobileHeroImage?: HeroImage | null;
+  mobileHeroVideo?: HeroVideo | null;
+}
+
+const { image = "", alt = "", scrollTarget = "", heroImage,
+  heroVideo, mobileHeroImage, mobileHeroVideo } = Astro.props;
+const desktopImage = resolveImage(heroImage, image);
+const mobileImage = resolveImage(mobileHeroImage, desktopImage.url);
+// A missing mobile image must inherit the desktop focal position as well.
+const mobilePosition = mobileHeroImage?.asset?.url ? mobileImage.position : desktopImage.position;
+const videos = heroVideos(heroVideo, mobileHeroVideo, Boolean(mobileHeroImage?.asset?.url));
 ---
 
 <section
-  class="w-full bg-cover bg-center bg-blend-color-burn h-screen flex items-center justify-center mb-32"
-  style={`background-image: url('${image}'); background-size: cover; background-position: center;`}
+  class="relative overflow-hidden w-full bg-cover bg-center bg-blend-color-burn h-screen flex items-center justify-center mb-32"
+  style={`--hero-position: ${desktopImage.position}; --mobile-hero-position: ${mobilePosition};`}
   id="hero"
+  data-hero-media
+  data-desktop-video={videos.desktop || undefined}
+  data-mobile-video={videos.mobile || undefined}
+  data-desktop-poster={desktopImage.url}
+  data-mobile-poster={mobileImage.url}
 >
+  {(desktopImage.url || mobileImage.url) && (
+    <picture class="absolute inset-0 block">
+      {mobileImage.url && <source media="(max-width: 767.98px)" srcset={mobileImage.url} />}
+      <img
+        src={desktopImage.url || mobileImage.url}
+        alt={alt}
+        class="hero-still w-full h-full object-cover"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+  )}
+  {(videos.desktop || videos.mobile) && (
+    <>
+      {/* No src/source until the selected viewport is visible and motion is allowed. */}
+      <video
+        class="hero-video absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
+        muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"
+      />
+      <button
+        type="button"
+        data-hero-playback
+        hidden
+        class="absolute z-10 bottom-6 left-6 md:bottom-12 md:left-12 rounded bg-black/70 px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+        aria-label="Play background video"
+      >Play video</button>
+    </>
+  )}
   <a
     href={`#${scrollTarget}`}
     class="absolute bottom-6 md:bottom-12 right-6 md:right-12"
@@ -16,8 +68,20 @@ const { image = "", scrollTarget = "" } = Astro.props;
   </a>
 </section>
 
+<style>
+  .hero-still { object-position: var(--hero-position); }
+  .hero-video { object-position: center; }
+  @media (max-width: 767.98px) {
+    .hero-still { object-position: var(--mobile-hero-position); }
+  }
+</style>
+
 <script>
+  import { initHeroVideo } from "../scripts/hero-video";
+
   function initSmoothScroll() {
+    const hero = document.querySelector<HTMLElement>("[data-hero-media]");
+    if (hero) initHeroVideo(hero);
     const targetId = document
       .querySelector("a[data-target]")
       ?.getAttribute("data-target");
