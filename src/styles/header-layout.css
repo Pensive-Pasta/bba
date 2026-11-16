@@ -1,0 +1,33 @@
+/* Initial fallback derives from the existing Logo viewBox (220 × 100),
+   w-32 / md:w-40 and p-4 / md:p-8. The actual in-flow header height is
+   published by ResizeObserver for responsive changes and browser zoom. */
+:root {
+  --site-header-height: calc(8rem * 100 / 220 + 2rem);
+}
+@media (min-width: 768px) {
+  :root { --site-header-height: calc(10rem * 100 / 220 + 4rem); }
+}
+html { scroll-padding-top: var(--site-header-height); }
+#site-header[data-scroll-hidden] { transform: translateY(-100%); }
+/* An expanded fixed menu must remain viewport-anchored, including when it is
+   opened immediately after keyboard focus reveals a hidden header. */
+#site-header:has(#menu-toggle[aria-expanded="true"]) { transform: none; transition: none; }
+
+/* These offsets replace the original fixed-header clearance. The header now
+   supplies that space in normal flow; retain only the remaining editorial gap. */
+.page-header-clearance {
+  padding-top: max(0px, calc(var(--page-header-offset, 200px) - var(--site-header-height)));
+}
+.page-header-margin-clearance {
+  margin-top: max(0px, calc(var(--page-header-offset, 200px) - var(--site-header-height)));
+}
+.page-header-clearance--home { --page-header-offset: 160px; }
+.page-header-clearance--contact { --page-header-offset: 150px; }
+.page-header-clearance--project { --page-header-offset: 8rem; }
+.page-header-min-screen { min-height: max(0px, calc(100vh - var(--site-header-height))); }
+.page-header-min-dynamic { min-height: max(0px, calc(100dvh - var(--site-header-height))); }
+.page-header-min-intro { min-height: max(0px, calc(60vh - var(--site-header-height))); }
+@media (min-width: 768px) {
+  .page-header-clearance--home, .page-header-clearance--contact { --page-header-offset: 200px; }
+  .page-header-clearance--project { --page-header-offset: 10rem; }
+}

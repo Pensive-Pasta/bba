@@ -64,7 +64,7 @@ const ogImage = resolveSeoImage(
   ]}
 >
   <PageDotGrid />
-  <article class="min-h-[100vh]">
+  <article class="page-header-min-screen">
     {
       hasHero && (
         <Hero
@@ -80,7 +80,7 @@ const ogImage = resolveSeoImage(
     }
 
     <section
-      class={`${hasHero ? "mt-12" : ""} ${!hasHero ? "mt-32 md:mt-40" : ""} ${projectInfo.contentBlocks.length === 0 ? "mb-12" : ""} px-4 md:px-8`}
+      class={`${hasHero ? "mt-12" : ""} ${!hasHero ? "page-header-margin-clearance page-header-clearance--project" : ""} ${projectInfo.contentBlocks.length === 0 ? "mb-12" : ""} px-4 md:px-8`}
     >
       <ProjectMeta projectInfo={projectInfo} />
     </section>

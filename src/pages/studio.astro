@@ -42,13 +42,13 @@ const ogImage = resolveSeoImage(studioPage?.seo?.ogImage?.asset?.url);
   />
 
   <section id="studio-page" class="flex max-w-[1600px] mx-auto min-h-[100vh]">
-    <div id="profile" class="min-h-[60vh] mt-12 md:-mt-20">
+    <div id="profile" class="min-h-[60vh]">
       <ContentBlock blocks={studioPage.profileBlocks} />
     </div>
 
     <div
       id="people"
-      class={`hidden min-h-[60vh] mt-12 ${studioPage.peopleIntro ? "md:-mt-20" : ""}`}
+      class="hidden w-full min-w-0 min-h-[60vh]"
     >
       {
         studioPage.peopleIntro && (
@@ -58,11 +58,11 @@ const ogImage = resolveSeoImage(studioPage?.seo?.ogImage?.asset?.url);
       <PeopleGrid people={studioPage.people} />
     </div>
 
-    <div id="values" class="hidden min-h-[60vh] mt-12 md:-mt-20">
+    <div id="values" class="hidden min-h-[60vh]">
       <ContentBlock blocks={studioPage.valuesBlocks} />
     </div>
 
-    <div id="awards" class="hidden min-h-[60vh] mt-12 md:-mt-20">
+    <div id="awards" class="hidden min-h-[60vh]">
       <ContentBlock blocks={studioPage.awardsBlocks} />
     </div>
   </section>

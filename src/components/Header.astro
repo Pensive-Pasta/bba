@@ -11,13 +11,13 @@ const navItems = [
 const currentYear = new Date().getFullYear();
 const { hideMenu = false } = Astro.props;
 
-const textColor = "text-primary";
+const textColor = "text-white";
 const legalUrl = "/legal";
 ---
 
 <header
   id="site-header"
-  class={`min-w-full fixed top-0 left-0 right-0 z-40 duration-500 ease-out transition-all will-change-transform ${textColor}`}
+  class={`min-w-full sticky top-0 left-0 right-0 z-40 shrink-0 bg-primary duration-500 ease-out transition-transform ${textColor}`}
 >
   <div
     class="flex justify-between items-center max-w-[1600px] mx-auto p-4 md:p-8"
@@ -135,12 +135,13 @@ const legalUrl = "/legal";
     navWindow.__bbaNavController = controller;
 
     const setMenuState = (isOpen: boolean) => {
+      const changed = menuToggle.getAttribute("aria-expanded") !== String(isOpen);
       mobileMenu.classList.toggle("hidden", !isOpen);
       mobileMenu.setAttribute("aria-hidden", String(!isOpen));
       menuToggle.setAttribute("aria-expanded", String(isOpen));
       body.classList.toggle("overflow-hidden", isOpen);
-      logo?.classList.toggle("text-white", isOpen);
-      logo?.classList.toggle("text-primary", !isOpen);
+      logo?.classList.add("text-white");
+      logo?.classList.remove("text-primary");
 
       menuLine1?.classList.toggle("rotate-45", isOpen);
       menuLine1?.classList.toggle("translate-x-1", isOpen);
@@ -151,6 +152,9 @@ const legalUrl = "/legal";
       menuLine1?.classList.toggle("!bg-white", isOpen);
       menuLine2?.classList.toggle("!bg-white", isOpen);
       menuLine3?.classList.toggle("!bg-white", isOpen);
+      if (changed) document.getElementById("site-header")?.dispatchEvent(
+        new CustomEvent("bba:menu-state", { detail: { open: isOpen } })
+      );
     };
 
     const closeMenu = () => setMenuState(false);
@@ -198,43 +202,6 @@ const legalUrl = "/legal";
   document.addEventListener("astro:page-load", setupMobileMenu);
 </script>
 
-<script>
-  const setupScrollHeader = () => {
-    const hero = document.getElementById("hero");
-    const header = document.getElementById("site-header");
-
-    if (!hero || !header) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          header.classList.add("text-white");
-          header.classList.remove("text-primary");
-          header.classList.add("bg-transparent");
-        } else {
-          header.classList.add("text-primary");
-          header.classList.remove("text-white");
-          header.classList.remove("bg-transparent");
-        }
-      },
-      {
-        threshold: 0,
-        rootMargin: `-${header.offsetHeight}px 0px 0px 0px`,
-      }
-    );
-
-    observer.observe(hero);
-  };
-
-  if (document.readyState !== "loading") {
-    setupScrollHeader();
-  } else {
-    document.addEventListener("DOMContentLoaded", setupScrollHeader);
-  }
-
-  document.addEventListener("astro:page-load", setupScrollHeader);
-</script>
-
 <script is:inline>
   const initNavHover = () => {
     const bgEl = document.getElementById("nav-bg");
@@ -257,73 +224,16 @@ const legalUrl = "/legal";
   document.addEventListener("astro:page-load", initNavHover);
 </script>
 
-<script is:inline>
-  // Hide header on scroll down. Show on scroll up. Ensure reveal precedes first solid bg.
-  const setupScrollHideHeader = () => {
+<script>
+  import { initHeaderScroll } from "../scripts/header-scroll";
+
+  let cleanup: (() => void) | undefined;
+  const setupHeaderScroll = () => {
+    cleanup?.();
     const header = document.getElementById("site-header");
-    if (!header) return;
-
-    // Track if header is over the hero section
-    const hero = document.getElementById("hero");
-    let overHero = false;
-
-    if (hero) {
-      const heroObserver = new IntersectionObserver(
-        ([entry]) => {
-          overHero = entry.isIntersecting;
-        },
-        {
-          threshold: 0,
-          rootMargin: `-${header.offsetHeight}px 0px 0px 0px`,
-        }
-      );
-      heroObserver.observe(hero);
-    }
-
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-    const DELTA = 6; // small threshold to reduce jitter
-
-    const applyState = (currentY) => {
-      const scrollingDown = currentY > lastScrollY;
-
-      if (scrollingDown && currentY > header.offsetHeight) {
-        // Scrolling down: slide header out and keep bg logic unchanged here
-        header.classList.add("-translate-y-full");
-      } else {
-        // Scrolling up: slide header in and control bg relative to hero
-        header.classList.remove("-translate-y-full");
-        if (hero && overHero || currentY < header.offsetHeight) {
-          // Over hero: no solid bg
-          header.classList.remove("bg-white");
-          header.classList.add("bg-transparent");
-        } else {
-          // Not over hero: use solid white bg
-          header.classList.add("bg-white");
-          header.classList.remove("bg-transparent");
-        }
-      }
-
-      lastScrollY = currentY;
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      const currentY = window.scrollY;
-      if (Math.abs(currentY - lastScrollY) < DELTA) return; // ignore tiny moves
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(() => applyState(currentY));
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
+    cleanup = header ? initHeaderScroll(header) : undefined;
   };
-
-  if (document.readyState !== "loading") {
-    setupScrollHideHeader();
-  } else {
-    document.addEventListener("DOMContentLoaded", setupScrollHideHeader);
-  }
-  document.addEventListener("astro:page-load", setupScrollHideHeader);
+  setupHeaderScroll();
+  document.addEventListener("astro:page-load", setupHeaderScroll);
+  window.addEventListener("pageshow", setupHeaderScroll);
 </script>

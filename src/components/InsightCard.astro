@@ -32,7 +32,7 @@ const formattedDate = new Date(publishedAt)
       <img src="/icons/arrow-up-right.svg" alt="arrow" class="arrow w-6 mt-1" />
     </div>
     <div class="flex flex-col mt-auto font-light overflow-hidden">
-      <span class="text-sm uppercase mt-1 tracking-wide">#{type}</span>
+      <span class="text-sm uppercase mt-1 tracking-wide">#{type === "thinking" ? "perspectives" : type}</span>
       <span class="text-sm">{formattedDate}</span>
     </div>
   </div>

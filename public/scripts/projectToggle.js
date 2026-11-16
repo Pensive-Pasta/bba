@@ -55,11 +55,6 @@ const initProjectToggle = () => {
   });
 
   const updateFilter = (type) => {
-    filterBtns.forEach((b) => b.classList.remove("active-filter"));
-    document
-      .querySelector(`.filter-btn[data-type="${type}"]`)
-      ?.classList.add("active-filter");
-
     document.querySelectorAll(".project-grid .card").forEach((card) => {
       const cardType = card.dataset.type;
       if (type === "both") {
@@ -68,33 +63,9 @@ const initProjectToggle = () => {
         card.classList.toggle("hidden", cardType !== type);
       }
     });
-
-    moveIndicatorTo(document.querySelector(`.filter-btn[data-type="${type}"]`));
   };
 
   updateFilter("both");
-  moveIndicatorTo(document.querySelector(`.filter-btn[data-type="both"]`));
-
-  window.addEventListener("resize", () => {
-    const activeBtn = document.querySelector(".filter-btn.active-filter");
-    if (activeBtn) moveIndicatorTo(activeBtn);
-  });
-};
-
-const moveIndicatorTo = (btn) => {
-  const indicator = document.getElementById("filter-indicator");
-  if (!indicator || !btn) return;
-
-  const group = btn.closest(".filter-toggle-group");
-  const groupRect = group.getBoundingClientRect();
-  const btnRect = btn.getBoundingClientRect();
-  const offsetLeft = btnRect.left - groupRect.left;
-  const offsetWidth = btnRect.width;
-
-  requestAnimationFrame(() => {
-    indicator.style.width = `${offsetWidth}px`;
-    indicator.style.transform = `translateX(${offsetLeft - 2}px)`;
-  });
 };
 
 const swapToggleLabels = (btn, from, to) => {

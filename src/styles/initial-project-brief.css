@@ -1,5 +1,10 @@
 .brief-shell {
-    @apply mx-auto min-h-screen w-full max-w-[640px] px-4 pb-44 pt-36 text-primary sm:pb-32 md:px-5 md:pt-40;
+    @apply mx-auto w-full max-w-[640px] px-4 pb-44 text-primary sm:pb-32 md:px-5;
+    min-height: max(0px, calc(100vh - var(--site-header-height)));
+    padding-top: max(0px, calc(9rem - var(--site-header-height)));
+    @media (min-width: 768px) {
+      padding-top: max(0px, calc(10rem - var(--site-header-height)));
+    }
   }
 
   .brief-shell [hidden] {

@@ -15,6 +15,17 @@ _type == "galleryBlock" => {
 export const getHomePageQuery = `*[_type == "homePage"][0]{
   title,
   intro,
+  landingHeading,
+  landingText,
+  heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  "heroVideo": heroVideo.asset->{ url, mimeType },
+  mobileHeroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  "mobileHeroVideo": mobileHeroVideo.asset->{ url, mimeType },
+  "landingFallbackProject": *[_type == "project" && slug.current == "copper-house"][0]{
+    title,
+    postCode,
+    heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } }
+  },
   featuredPage{
     pageTitle,
     pageSlug

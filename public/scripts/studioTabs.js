@@ -3,6 +3,8 @@ function initStudioTabs() {
   const sections = ["profile", "people", "values", "awards"];
 
   tabs.forEach((tab) => {
+    if (tab.dataset.tabBound === "true") return;
+    tab.dataset.tabBound = "true";
     tab.addEventListener("click", () => {
       const target = tab.getAttribute("data-tab");
 
@@ -11,12 +13,6 @@ function initStudioTabs() {
         if (element) {
           element.classList.toggle("hidden", section !== target);
         }
-      });
-
-      tabs.forEach((t) => {
-        t.classList.toggle("opacity-50", t === tab);
-        t.classList.toggle("opacity-100", t !== tab);
-        t.classList.toggle("italic", t === tab);
       });
     });
   });

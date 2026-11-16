@@ -3,6 +3,8 @@ function initInsightTabs() {
   const sections = ["all", "news", "projects", "thinking"];
 
   tabs.forEach((tab) => {
+    if (tab.dataset.tabBound === "true") return;
+    tab.dataset.tabBound = "true";
     tab.addEventListener("click", () => {
       const target = tab.dataset.tab;
 
@@ -10,14 +12,6 @@ function initInsightTabs() {
       sections.forEach((section) => {
         const el = document.getElementById(`insight-${section}`);
         if (el) el.classList.toggle("hidden", section !== target);
-      });
-
-      // visual tab state
-      tabs.forEach((t) => {
-        const isActive = t === tab;
-        t.classList.toggle("opacity-50", isActive);
-        t.classList.toggle("opacity-100", !isActive);
-        t.classList.toggle("italic", isActive);
       });
     });
   });

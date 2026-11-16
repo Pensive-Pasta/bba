@@ -120,13 +120,15 @@ export function initHeroVideo(root: HTMLElement) {
     update();
   }) : undefined;
   observer?.observe(root);
-  document.addEventListener("astro:before-swap", () => {
+  const dispose = () => {
     observer?.disconnect();
     events.abort();
     unload();
     delete root.dataset.videoReady;
-  }, { once: true, signal: events.signal });
+  };
+  document.addEventListener("astro:before-swap", dispose, { once: true, signal: events.signal });
   // A cached failed response can arrive before the component script runs.
   if (video.error && selected) showFallback();
   update();
+  return dispose;
 }
