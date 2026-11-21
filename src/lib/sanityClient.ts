@@ -4,6 +4,7 @@ export const sanity = createClient({
   projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID,
   dataset: "production",
   apiVersion: import.meta.env.SANITY_API_VERSION,
+  perspective: "published", // Keep unpublished development projects out of the website.
   useCdn: false, // useCdn: false when using tokens
   token: import.meta.env.SANITY_API_TOKEN,
 });

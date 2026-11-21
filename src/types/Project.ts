@@ -4,8 +4,8 @@ export interface Project {
     current: string;
   };
   postCode: string;
-  county: string;
-  year: number;
-  type: "urban" | "inter-urban" | "rural";
-  imageUrl: string;
+  county?: string;
+  year?: number;
+  type?: "urban" | "inter-urban" | "rural";
+  imageUrl?: string;
 }

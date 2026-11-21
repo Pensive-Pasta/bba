@@ -1,14 +1,14 @@
 ---
 import ProjectVideoPreview from "./ProjectVideoPreview.astro";
 const { title, postCode, county, imageUrl, slug, type, previewVideoUrl } = Astro.props;
-const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-cornflower" : "bg-pink";
+const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-cornflower" : type === "urban" ? "bg-pink" : "bg-primary";
 ---
 
 <a
   href={`/work/${slug.current}`}
   class="group block project-card relative overflow-hidden aspect-square"
 >
-  <div class="absolute inset-0 z-0">
+  {(previewVideoUrl || imageUrl) && <div class="absolute inset-0 z-0">
     {
       previewVideoUrl ? <ProjectVideoPreview videoUrl={previewVideoUrl} imageUrl={imageUrl} colourClass={colourClass} /> : imageUrl && (
         <div
@@ -17,7 +17,7 @@ const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-
         />
       )
     }
-  </div>
+  </div>}
 
   {!previewVideoUrl && <div
     class={`absolute inset-0 z-10 ${colourClass} ${imageUrl ? "opacity-95 group-hover:opacity-0 mix-blend-multiply transition-opacity duration-500 " : ""}`}
@@ -31,8 +31,8 @@ const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-
     </div>
     <div class="flex flex-col text-white font-light p-4 overflow-hidden">
       <span class="text-sm md:text-xl">#{title}</span>
-      <span class="text-sm md:text-xl">#{type}</span>
-      <span class="text-sm md:text-xl">#{county}</span>
+      {type && <span class="text-sm md:text-xl">#{type}</span>}
+      {county && <span class="text-sm md:text-xl">#{county}</span>}
     </div>
   </div>
 </a>

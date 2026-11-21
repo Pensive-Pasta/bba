@@ -29,12 +29,13 @@ const hasHero = Boolean(projectInfo.imageUrl || projectInfo.heroVideo?.url ||
 
 const seoTitle =
   projectInfo.seo?.metaTitle ?? `${projectInfo.title} | Work | ${SITE_TITLE_SUFFIX}`;
+const completion = projectInfo.credits?.find((credit: { label: string; value: string }) => credit.label === "Completion")?.value;
 const projectSummary = [
   projectInfo.type
     ? `${projectInfo.type.charAt(0).toUpperCase() + projectInfo.type.slice(1)} project`
     : undefined,
   projectInfo.county ? `in ${projectInfo.county}` : undefined,
-  projectInfo.year ? `completed in ${projectInfo.year}` : undefined,
+  completion ? `Completion: ${completion}` : projectInfo.year ? `Year: ${projectInfo.year}` : undefined,
 ]
   .filter(Boolean)
   .join(", ");
@@ -65,6 +66,7 @@ const ogImage = resolveSeoImage(
 >
   <PageDotGrid />
   <article class="page-header-min-screen">
+    <h1 class="sr-only">{projectInfo.title}</h1>
     {
       hasHero && (
         <Hero
@@ -87,7 +89,7 @@ const ogImage = resolveSeoImage(
 
     {
       projectInfo.contentBlocks.length >= 1 && (
-        <section class="mt-12 md:-mt-32 mb-32">
+        <section class={`mt-12 ${hasHero ? "md:-mt-32" : ""} mb-32`}>
           <ContentBlock blocks={projectInfo.contentBlocks} />
         </section>
       )

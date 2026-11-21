@@ -14,8 +14,10 @@ const alignmentClass =
 const html = toHTML(content, {
   components: {
     block: {
+      h2: ({ children }) =>
+        `<h2 class="text-xl md:text-2xl text-primary font-bold mt-8 mb-4 first:mt-0">${children}</h2>`,
       normal: ({ children }) =>
-        `<p class="text-lg md:text-xl text-primary font-light break-words hyphens-none">${children}</p>`,
+        `<p class="text-lg md:text-xl text-primary font-light break-words hyphens-none mb-4 last:mb-0">${children}</p>`,
     },
     marks: {
       strong: ({ children }) =>
