@@ -1,6 +1,7 @@
 ---
 import type { Project } from "../types/Project";
 import ProjectCard from "./ProjectCard.astro";
+import { squareProjectImage } from "../lib/heroMedia";
 const { projects } = Astro.props as { projects: Project[] };
 ---
 
@@ -10,7 +11,7 @@ const { projects } = Astro.props as { projects: Project[] };
   {
     projects.map((project) => (
       <div class="card" data-type={project.type}>
-        <ProjectCard {...project} />
+        <ProjectCard {...project} imageUrl={squareProjectImage(project.heroImage, project.imageUrl)} />
       </div>
     ))
   }

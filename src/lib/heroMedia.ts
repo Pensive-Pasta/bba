@@ -2,7 +2,7 @@ import type { HeroImage, HeroVideo } from "../types/HeroMedia";
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
-// Keep legacy URLs untouched unless the editor has supplied a crop.
+// Keep crop and hotspot handling while bounding large Sanity originals for delivery.
 // Dimensions come from asset metadata, never from the filename.
 export function heroImage(image?: HeroImage | null, fallback = "") {
   const original = image?.asset?.url || fallback;
@@ -23,6 +23,11 @@ export function heroImage(image?: HeroImage | null, fallback = "") {
     top = y / dimensions.height;
     width = w / dimensions.width;
     height = h / dimensions.height;
+  }
+  if (url.hostname === "cdn.sanity.io" && url.pathname.startsWith("/images/")) {
+    for (const [key, value] of Object.entries({ w: "2560", fit: "max", auto: "format", q: "80" })) {
+      url.searchParams.set(key, value);
+    }
   }
   const x = clamp(((image?.hotspot?.x ?? 0.5) - left) / width);
   const y = clamp(((image?.hotspot?.y ?? 0.5) - top) / height);
