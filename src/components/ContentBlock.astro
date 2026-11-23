@@ -2,6 +2,7 @@
 import ImageBlock from "./ImageBlock.astro";
 import TextBlock from "./TextBlock.astro";
 import GalleryBlock from "./GalleryBlock.astro";
+import EditorialGalleryBlock from "./EditorialGalleryBlock.astro";
 import { isRenderable } from "../lib/contentBlocks";
 
 export interface Props {
@@ -21,6 +22,7 @@ const blocks = Array.isArray(Astro.props.blocks) ? Astro.props.blocks.filter(isR
         case "textBlock":
           return <TextBlock content={block.content} alignment={alignment} />;
         case "galleryBlock":
+          if (block.presentation === "editorial") return <EditorialGalleryBlock images={block.images} heading={block.heading} />;
           return <GalleryBlock images={block.images} heading={block.heading} alignment={alignment} />;
         default:
           return null;

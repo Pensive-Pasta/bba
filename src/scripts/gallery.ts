@@ -1,10 +1,9 @@
-import type PhotoSwipeLightbox from "photoswipe/lightbox";
+import { attachGalleryLightbox } from "./gallery-lightbox-trigger";
 import { galleryScrollTarget } from "./gallery-navigation.ts";
 
 class BbaGallery extends HTMLElement {
   private controller?: AbortController;
-  private lightbox?: PhotoSwipeLightbox;
-  private opening = false;
+  private cleanupLightbox?: () => void;
   private resizeObserver?: ResizeObserver;
   private frame = 0;
 
@@ -18,6 +17,7 @@ class BbaGallery extends HTMLElement {
     const controller = new AbortController();
     this.controller = controller;
     const { signal } = controller;
+    this.cleanupLightbox = attachGalleryLightbox(this, signal);
 
     const maximum = () => Math.max(0, track.scrollWidth - track.clientWidth);
     const update = () => {
@@ -56,29 +56,6 @@ class BbaGallery extends HTMLElement {
       this.resizeObserver.observe(track);
       track.querySelectorAll("[data-gallery-slide]").forEach((slide) => this.resizeObserver!.observe(slide));
     }
-    this.addEventListener("click", async (event) => {
-      // Once initialised, PhotoSwipe's own documented link handler takes over.
-      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const anchor = (event.target as Element).closest<HTMLAnchorElement>("a[data-gallery-image]");
-      if (!anchor || !this.contains(anchor)) return;
-      anchor.focus({ preventScroll: true });
-      if (this.lightbox) return;
-      event.preventDefault();
-      if (this.opening) return;
-      this.opening = true;
-      const index = Array.from(this.querySelectorAll("a[data-gallery-image]")).indexOf(anchor);
-      try {
-        const { createGalleryLightbox } = await import("./gallery-lightbox");
-        if (signal.aborted || !this.isConnected) return;
-        this.lightbox = createGalleryLightbox(this);
-        this.lightbox.loadAndOpen(index, { gallery: this });
-      } catch {
-        // The original image link remains a useful fallback if the chunk fails.
-        if (!signal.aborted && this.isConnected) window.location.assign(anchor.href);
-      } finally {
-        this.opening = false;
-      }
-    }, { signal });
     update();
   }
 
@@ -89,8 +66,8 @@ class BbaGallery extends HTMLElement {
     this.resizeObserver = undefined;
     cancelAnimationFrame(this.frame);
     this.frame = 0;
-    this.lightbox?.destroy();
-    this.lightbox = undefined;
+    this.cleanupLightbox?.();
+    this.cleanupLightbox = undefined;
   }
 }
 

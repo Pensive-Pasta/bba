@@ -2,10 +2,12 @@
 const galleryBlockProjection = `
 _type == "galleryBlock" => {
   heading,
+  presentation,
   "images": coalesce(images, [])[]{
     _key,
     altText,
     caption,
+    editorialLayout,
     crop,
     hotspot,
     asset->{ url, metadata{ dimensions{ width, height } } }
