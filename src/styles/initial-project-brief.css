@@ -1,9 +1,10 @@
 .brief-shell {
     @apply mx-auto w-full max-w-[640px] px-4 pb-44 text-primary sm:pb-32 md:px-5;
     min-height: max(0px, calc(100vh - var(--site-header-height)));
-    padding-top: max(0px, calc(9rem - var(--site-header-height)));
+    --page-header-gap: 3.5rem;
+    padding-top: var(--page-header-gap);
     @media (min-width: 768px) {
-      padding-top: max(0px, calc(10rem - var(--site-header-height)));
+      --page-header-gap: 1.5rem;
     }
   }
 
