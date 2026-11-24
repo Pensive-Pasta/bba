@@ -1,0 +1,37 @@
+/* Adapted from release/holding-page: HoldingPageContent and HoldingSlideshow.
+   These selectors only affect the overlay or temporarily obscure its siblings. */
+.visitor-landing { display: none; position: fixed; inset: 0; z-index: 1000; width: 100%; height: 100dvh; overflow: hidden; background: white; color: white; opacity: 1; transition: opacity 300ms ease; cursor: pointer; }
+html[data-bba-landing] { overflow: hidden; }
+html[data-bba-landing] .visitor-landing { display: block; }
+html[data-bba-landing="open"] body > :not([data-bba-landing-overlay]):not(script):not(style) { visibility: hidden; }
+.visitor-landing.is-exiting { opacity: 0; pointer-events: none; }
+.landing-media, .landing-media picture, .landing-media img, .landing-video { position: absolute; inset: 0; width: 100%; height: 100%; }
+.landing-media img { display: block; object-fit: cover; object-position: var(--landing-image-position); }
+.landing-media:has(.landing-video:not(.opacity-0)) picture { visibility: hidden; }
+.landing-video { object-fit: cover; pointer-events: none; }
+.landing-composition { pointer-events: none; padding-top: max(1.5rem, env(safe-area-inset-top)); padding-right: max(1rem, env(safe-area-inset-right)); padding-bottom: max(2rem, env(safe-area-inset-bottom)); padding-left: max(1rem, env(safe-area-inset-left)); }
+.landing-shading { position: absolute; pointer-events: none; }
+.landing-shading--top { inset: 0 0 auto; height: 34%; background: linear-gradient(to bottom, rgb(0 0 0 / .46), rgb(0 0 0 / .22), transparent); }
+.landing-shading--bottom { inset: auto 0 0; height: 46%; background: linear-gradient(to top, rgb(0 0 0 / .58), rgb(0 0 0 / .24), transparent); }
+.landing-shading--left, .landing-shading--right { display: none; }
+.landing-entry { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; min-height: 44px; padding: .5rem .25rem; border: 0; background: transparent; color: inherit; text-align: left; pointer-events: auto; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.landing-entry:focus-visible { outline: 2px solid white; outline-offset: 4px; }
+.landing-progress { display: block; width: 6rem; height: 2px; background: rgb(255 255 255 / .35); }
+.landing-progress::after { content: ""; display: block; height: 100%; background: white; transform: scaleX(0); transform-origin: left; }
+.visitor-landing[data-landing-active] .landing-progress::after { animation: landing-entry-progress var(--landing-entry-delay) linear forwards; }
+.visitor-landing.is-exiting .landing-progress::after { animation-play-state: paused; }
+@keyframes landing-entry-progress { to { transform: scaleX(1); } }
+.landing-playback { position: absolute; right: max(1rem, env(safe-area-inset-right)); bottom: calc(max(2rem, env(safe-area-inset-bottom)) + 4rem); z-index: 3; min-width: 44px; min-height: 44px; padding: .5rem .75rem; background: rgb(0 0 0 / .65); font-size: .875rem; color: white; }
+.landing-playback[hidden] { display: none; }
+.landing-playback:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+@media (min-width: 768px) {
+  .landing-composition { padding-top: max(2rem, env(safe-area-inset-top)); padding-right: max(2rem, env(safe-area-inset-right)); padding-bottom: max(2.5rem, env(safe-area-inset-bottom)); padding-left: max(2rem, env(safe-area-inset-left)); }
+  .landing-shading--top, .landing-shading--bottom { display: none; }
+  .landing-shading--left { display: block; inset: 0 auto 0 0; width: 42vw; background: linear-gradient(to right, rgb(0 0 0 / .2), transparent); }
+  .landing-shading--right { display: block; inset: 0 0 0 auto; width: 32vw; background: linear-gradient(to left, rgb(0 0 0 / .1), transparent); }
+}
+@media (max-width: 767.98px) { .landing-media img { object-position: var(--landing-mobile-position); } }
+@media (prefers-reduced-motion: reduce) {
+  .visitor-landing { transition: none; }
+  .landing-progress { display: none; }
+}

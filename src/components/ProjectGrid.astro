@@ -2,17 +2,51 @@
 import type { Project } from "../types/Project";
 import ProjectCard from "./ProjectCard.astro";
 import { squareProjectImage } from "../lib/heroMedia";
+import { projectCheckerboard } from "../lib/projectCheckerboard";
 const { projects } = Astro.props as { projects: Project[] };
+
+// Precompute each filtered layout once. CSS selects the breakpoint, so there
+// is only one copy of each card and no client-side initial/resize reordering.
+const orders = [2, 4].flatMap((columns) =>
+  ["both", "urban", "inter-urban", "rural"].map((filter) => {
+    const filtered = filter === "both" ? projects : projects.filter((project) => project.type === filter);
+    return {
+      columns,
+      filter,
+      positions: new Map(projectCheckerboard(filtered, columns).map((project, index) => [project, index])),
+    };
+  }),
+);
 ---
 
 <div
-  class="project-grid grid grid-cols-2 lg:grid-cols-4 transition-opacity duration-300 ease-in-out opacity-100 max-w-[1600px] mx-auto"
+  class="project-grid image-grid site-frame grid grid-cols-2 lg:grid-cols-4 transition-opacity duration-300 ease-in-out opacity-100"
 >
   {
-    projects.map((project) => (
-      <div class="card" data-type={project.type}>
-        <ProjectCard {...project} imageUrl={squareProjectImage(project.heroImage, project.imageUrl)} />
-      </div>
-    ))
+    projects.map((project) => {
+      const imageUrl = squareProjectImage(project.heroImage, project.imageUrl);
+
+      return (
+        <div
+          class:list={["card image-grid-cell", {
+            "grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden": !imageUrl,
+          }]}
+          data-type={project.type}
+          style={orders.flatMap(({ columns, filter, positions }) => {
+            const position = positions.get(project) ?? 0;
+            return [
+              `--work-${filter}-${columns}:${position}`,
+              ...(columns === 4 ? [`--work-${filter}-edge:${position % columns === 1 ? "0px" : "var(--grid-stroke)"}`] : []),
+            ];
+          }).join(";")}
+        >
+          {imageUrl ? (
+            <ProjectCard {...project} imageUrl={imageUrl} />
+          ) : (
+            <span class="block p-4 text-4xl">{project.postCode}</span>
+          )}
+        </div>
+      );
+    })
   }
 </div>

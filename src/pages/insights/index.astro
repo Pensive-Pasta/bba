@@ -2,7 +2,6 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AnimatedPills from "../../components/AnimatedPills.astro";
 import InsightGrid from "../../components/InsightGrid.astro";
-import PageDotGrid from "../../components/PageDotGrid.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getInsightsQuery, getInsightPageQuery } from "../../lib/queries";
 import {
@@ -28,6 +27,7 @@ const ogImage = resolveSeoImage(insightPage?.seo?.ogImage?.asset?.url);
 ---
 
 <BaseLayout
+  mainClass="page-grid-main"
   title={metaTitle}
   description={metaDescription}
   ogImage={ogImage}
@@ -37,21 +37,20 @@ const ogImage = resolveSeoImage(insightPage?.seo?.ogImage?.asset?.url);
   ]}
 >
   <section id="insights-page" class="">
-    <PageDotGrid />
-
-    <div class="page-header-min-screen max-w-[1600px] mx-auto">
-      <div class="page-header-clearance page-header-min-intro px-4 md:px-8">
-        <h1 class="text-2xl md:text-4xl mb-12">
-          {insightPage?.title || "Insights"}
-        </h1>
-      </div>
-
-      <div class="flex items-center text-lg p-4 md:p-8">
-        <AnimatedPills
-          items={filterTypes.map((type) => ({ value: type, label: type === "thinking" ? "Perspectives" : type.charAt(0).toUpperCase() + type.slice(1), controls: `insight-${type}` }))}
-          label="Filter insights"
-          buttonClass="insight-tab"
-        />
+    <div class="page-header-min-screen site-frame">
+      <div class="page-grid-header">
+        <div class="page-grid-lead">
+          <h1 class="text-2xl md:text-4xl">
+            {insightPage?.title || "Insights"}
+          </h1>
+          <div class="page-grid-filters flex items-center text-lg">
+            <AnimatedPills
+              items={filterTypes.map((type) => ({ value: type, label: type === "thinking" ? "Perspectives" : type.charAt(0).toUpperCase() + type.slice(1), controls: `insight-${type}` }))}
+              label="Filter insights"
+              buttonClass="insight-tab"
+            />
+          </div>
+        </div>
       </div>
 
       <div id="insight-all">

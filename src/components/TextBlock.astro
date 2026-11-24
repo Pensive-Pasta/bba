@@ -5,9 +5,10 @@ import { toHTML } from "@portabletext/to-html";
 interface Props {
   content: PortableTextBlock[];
   alignment: "left" | "right";
+  embedded?: boolean;
 }
 
-const { content, alignment } = Astro.props || [];
+const { content, alignment, embedded = false } = Astro.props;
 const alignmentClass =
   alignment === "right" ? "md:ml-auto md:mr-0" : "md:mr-auto md:ml-0";
 
@@ -28,7 +29,7 @@ const html = toHTML(content, {
 ---
 
 <section
-  class={`w-full md:w-1/2 px-4 md:pr-8 mb-12 break-words ${alignmentClass}`}
+  class={embedded ? "w-full break-words" : `w-full md:w-1/2 px-4 md:pr-8 mb-12 break-words ${alignmentClass}`}
 >
   <div set:html={html} />
 </section>

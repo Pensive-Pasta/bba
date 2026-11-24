@@ -1,7 +1,8 @@
 (() => {
   const key = "bba-landing-entered";
   let stored = false;
-  try { stored = sessionStorage.getItem(key) === "1"; } catch { /* Storage may be disabled. */ }
+  try { stored = localStorage.getItem(key) === "1"; } catch { /* Storage may be disabled. */ }
+  try { stored = stored || sessionStorage.getItem(key) === "1"; } catch { /* Keep existing session flags as a fallback. */ }
   const navigation = performance.getEntriesByType("navigation")[0];
   const entered = Boolean(window.__bbaLanding?.entered || stored || history.state?.bbaLandingEntered);
   const show = !entered && location.pathname === "/" && !location.hash && navigation?.type !== "back_forward";
@@ -9,6 +10,7 @@
     entered: entered || !show,
     enter() {
       this.entered = true;
+      try { localStorage.setItem(key, "1"); } catch { /* Session/history remain useful. */ }
       try { sessionStorage.setItem(key, "1"); } catch { /* Memory/history remain useful. */ }
       // Do not create a partial state before ClientRouter initialises its index.
       try {

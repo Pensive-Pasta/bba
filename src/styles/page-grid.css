@@ -1,0 +1,184 @@
+/* Shared frame and stroke measurements; deliberate full-bleed media opt out. */
+.site-frame {
+  width: 100%;
+  max-width: var(--site-max-width);
+  margin-inline: auto;
+}
+
+/* Image cells meet without separator tracks. Each cell owns its trailing
+   boundaries, underneath the media: opaque photographs cover the ink, while
+   exposed cells and biography areas retain the dotted structure. People keeps
+   its existing spacing between complete biography rows. */
+.image-grid { column-gap: 0; isolation: isolate; }
+.image-grid-cell { position: relative; min-width: 0; }
+.image-grid-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-right: var(--image-grid-right-stroke, var(--grid-stroke)) dotted var(--dot-color);
+  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+  pointer-events: none;
+  z-index: 0;
+}
+.image-grid-cell > a,
+.image-grid-cell > .image-grid-media { z-index: 1; }
+
+/* On mobile the home grid follows the intro copy and owns their separator. */
+.home-project-grid { border-top: var(--grid-stroke) dotted var(--dot-color); }
+
+/* Work's filtered checkerboards are calculated at build time. CSS picks the
+   active column count, without a client-side initial or resize reshuffle. */
+.project-grid > .card {
+  --work-order-2: var(--work-both-2);
+  --work-order-4: var(--work-both-4);
+  --work-edge: var(--work-both-edge);
+  order: var(--work-order-2);
+}
+.project-grid[data-project-filter="urban"] > .card {
+  --work-order-2: var(--work-urban-2);
+  --work-order-4: var(--work-urban-4);
+  --work-edge: var(--work-urban-edge);
+}
+.project-grid[data-project-filter="inter-urban"] > .card {
+  --work-order-2: var(--work-inter-urban-2);
+  --work-order-4: var(--work-inter-urban-4);
+  --work-edge: var(--work-inter-urban-edge);
+}
+.project-grid[data-project-filter="rural"] > .card {
+  --work-order-2: var(--work-rural-2);
+  --work-order-4: var(--work-rural-4);
+  --work-edge: var(--work-rural-edge);
+}
+@screen lg {
+  .project-grid > .card {
+    order: var(--work-order-4);
+    /* The page owns the centre rule. Suppress its duplicate using the visual
+       position rather than nth-child when CSS order rearranges the cards. */
+    --image-grid-right-stroke: var(--work-edge);
+  }
+}
+
+/* Keep heading and filters together so taller copy in the other column cannot
+   distribute empty space between the left-hand controls. */
+.page-grid-header {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--site-gutter) 0;
+  padding-block: var(--page-header-gap) var(--site-gutter);
+  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+  background: white;
+  isolation: isolate;
+}
+.page-grid-lead,
+.page-grid-description {
+  min-width: 0;
+  padding-inline: var(--site-gutter);
+}
+.page-grid-lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.page-grid-filters {
+  width: 100%;
+  min-width: 0;
+  container: page-filters / inline-size;
+  isolation: isolate;
+}
+.page-grid-header::before,
+.contact-intro::before {
+  content: "";
+  display: none;
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  border-left: var(--grid-stroke) dotted var(--dot-color);
+  transform: translateX(calc(-1 * var(--grid-half-stroke)));
+  pointer-events: none;
+}
+@screen lg {
+  .page-grid-header { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page-grid-header::before { display: block; }
+}
+
+/* Grid-based pages share one centred boundary for their whole main area.
+   CSS follows the active content height down to the footer; media stays above
+   the ink. Pages with md half-width content can opt into that breakpoint. */
+.page-grid-main { position: relative; isolation: isolate; }
+.page-grid-main::before {
+  content: "";
+  display: none;
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: 0;
+  border-left: var(--grid-stroke) dotted var(--dot-color);
+  transform: translateX(calc(-1 * var(--grid-half-stroke)));
+  pointer-events: none;
+  z-index: -1;
+}
+@screen md {
+  .home-project-grid { border-top: 0; }
+  .page-grid-main--md::before { display: block; }
+  .page-grid-main--md .contact-intro::before { display: none; }
+  /* The home grid occupies the left half; its second cell ends at page centre. */
+  .page-grid-main .home-project-grid > .image-grid-cell:nth-child(2n)::before { border-right: 0; }
+  .page-grid-main--md .listing-grid > .card:nth-child(2n)::before { border-left: 0; }
+}
+@screen lg {
+  .page-grid-main::before { display: block; }
+  .page-grid-main .page-grid-header { background: transparent; }
+  .page-grid-main .page-grid-header::before { display: none; }
+  .page-grid-main .image-grid[class~="lg:grid-cols-4"] > .image-grid-cell:nth-child(4n + 2)::before { border-right-width: var(--image-grid-right-stroke, 0px); }
+}
+/* Captions and the three-column Index table can span the centre boundary. */
+.page-grid-main #project-index,
+.page-grid-main figcaption { background: white; }
+
+/* Map panels retain their existing reserved separators. Photograph grids use
+   the flush image-cell treatment above. */
+.listing-grid {
+  gap: var(--grid-stroke);
+  overflow: hidden;
+}
+.listing-grid > .card { position: relative; min-width: 0; }
+.listing-grid > .card::before,
+.listing-grid > .card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+.listing-grid > .card::before {
+  inset-block: 0;
+  left: calc(-1 * var(--grid-stroke));
+  border-left: var(--grid-stroke) dotted var(--dot-color);
+}
+.listing-grid > .card::after {
+  left: calc(-1 * var(--grid-stroke));
+  right: 0;
+  top: calc(-1 * var(--grid-stroke));
+  border-top: var(--grid-stroke) dotted var(--dot-color);
+}
+
+/* A full-width row owns the horizontal rule. Its existing inner section can
+   stay half-width/aligned without shortening the rule or changing image sizes.
+   Flow-root keeps existing section margins inside their owning row. */
+.content-separators > .content-block-row {
+  display: flow-root;
+  padding-bottom: var(--site-gutter);
+  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+}
+.contact-intro {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-bottom: var(--site-gutter);
+  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+}
+.contact-intro > * { min-width: 0; padding-inline: var(--site-gutter); }
+@screen md {
+  .contact-intro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-intro::before { display: block; }
+}

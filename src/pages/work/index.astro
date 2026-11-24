@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageDotGrid from "../../components/PageDotGrid.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getProjectsQuery, getWorkPageQuery } from "../../lib/queries";
 import ProjectFilterControls from "../../components/ProjectFilterControls.astro";
@@ -38,6 +37,7 @@ const ogImage = resolveSeoImage(workPage?.seo?.ogImage?.asset?.url);
 ---
 
 <BaseLayout
+  mainClass="page-grid-main"
   title={metaTitle}
   description={metaDescription}
   ogImage={ogImage}
@@ -47,9 +47,9 @@ const ogImage = resolveSeoImage(workPage?.seo?.ogImage?.asset?.url);
   ]}
 >
   <section id="work-page" class="">
-    <PageDotGrid />
-    <WorkHeader title={workPage.title} description={workPage.description} />
-    <ProjectFilterControls />
+    <WorkHeader title={workPage.title} description={workPage.description}>
+      <ProjectFilterControls />
+    </WorkHeader>
     <div class="work-results lg:min-h-[960px]">
       <ProjectGrid projects={projects} />
       <ProjectIndexTable projects={projects} />

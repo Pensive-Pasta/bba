@@ -5,11 +5,11 @@ const { insights } = Astro.props as { insights: Insight[] };
 ---
 
 <div
-  class="grid grid-cols-2 lg:grid-cols-4 max-w-[1600px] mx-auto"
+  class="image-grid site-frame grid grid-cols-2 lg:grid-cols-4"
 >
   {
     insights.map((insight) => (
-     <div class="card" data-type={insight.type.toLowerCase()}>
+     <div class="card image-grid-cell" data-type={insight.type.toLowerCase()}>
         <InsightCard {...insight} />
       </div>
     ))

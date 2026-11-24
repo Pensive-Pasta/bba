@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageDotGrid from "../../components/PageDotGrid.astro";
 import ContentBlock from "../../components/ContentBlock.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getInsightBySlugQuery } from "../../lib/queries";
@@ -56,6 +55,7 @@ const articleJsonLd = {
 ---
 
 <BaseLayout
+  mainClass="page-grid-main page-grid-main--md"
   title={seoTitle}
   description={seoDescription}
   ogType="article"
@@ -67,15 +67,14 @@ const articleJsonLd = {
     { name: insight.title, path: `/insights/${slug}/` },
   ]}
 >
-  <PageDotGrid />
-  <article class="max-w-[1600px] mx-auto pb-20 page-header-clearance page-header-min-intro">
+  <article class="site-frame pb-20 page-header-clearance">
     <h1 class="text-3xl md:text-4xl font-bold mb-4 px-4 md:px-8 md:w-1/2">
       {insight.title}
     </h1>
     <p class="text-sm mb-12 px-4 md:px-8">
       {new Date(insight.publishedAt).toLocaleDateString("en-GB")}
     </p>
-    <div class="mt-12 md:-mt-32">
+    <div class="content-separators mt-12 md:-mt-32">
       <ContentBlock blocks={insight.contentBlocks} />
     </div>
   </article>

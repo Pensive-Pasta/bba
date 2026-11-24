@@ -1,0 +1,32 @@
+---
+import ProjectMeta from "./ProjectMeta.astro";
+import TextBlock from "./TextBlock.astro";
+import type { ProjectContentBlock } from "../lib/projectIntroduction";
+
+interface Props {
+  projectInfo: {
+    title: string;
+    postCode?: string;
+    county?: string;
+    site?: string | null;
+    type?: string;
+  };
+  introduction: ProjectContentBlock[];
+}
+
+const { projectInfo, introduction } = Astro.props;
+---
+
+<section class="project-introduction site-frame" aria-label="Project introduction">
+  <div
+    class="project-information focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+    tabindex="0"
+    role="region"
+    aria-labelledby="project-title"
+  >
+    <ProjectMeta projectInfo={projectInfo} />
+  </div>
+  <div class="project-intro-copy">
+    {introduction.map((block) => <TextBlock content={block.content!} alignment="right" embedded />)}
+  </div>
+</section>

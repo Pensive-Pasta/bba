@@ -38,44 +38,18 @@ const hasVideo = Boolean(media.videos.desktop || media.videos.mobile);
       <h2 id="landing-heading" class="whitespace-pre-line break-words text-[30px] leading-[38px] font-medium md:text-headline">{media.heading}</h2>
       {media.text && <p class="mt-4 max-w-[22rem] whitespace-pre-line break-words text-bodySecondary font-light md:mt-5 md:text-bodyPrimary">{media.text}</p>}
     </div>
-    <p class="mt-8 text-bodySecondary font-light md:mt-10 md:text-bodyPrimary">
-      <span>Oundle</span><span class="px-2 text-white" aria-hidden="true">•</span><span>Manchester</span>
-    </p>
+    <div class="mt-8 flex flex-wrap items-end justify-between gap-4 md:mt-10">
+      <p class="text-bodySecondary font-light md:text-bodyPrimary">
+        <span>Oundle</span><span class="px-2 text-white" aria-hidden="true">•</span><span>Manchester</span>
+      </p>
+      <button type="button" class="landing-entry text-bodySecondary font-light md:text-bodyPrimary" data-landing-entry aria-label="Click to enter the Butcher Bayley Architects website" aria-describedby="landing-heading">
+        <span>Click to enter</span>
+        <span class="landing-progress" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
-  <button type="button" class="landing-entry" data-landing-entry aria-label="Enter the Butcher Bayley Architects website" aria-describedby="landing-heading"></button>
 </section>
 
-<style>
-  /* Adapted from release/holding-page: HoldingPageContent and HoldingSlideshow.
-     These selectors only affect the overlay or temporarily obscure its siblings. */
-  .visitor-landing { display: none; position: fixed; inset: 0; z-index: 1000; width: 100%; height: 100dvh; overflow: hidden; background: white; color: white; opacity: 1; transition: opacity 300ms ease; }
-  :global(html[data-bba-landing]) { overflow: hidden; }
-  :global(html[data-bba-landing] .visitor-landing) { display: block; }
-  :global(html[data-bba-landing="open"] body > :not([data-bba-landing-overlay]):not(script):not(style)) { visibility: hidden; }
-  .visitor-landing.is-exiting { opacity: 0; pointer-events: none; }
-  .landing-media, .landing-media picture, .landing-media img, .landing-video { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .landing-media img { display: block; object-fit: cover; object-position: var(--landing-image-position); }
-  .landing-media:has(.landing-video:not(.opacity-0)) picture { visibility: hidden; }
-  .landing-video { object-fit: cover; pointer-events: none; }
-  .landing-composition { pointer-events: none; padding-top: max(1.5rem, env(safe-area-inset-top)); padding-right: max(1rem, env(safe-area-inset-right)); padding-bottom: max(2rem, env(safe-area-inset-bottom)); padding-left: max(1rem, env(safe-area-inset-left)); }
-  .landing-shading { position: absolute; pointer-events: none; }
-  .landing-shading--top { inset: 0 0 auto; height: 34%; background: linear-gradient(to bottom, rgb(0 0 0 / .46), rgb(0 0 0 / .22), transparent); }
-  .landing-shading--bottom { inset: auto 0 0; height: 46%; background: linear-gradient(to top, rgb(0 0 0 / .58), rgb(0 0 0 / .24), transparent); }
-  .landing-shading--left, .landing-shading--right { display: none; }
-  .landing-entry { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-  .landing-entry, .landing-entry:focus, .landing-entry:focus-visible { border: 0; outline: none; box-shadow: none; }
-  .landing-playback { position: absolute; right: max(1rem, env(safe-area-inset-right)); bottom: max(2rem, env(safe-area-inset-bottom)); z-index: 3; min-width: 44px; min-height: 44px; padding: .5rem .75rem; background: rgb(0 0 0 / .65); font-size: .875rem; color: white; }
-  .landing-playback[hidden] { display: none; }
-  .landing-playback:focus-visible { outline: 2px solid white; outline-offset: 3px; }
-  @media (min-width: 768px) {
-    .landing-composition { padding-top: max(2rem, env(safe-area-inset-top)); padding-right: max(2rem, env(safe-area-inset-right)); padding-bottom: max(2.5rem, env(safe-area-inset-bottom)); padding-left: max(2rem, env(safe-area-inset-left)); }
-    .landing-shading--top, .landing-shading--bottom { display: none; }
-    .landing-shading--left { display: block; inset: 0 auto 0 0; width: 42vw; background: linear-gradient(to right, rgb(0 0 0 / .2), transparent); }
-    .landing-shading--right { display: block; inset: 0 0 0 auto; width: 32vw; background: linear-gradient(to left, rgb(0 0 0 / .1), transparent); }
-  }
-  @media (max-width: 767.98px) { .landing-media img { object-position: var(--landing-mobile-position); } }
-  @media (prefers-reduced-motion: reduce) { .visitor-landing { transition: none; } }
-</style>
 <script>
   import { setupVisitorLanding } from "../scripts/visitor-landing";
   setupVisitorLanding();

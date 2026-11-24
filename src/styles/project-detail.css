@@ -1,0 +1,41 @@
+/* Project-only layout: existing media components and other page intros keep
+   their own styles. The hero's dimensions and media are unchanged. */
+.project-detail > #hero { margin-bottom: 0; }
+.project-introduction {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  row-gap: var(--site-gutter);
+  padding-block: var(--site-gutter);
+  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+  background: white;
+}
+.project-information,
+.project-intro-copy {
+  min-width: 0;
+  padding-inline: var(--site-gutter);
+}
+.project-information {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.project-information dd { min-width: 0; overflow-wrap: anywhere; }
+.project-intro-copy { display: grid; align-content: start; gap: 1.5rem; }
+@screen lg {
+  .project-introduction {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    background: transparent;
+  }
+  .project-information {
+    position: sticky;
+    top: calc(var(--site-header-height) + var(--site-gutter));
+    max-height: calc(100dvh - var(--site-header-height) - 2 * var(--site-gutter));
+    overflow-y: auto;
+  }
+}
+
+/* Keep the final row's grid boundary against the footer. Inner paragraph,
+   caption and arrangement spacing remains owned by the media components. */
+.project-detail .project-editorial > .content-block-row:last-child { padding-bottom: 0; }
+.project-detail .project-editorial > .content-block-row:last-child > section { margin-bottom: 0; }

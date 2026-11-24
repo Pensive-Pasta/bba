@@ -55,6 +55,7 @@ const initProjectToggle = () => {
   });
 
   const updateFilter = (type) => {
+    grid.dataset.projectFilter = type;
     document.querySelectorAll(".project-grid .card").forEach((card) => {
       const cardType = card.dataset.type;
       if (type === "both") {

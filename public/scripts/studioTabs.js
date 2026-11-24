@@ -13,6 +13,7 @@ function initStudioTabs() {
         if (element) {
           element.classList.toggle("hidden", section !== target);
         }
+        document.getElementById(`${section}-intro`)?.classList.toggle("hidden", section !== target);
       });
     });
   });

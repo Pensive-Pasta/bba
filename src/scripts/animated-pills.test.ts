@@ -162,7 +162,13 @@ test("Studio keeps its section switching while the shared component controls the
   const values = ["profile", "people", "values", "awards"];
   const env = environment(values);
   env.lists.set(".tab", env.buttons);
-  values.forEach((id, index) => { const panel = new Element(); if (index) panel.classes.add("hidden"); env.ids.set(id, panel); });
+  values.forEach((id, index) => {
+    for (const target of [id, `${id}-intro`]) {
+      const panel = new Element();
+      if (index) panel.classes.add("hidden");
+      env.ids.set(target, panel);
+    }
+  });
   env.run("studioTabs.js");
   env.document.dispatchEvent(new Event("astro:page-load"));
   env.document.dispatchEvent(new Event("astro:after-swap"));
@@ -171,6 +177,14 @@ test("Studio keeps its section switching while the shared component controls the
   assert.equal(env.ids.get("profile")!.classes.has("hidden"), true);
   assert.equal(env.buttons[1].getAttribute("aria-pressed"), "true");
   assert.equal(env.indicator.style.transform, "translateX(100px)");
+  for (const [index, button] of env.buttons.entries()) {
+    button.dispatchEvent(new Event("click")); env.flush();
+    for (const [sectionIndex, id] of values.entries()) {
+      assert.equal(env.ids.get(id)!.classes.has("hidden"), sectionIndex !== index);
+      assert.equal(env.ids.get(`${id}-intro`)!.classes.has("hidden"), sectionIndex !== index);
+    }
+    assert.equal(button.getAttribute("aria-pressed"), "true");
+  }
   env.cleanup();
 });
 
@@ -201,9 +215,11 @@ test("Work preserves filtering and its animated Index/Grid toggle alongside shar
   const cards = ["urban", "inter-urban", "rural"].map((type) => { const card = new Element(); card.dataset.type = type; return card; });
   env.lists.set(".project-grid .card", cards);
   env.run("projectToggle.js");
+  assert.equal(grid.dataset.projectFilter, "both");
   env.buttons[1].dispatchEvent(new Event("click")); env.flush();
   assert.deepEqual(cards.map((card) => card.classes.has("hidden")), [false, true, true]);
   assert.equal(env.buttons[1].getAttribute("aria-pressed"), "true");
+  assert.equal(grid.dataset.projectFilter, "urban");
   toggle.dispatchEvent(new Event("click")); t.mock.timers.tick(300); env.flush();
   assert.equal(index.classes.has("hidden"), false);
   assert.equal(index.classes.has("opacity-100"), true);
@@ -217,5 +233,12 @@ test("Work preserves filtering and its animated Index/Grid toggle alongside shar
   assert.equal(grid.classes.has("hidden"), false);
   assert.equal(env.root.classes.has("opacity-0"), false);
   assert.deepEqual(cards.map((card) => card.classes.has("hidden")), [false, true, true]);
+  for (const button of env.buttons) {
+    button.dispatchEvent(new Event("click")); env.flush();
+    assert.equal(grid.dataset.projectFilter, button.dataset.type);
+    assert.deepEqual(cards.map((card) => card.classes.has("hidden")),
+      cards.map((card) => button.dataset.type !== "both" && card.dataset.type !== button.dataset.type));
+    assert.equal(button.getAttribute("aria-pressed"), "true");
+  }
   env.cleanup();
 });

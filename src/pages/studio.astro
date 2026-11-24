@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageDotGrid from "../components/PageDotGrid.astro";
 import ContentBlock from "../components/ContentBlock.astro";
 import { sanity } from "../lib/sanityClient";
 import { getStudioPageQuery } from "../lib/queries";
 import PeopleGrid from "../components/PeopleGrid.astro";
 import StudioHeader from "../components/StudioHeader.astro";
 import TextBlock from "../components/TextBlock.astro";
+import { studioIntroduction } from "../lib/studioIntroduction";
 import {
   portableTextToPlainText,
   resolveSeoDescription,
@@ -15,6 +15,12 @@ import {
 } from "../lib/seo";
 
 const studioPage = await sanity.fetch(getStudioPageQuery);
+const sections = [
+  { key: "profile", heading: "Profile", ...studioIntroduction(studioPage.profileBlocks, "Profile") },
+  { key: "people", heading: "People", ...studioIntroduction([{ _type: "textBlock", content: studioPage.peopleIntro }], "People") },
+  { key: "values", heading: "Values", ...studioIntroduction(studioPage.valuesBlocks, "Values") },
+  { key: "awards", heading: "Awards", ...studioIntroduction(studioPage.awardsBlocks, "Awards") },
+];
 
 const metaTitle =
   studioPage?.seo?.metaTitle || `${studioPage?.title ?? "Studio"} | ${SITE_TITLE_SUFFIX}`;
@@ -27,6 +33,7 @@ const ogImage = resolveSeoImage(studioPage?.seo?.ogImage?.asset?.url);
 ---
 
 <BaseLayout
+  mainClass="page-grid-main"
   title={metaTitle}
   description={metaDescription}
   ogImage={ogImage}
@@ -35,36 +42,28 @@ const ogImage = resolveSeoImage(studioPage?.seo?.ogImage?.asset?.url);
     { name: "Studio", path: "/studio/" },
   ]}
 >
-  <PageDotGrid />
   <StudioHeader
     title="Studio"
-    tabs={["profile", "people", "values", "awards"]}
-  />
-
-  <section id="studio-page" class="flex max-w-[1600px] mx-auto min-h-[100vh]">
-    <div id="profile" class="min-h-[60vh]">
-      <ContentBlock blocks={studioPage.profileBlocks} />
+    tabs={sections.map(({ key }) => key)}
+  >
+    <div slot="introduction">
+      {sections.map(({ key, heading, introduction, hasHeading }, index) => (
+        <div id={`${key}-intro`} class:list={{ hidden: index !== 0 }}>
+          {!hasHeading && <h2 class="text-xl md:text-2xl text-primary font-bold mb-4">{heading}</h2>}
+          <div class="space-y-4">
+            {introduction.map((block) => <TextBlock content={block.content!} alignment="right" embedded />)}
+          </div>
+        </div>
+      ))}
     </div>
+  </StudioHeader>
 
-    <div
-      id="people"
-      class="hidden w-full min-w-0 min-h-[60vh]"
-    >
-      {
-        studioPage.peopleIntro && (
-          <TextBlock content={studioPage.peopleIntro} alignment="right" />
-        )
-      }
-      <PeopleGrid people={studioPage.people} />
-    </div>
-
-    <div id="values" class="hidden min-h-[60vh]">
-      <ContentBlock blocks={studioPage.valuesBlocks} />
-    </div>
-
-    <div id="awards" class="hidden min-h-[60vh]">
-      <ContentBlock blocks={studioPage.awardsBlocks} />
-    </div>
+  <section id="studio-page" class="site-frame">
+    {sections.map(({ key, body, startIndex }, index) => (
+      <div id={key} class:list={["w-full min-w-0 content-separators", { hidden: index !== 0 }]}>
+        {key === "people" ? <PeopleGrid people={studioPage.people} /> : <ContentBlock blocks={body} startIndex={startIndex} />}
+      </div>
+    ))}
   </section>
 
   <script is:inline type="module" src="/scripts/studioTabs.js"></script>

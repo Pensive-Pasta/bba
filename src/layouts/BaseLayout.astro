@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import "../styles/header-layout.css";
+import "../styles/page-grid.css";
+import "../styles/visitor-landing.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { ClientRouter } from "astro:transitions";
@@ -21,6 +23,7 @@ const {
   hideMenu = false,
   hideFooter = false,
   hideCookieConsent = false,
+  mainClass = "",
 } = Astro.props;
 
 const siteOrigin = Astro.site?.toString();
@@ -117,7 +120,7 @@ const structuredData = [
   <body class="w-full min-h-screen bg-white flex flex-col">
     <slot name="landing" />
     <Header hideMenu={hideMenu} />
-    <main class="site-main flex-1 min-w-0">
+    <main class:list={["site-main flex-1 min-w-0", mainClass]}>
       <slot />
     </main>
     {!hideFooter && <Footer />}

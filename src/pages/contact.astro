@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageDotGrid from "../components/PageDotGrid.astro";
 import { sanity } from "../lib/sanityClient";
 import { getContactPageQuery } from "../lib/queries";
 import { normaliseText } from "../utils/normaliseText";
@@ -54,6 +53,7 @@ const ogImage = resolveSeoImage(seo?.ogImage?.asset?.url);
 ---
 
 <BaseLayout
+  mainClass="page-grid-main page-grid-main--md"
   title={metaTitle}
   description={metaDescription}
   ogImage={ogImage}
@@ -62,79 +62,71 @@ const ogImage = resolveSeoImage(seo?.ogImage?.asset?.url);
     { name: "Contact", path: "/contact/" },
   ]}
 >
-  <PageDotGrid />
-
   <section
-    class="flex flex-col md:flex-row px-4 md:px-8 page-header-clearance page-header-clearance--contact max-w-[1600px] mx-auto"
+    class="contact-intro site-frame items-start gap-y-6 pt-[var(--site-gutter)]"
   >
-    <h1 class="md:w-1/2 text-2xl md:text-4xl mb-12">{title}</h1>
+    <div class="flex flex-col items-start gap-6">
+      <h1 class="text-2xl md:text-4xl">{title}</h1>
 
-    <div class="md:w-1/2 md:pl-8">
+      <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-primary max-w-full">
+        {email && (
+          <>
+            <dt class="font-medium">Email:</dt>
+            <dd class="font-bold text-xl min-w-0 [overflow-wrap:anywhere]">
+              <a
+                href={`mailto:${email}`}
+                class="border-b border-primary hover:opacity-70 transition-opacity"
+              >
+                {email}
+              </a>
+            </dd>
+          </>
+        )}
+        {tel && (
+          <>
+            <dt class="font-medium">Phone:</dt>
+            <dd class="font-bold text-xl min-w-0 [overflow-wrap:anywhere]">
+              <a
+                href={`tel:${tel}`}
+                class="hover:opacity-70 transition-opacity"
+              >
+                {tel}
+              </a>
+            </dd>
+          </>
+        )}
+      </dl>
+    </div>
+
+    {intro.length > 0 && <div>
       {
         intro.map((para: string) => (
-          <p class="text-lg md:text-xl leading-normal text-primary mb-8 font-light">
+          <p class="text-lg md:text-xl leading-normal text-primary mb-8 last:mb-0 font-light">
             {para.replace(/\n+/g, " ")}
           </p>
         ))
       }
-
-      <p class="text-sm md:text-lg leading-normal text-primary font-light mb-2">
-        <span>
-          E:
-          <a
-            href={`mailto:${email}`}
-            class="border-b border-primary hover:opacity-70 transition-opacity mb-1 break-words"
-          >
-            {email}
-          </a>
-        </span><br />
-        <span>
-          T:
-          <a
-            href={`tel:${tel}`}
-            class="hover:opacity-70 transition-opacity break-words"
-          >
-            {tel}
-          </a>
-        </span>
-      </p>
-    </div>
+    </div>}
   </section>
 
   {
     locA && locB && (
-      <section class="w-full flex md:flex-row flex-col items-center justify-center mt-[10vw]">
+      <section class="image-grid grid grid-cols-1 md:grid-cols-2 w-full">
         {cards.map(
           (loc, i) =>
             loc && (
-              <div class="md:w-1/2 w-full aspect-square relative group">
-                <div class="absolute inset-0 z-0">
+              <div class="image-grid-cell aspect-square relative group">
+                <div class="image-grid-media absolute inset-0">
                   <iframe
-                    data-map-embed
-                    data-src={loc.embedSrc}
+                    src={loc.embedSrc}
                     title={`Interactive map for ${loc.label ?? "our studio"}`}
-                    class="hidden w-full h-full border-0"
+                    class="block w-full h-full border-0"
                     allowfullscreen=""
                     loading="lazy"
                   />
                   <div
                     class={`absolute inset-0 pointer-events-none opacity-80 mix-blend-multiply ${overlayForIndex(i)}`}
                   />
-                  <div
-                    data-map-placeholder
-                    class="absolute inset-0 z-20 flex items-center justify-center px-6 text-center"
-                  >
-                    <button
-                      type="button"
-                      data-load-map
-                      class="max-w-xs border border-white bg-primary px-5 py-4 text-sm font-medium text-white transition-colors hover:bg-white hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                    >
-                      Load interactive map
-                      <span class="mt-2 block text-xs font-light">
-                        This loads content from Google Maps, which may use cookies.
-                      </span>
-                    </button>
-                  </div>
                 </div>
 
                 {loc.postcodeBadge && (
@@ -172,30 +164,4 @@ const ogImage = resolveSeoImage(seo?.ogImage?.asset?.url);
     )
   }
 
-  <script>
-    const setupMapEmbeds = () => {
-      document.querySelectorAll<HTMLButtonElement>("[data-load-map]").forEach(
-        (button) => {
-          if (button.dataset.mapBound === "true") return;
-          button.dataset.mapBound = "true";
-
-          button.addEventListener("click", () => {
-            const placeholder = button.closest<HTMLElement>("[data-map-placeholder]");
-            const container = placeholder?.parentElement;
-            const iframe = container?.querySelector<HTMLIFrameElement>("[data-map-embed]");
-            const source = iframe?.dataset.src;
-
-            if (!iframe || !source) return;
-            iframe.src = source;
-            iframe.classList.remove("hidden");
-            placeholder?.remove();
-          });
-        },
-      );
-    };
-
-    if (document.readyState !== "loading") setupMapEmbeds();
-    else document.addEventListener("DOMContentLoaded", setupMapEmbeds);
-    document.addEventListener("astro:page-load", setupMapEmbeds);
-  </script>
 </BaseLayout>

@@ -1,6 +1,7 @@
 import { initHeroVideo } from "./hero-video.ts";
 
 type LandingWindow = Window & { __bbaLanding?: { entered: boolean; enter(): void } };
+export const landingEntryDelay = 3500;
 
 export function setupVisitorLanding() {
   const overlay = document.querySelector<HTMLElement>("[data-bba-landing-overlay]");
@@ -19,8 +20,10 @@ export function setupVisitorLanding() {
   const disposeVideo = media ? initHeroVideo(media) : undefined;
   entry.focus({ preventScroll: true });
   let exiting = false;
+  let entryTimer: ReturnType<typeof setTimeout> | undefined;
   let fadeTimer: ReturnType<typeof setTimeout> | undefined;
   const restore = () => {
+    clearTimeout(entryTimer);
     clearTimeout(fadeTimer);
     disposeVideo?.();
     background.forEach((element, index) => { element.inert = inertStates[index]; });
@@ -31,6 +34,7 @@ export function setupVisitorLanding() {
   const enter = () => {
     if (exiting) return;
     exiting = true;
+    clearTimeout(entryTimer);
     (window as LandingWindow).__bbaLanding?.enter();
     document.documentElement.setAttribute("data-bba-landing", "leaving");
     overlay.classList.add("is-exiting");
@@ -49,9 +53,14 @@ export function setupVisitorLanding() {
       }
     };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) complete();
-    else fadeTimer = setTimeout(complete, 310); // Dismissal only; never timed entry.
+    else fadeTimer = setTimeout(complete, 310); // Keep the existing 300ms fade.
   };
   entry.addEventListener("click", enter, { signal });
+  overlay.addEventListener("click", (event) => {
+    // Keep the existing click-anywhere entry without swallowing video controls.
+    if (event.target instanceof HTMLElement && event.target.closest("button")) return;
+    enter();
+  }, { signal });
   overlay.addEventListener("keydown", (event) => {
     if (event.key === "Escape") { event.preventDefault(); enter(); return; }
     if (event.key !== "Tab") return;
@@ -65,4 +74,10 @@ export function setupVisitorLanding() {
     (window as LandingWindow).__bbaLanding?.enter();
     restore();
   }, { once: true, signal });
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) enter();
+  else {
+    overlay.style.setProperty("--landing-entry-delay", `${landingEntryDelay}ms`);
+    overlay.setAttribute("data-landing-active", "");
+    entryTimer = setTimeout(enter, landingEntryDelay);
+  }
 }

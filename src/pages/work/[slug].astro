@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageDotGrid from "../../components/PageDotGrid.astro";
 import Hero from "../../components/Hero.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getProjectBySlugQuery } from "../../lib/queries";
 import ContentBlock from "../../components/ContentBlock.astro";
-import ProjectMeta from "../../components/ProjectMeta.astro";
+import ProjectIntroduction from "../../components/ProjectIntroduction.astro";
 import Credits from "../../components/Credits.astro";
+import { projectIntroduction } from "../../lib/projectIntroduction";
+import "../../styles/project-detail.css";
 import {
   portableTextToPlainText,
   resolveSeoDescription,
@@ -24,6 +25,7 @@ export async function getStaticPaths() {
 }
 
 const projectInfo = await sanity.fetch(getProjectBySlugQuery, { slug });
+const { introduction, body, startIndex } = projectIntroduction(projectInfo.contentBlocks);
 const hasHero = Boolean(projectInfo.imageUrl || projectInfo.heroVideo?.url ||
   projectInfo.mobileHeroImage?.asset?.url || projectInfo.mobileHeroVideo?.url);
 
@@ -55,6 +57,7 @@ const ogImage = resolveSeoImage(
 ---
 
 <BaseLayout
+  mainClass="page-grid-main page-grid-main--md"
   title={seoTitle}
   description={seoDescription}
   ogImage={ogImage}
@@ -64,9 +67,8 @@ const ogImage = resolveSeoImage(
     { name: projectInfo.title, path: `/work/${slug}/` },
   ]}
 >
-  <PageDotGrid />
-  <article class="page-header-min-screen">
-    <h1 class="sr-only">{projectInfo.title}</h1>
+  <article class="project-detail">
+    <h1 id="project-title" class="sr-only">{projectInfo.title}</h1>
     {
       hasHero && (
         <Hero
@@ -81,24 +83,15 @@ const ogImage = resolveSeoImage(
       )
     }
 
-    <section
-      class={`${hasHero ? "mt-12" : ""} ${!hasHero ? "page-header-margin-clearance page-header-clearance--project" : ""} ${projectInfo.contentBlocks.length === 0 ? "mb-12" : ""} px-4 md:px-8`}
-    >
-      <ProjectMeta projectInfo={projectInfo} />
-    </section>
+    <ProjectIntroduction projectInfo={projectInfo} introduction={introduction} />
 
     {
-      projectInfo.contentBlocks.length >= 1 && (
-        <section class={`mt-12 ${hasHero ? "md:-mt-32" : ""} mb-32`}>
-          <ContentBlock blocks={projectInfo.contentBlocks} />
+      body.length > 0 && (
+        <section class="project-editorial content-separators">
+          <ContentBlock blocks={body} startIndex={startIndex} />
         </section>
       )
     }
-
-    {
-      projectInfo.credits?.length > 0 && (
-        <Credits credits={projectInfo.credits} />
-      )
-    }
+    <Credits credits={projectInfo.credits ?? []} />
   </article>
 </BaseLayout>
