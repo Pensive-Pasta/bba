@@ -48,6 +48,16 @@ const items: Array<{ label: string; project?: Project }> = [
 // Complete the final two-column row without moving or adding project tiles.
 if (items.length % 2 !== 0) items.push({ label: "" });
 
+// Luke's labels belong only to the existing non-interactive white cells.
+// Keep project postcodes, media positions and the number of cells unchanged.
+const whitePostcodes = ["PE8", "M28", "NN14", "NR21", "LE15", "CB10"];
+let whiteIndex = 0;
+items.forEach((item, i) => {
+  if (!(i > 0 && (i - 1) % 4 < 2 && item.project)) {
+    item.label = whitePostcodes[whiteIndex++] ?? item.label;
+  }
+});
+
 // Normalise intro text
 const introRaw = home?.intro ?? "";
 const intro = normaliseText(introRaw);

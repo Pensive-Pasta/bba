@@ -13,7 +13,11 @@ import {
 } from "../../lib/seo";
 
 const workPage = await sanity.fetch(getWorkPageQuery);
-const projects = await sanity.fetch(getProjectsQuery);
+// Exclude Luke's two postcode-only entries from both Work views, retaining
+// their records, detail URLs and the homepage's independent tile labels.
+const projects = (await sanity.fetch(getProjectsQuery)).filter(
+  (project: Project) => !["the-pumps", "annabelle-davis-centre"].includes(project.slug.current)
+);
 
 export interface Project {
   title: string;
