@@ -35,7 +35,14 @@
   }
 }
 
-/* Keep the final row's grid boundary against the footer. Inner paragraph,
-   caption and arrangement spacing remains owned by the media components. */
-.project-detail .project-editorial > .content-block-row:last-child { padding-bottom: 0; }
-.project-detail .project-editorial > .content-block-row:last-child > section { margin-bottom: 0; }
+/* Keep images clear of both dotted boundaries, including the final row.
+   Put the lower gap inside the content section so the divider before Credits
+   remains separated from the final image. */
+.project-detail .project-editorial > .content-block-row {
+  padding-top: var(--site-gutter);
+  padding-bottom: 0;
+}
+.project-detail .project-editorial > .content-block-row > section {
+  margin-bottom: 0;
+  padding-bottom: var(--site-gutter);
+}
