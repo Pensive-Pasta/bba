@@ -34,10 +34,24 @@ test("empty blocks do not hide a real intro and removing an odd prefix preserves
   assert.equal(result.startIndex % 2, 1);
 });
 
-test("existing section headings are retained without adding the same label twice", () => {
-  assert.equal(studioIntroduction([text(" People ", "h2")], "People").hasHeading, true);
-  assert.equal(studioIntroduction([text("People")], "People").hasHeading, false);
-  assert.equal(studioIntroduction([text("Our approach", "h2")], "Values").hasHeading, false);
+test("repeated tab headings are omitted without changing CMS content or body alignment", () => {
+  const heading = text(" People ", "h2"), intro = text("Meet our team");
+  const original = structuredClone(heading);
+  const result = studioIntroduction([heading, intro, image], "People");
+  assert.deepEqual(result.introduction, [intro]);
+  assert.deepEqual(result.body, [image]);
+  assert.equal(result.startIndex, 2);
+  assert.deepEqual(heading, original);
+
+  const combined = { ...heading, content: [...heading.content, ...intro.content] };
+  assert.deepEqual(studioIntroduction([combined], "People").introduction, [intro]);
+  assert.deepEqual(studioIntroduction([heading], "People").introduction, []);
+});
+
+test("ordinary text and editorial headings that differ from the tab label remain visible", () => {
+  const paragraph = text("People"), heading = text("Our approach", "h2");
+  assert.deepEqual(studioIntroduction([paragraph], "People").introduction, [paragraph]);
+  assert.deepEqual(studioIntroduction([heading], "Values").introduction, [heading]);
 });
 
 test("absent and text-only sections remain valid without placeholder media or lost text", () => {

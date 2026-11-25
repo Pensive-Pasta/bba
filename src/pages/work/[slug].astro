@@ -2,7 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Hero from "../../components/Hero.astro";
 import { sanity } from "../../lib/sanityClient";
-import { getProjectBySlugQuery } from "../../lib/queries";
+import { getCaseStudiesQuery, getProjectBySlugQuery } from "../../lib/queries";
+import { projectDetailHref } from "../../lib/projects";
+import type { Project } from "../../types/Project";
 import ContentBlock from "../../components/ContentBlock.astro";
 import ProjectIntroduction from "../../components/ProjectIntroduction.astro";
 import Credits from "../../components/Credits.astro";
@@ -18,13 +20,14 @@ import {
 const { slug } = Astro.params;
 
 export async function getStaticPaths() {
-  const projects = await sanity.fetch(
-    `*[_type == "project"]{ "slug": slug.current }`
-  );
-  return projects.map((p: { slug: string }) => ({ params: { slug: p.slug } }));
+  const projects: Project[] = await sanity.fetch(getCaseStudiesQuery);
+  return projects.filter((project) => projectDetailHref(project)).map((project) => ({ params: { slug: project.slug!.current } }));
 }
 
 const projectInfo = await sanity.fetch(getProjectBySlugQuery, { slug });
+if (!projectInfo || !projectDetailHref(projectInfo)) {
+  throw new Error(`Case study became unavailable during build: ${slug}`);
+}
 const { introduction, body, startIndex } = projectIntroduction(projectInfo.contentBlocks);
 const hasHero = Boolean(projectInfo.imageUrl || projectInfo.heroVideo?.url ||
   projectInfo.mobileHeroImage?.asset?.url || projectInfo.mobileHeroVideo?.url);

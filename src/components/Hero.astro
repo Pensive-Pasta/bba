@@ -23,7 +23,7 @@ const hasVideo = Boolean(videos.desktop || videos.mobile);
 ---
 
 <section
-  class={`relative overflow-hidden w-full bg-cover bg-center bg-blend-color-burn h-screen flex items-center justify-center mb-32 ${hasVideo ? "bg-black" : ""}`}
+  class="relative overflow-hidden w-full bg-white bg-cover bg-center bg-blend-color-burn h-screen flex items-center justify-center mb-32"
   style={`--hero-position: ${desktopImage.position}; --mobile-hero-position: ${mobilePosition};`}
   id="hero"
   data-hero-media
@@ -37,8 +37,8 @@ const hasVideo = Boolean(videos.desktop || videos.mobile);
         src={desktopImage.url || mobileImage.url}
         alt={alt}
         class="hero-still w-full h-full object-cover"
-        loading={hasVideo ? "lazy" : "eager"}
-        fetchpriority={hasVideo ? "auto" : "high"}
+        loading="eager"
+        fetchpriority="high"
         decoding="async"
       />
     </picture>
@@ -74,13 +74,7 @@ const hasVideo = Boolean(videos.desktop || videos.mobile);
 <style>
   .hero-still { object-position: var(--hero-position); }
   .hero-video { object-position: center; }
-  /* Never flash the unrelated image while a selected video is buffering. */
-  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-    section[data-desktop-video]:not([data-video-fallback]) .hero-picture { display: none; }
-  }
-  @media (max-width: 767.98px) and (prefers-reduced-motion: no-preference) {
-    section[data-mobile-video]:not([data-video-fallback]) .hero-picture { display: none; }
-  }
+  /* Keep the responsive photograph beneath the video throughout its fade-in. */
   @media (max-width: 767.98px) {
     .hero-still { object-position: var(--mobile-hero-position); }
   }

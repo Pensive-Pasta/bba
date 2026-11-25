@@ -14,9 +14,38 @@ _type == "galleryBlock" => {
   }
 }`;
 
+// Keep detail eligibility in one place, including for route enumeration.
+export const caseStudyCondition = `_type == "project" && !(_id in path("drafts.**")) &&
+  caseStudyEnabled == true && defined(slug.current) &&
+  (defined(heroImage.asset->url) || defined(heroVideo.asset->url)) &&
+  count(contentBlocks[_type == "textBlock" && length(pt::text(content)) > 0]) > 0`;
+
+export const projectSummaryProjection = `
+  _id,
+  projectNumber,
+  title,
+  slug,
+  postCode,
+  county,
+  year,
+  type,
+  typology,
+  includeInWorkIndex,
+  caseStudyEnabled,
+  "caseStudyText": pt::text(contentBlocks[_type == "textBlock"].content[]),
+  heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  "heroVideo": heroVideo.asset->{ url, mimeType },
+  "imageUrl": heroImage.asset->url
+`;
+
 export const getHomePageQuery = `*[_type == "homePage"][0]{
   title,
   intro,
+  "projectTiles": coalesce(projectTiles, [])[]{
+    display,
+    label,
+    "project": project->{${projectSummaryProjection}}
+  },
   landingHeading,
   landingText,
   heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
@@ -42,6 +71,8 @@ export const getHomePageQuery = `*[_type == "homePage"][0]{
 export const getWorkPageQuery = `*[_type == "workPage"][0]{
   title,
   description,
+  "projects": coalesce(projects, [])[]->{${projectSummaryProjection}},
+  "indexProjects": *[_type == "project" && !(_id in path("drafts.**")) && includeInWorkIndex == true] | order(lower(title) asc){${projectSummaryProjection}},
   seo{
     metaTitle,
     metaDescription,
@@ -49,30 +80,12 @@ export const getWorkPageQuery = `*[_type == "workPage"][0]{
   }
 }`;
 
-export const getProjectsQuery = `*[_type == "project"] | order(year desc){
-  title,
-  slug,
-  postCode,
-  county,
-  year,
-  type,
-  heroImage{ crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
-  "heroVideo": heroVideo.asset->{ url, mimeType },
-  "imageUrl": heroImage.asset->url
-}`;
+export const getCaseStudiesQuery = `*[${caseStudyCondition}]{${projectSummaryProjection}}`;
 
 export const getProjectBySlugQuery = `
-*[_type == "project" && slug.current == $slug][0]{
-  title,
-  postCode,
-  county,
-  year,
-  site,
-  type,
-  "imageUrl": heroImage.asset->url,
+*[${caseStudyCondition} && slug.current == $slug][0]{
+  ${projectSummaryProjection},
   "altText": heroImage.altText,
-  heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
-  "heroVideo": heroVideo.asset->{ url, mimeType },
   mobileHeroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
   "mobileHeroVideo": mobileHeroVideo.asset->{ url, mimeType },
   seo{

@@ -1,0 +1,21 @@
+---
+interface Props {
+  parentLabel: string;
+  parentHref: string;
+  title: string;
+}
+
+const { parentLabel, parentHref, title } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="min-w-0 text-sm font-light text-primary">
+  <ol role="list" class="flex min-w-0 items-baseline gap-2">
+    <li class="shrink-0">
+      <a href={parentHref} class="underline-offset-4 hover:underline focus-visible:underline">{parentLabel}</a>
+    </li>
+    <li class="flex min-w-0 items-baseline gap-2">
+      <span aria-hidden="true" class="shrink-0">/</span>
+      <span aria-current="page" class="min-w-0 [overflow-wrap:anywhere]">{title}</span>
+    </li>
+  </ol>
+</nav>

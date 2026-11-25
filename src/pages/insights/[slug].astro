@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ContentBlock from "../../components/ContentBlock.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getInsightBySlugQuery } from "../../lib/queries";
 import {
@@ -68,6 +69,9 @@ const articleJsonLd = {
   ]}
 >
   <article class="site-frame pb-20 page-header-clearance">
+    <div class="mb-4 px-4 md:px-8 md:w-1/2">
+      <Breadcrumbs parentLabel="Insights" parentHref="/insights/" title={insight.title} />
+    </div>
     <h1 class="text-3xl md:text-4xl font-bold mb-4 px-4 md:px-8 md:w-1/2">
       {insight.title}
     </h1>

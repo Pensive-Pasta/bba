@@ -41,7 +41,7 @@ const orders = [2, 4].flatMap((columns) =>
           }).join(";")}
         >
           {imageUrl ? (
-            <ProjectCard {...project} imageUrl={imageUrl} />
+            <ProjectCard {...project} project={project} imageUrl={imageUrl} />
           ) : (
             <span class="block p-4 text-4xl">{project.postCode}</span>
           )}

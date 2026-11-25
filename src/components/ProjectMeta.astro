@@ -3,8 +3,8 @@ interface ProjectInfo {
   title?: string;
   postCode?: string;
   county?: string;
-  site?: string | null;
   type?: string;
+  typology?: string;
 }
 
 interface Props {
@@ -19,8 +19,8 @@ const entries = (
     ["Name", projectInfo.title],
     ["Postcode", projectInfo.postCode],
     ["County", projectInfo.county],
-    ["Site", projectInfo.site],
-    ["Typology", projectInfo.type],
+    ["Context", projectInfo.type],
+    ["Typology", projectInfo.typology],
   ] as [label: string, value: string | null | undefined][]
 ).filter(([, v]) => v && String(v).trim().length > 0);
 ---

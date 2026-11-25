@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { sanity } from "../../lib/sanityClient";
-import { getProjectsQuery, getWorkPageQuery } from "../../lib/queries";
+import { getWorkPageQuery } from "../../lib/queries";
+import { workGridProjects } from "../../lib/projects";
 import ProjectFilterControls from "../../components/ProjectFilterControls.astro";
 import ProjectGrid from "../../components/ProjectGrid.astro";
 import ProjectIndexTable from "../../components/ProjectIndexTable.astro";
@@ -13,21 +14,7 @@ import {
 } from "../../lib/seo";
 
 const workPage = await sanity.fetch(getWorkPageQuery);
-// Exclude Luke's two postcode-only entries from both Work views, retaining
-// their records, detail URLs and the homepage's independent tile labels.
-const projects = (await sanity.fetch(getProjectsQuery)).filter(
-  (project: Project) => !["the-pumps", "annabelle-davis-centre"].includes(project.slug.current)
-);
-
-export interface Project {
-  title: string;
-  slug: { current: string };
-  postCode: string;
-  county?: string;
-  year?: number;
-  type?: "urban" | "inter-urban" | "rural";
-  imageUrl?: string;
-}
+const projects = workGridProjects(workPage?.projects);
 
 const metaTitle =
   workPage?.seo?.metaTitle ||
@@ -54,9 +41,9 @@ const ogImage = resolveSeoImage(workPage?.seo?.ogImage?.asset?.url);
     <WorkHeader title={workPage.title} description={workPage.description}>
       <ProjectFilterControls />
     </WorkHeader>
-    <div class="work-results lg:min-h-[960px]">
+    <div class="work-results">
       <ProjectGrid projects={projects} />
-      <ProjectIndexTable projects={projects} />
+      <ProjectIndexTable projects={workPage?.indexProjects ?? []} />
     </div>
   </section>
 

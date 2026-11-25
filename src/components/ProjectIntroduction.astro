@@ -1,6 +1,7 @@
 ---
 import ProjectMeta from "./ProjectMeta.astro";
 import TextBlock from "./TextBlock.astro";
+import Breadcrumbs from "./Breadcrumbs.astro";
 import type { ProjectContentBlock } from "../lib/projectIntroduction";
 
 interface Props {
@@ -8,8 +9,8 @@ interface Props {
     title: string;
     postCode?: string;
     county?: string;
-    site?: string | null;
     type?: string;
+    typology?: string;
   };
   introduction: ProjectContentBlock[];
 }
@@ -24,6 +25,7 @@ const { projectInfo, introduction } = Astro.props;
     role="region"
     aria-labelledby="project-title"
   >
+    <Breadcrumbs parentLabel="Work" parentHref="/work/" title={projectInfo.title} />
     <ProjectMeta projectInfo={projectInfo} />
   </div>
   <div class="project-intro-copy">

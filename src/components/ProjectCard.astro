@@ -1,11 +1,14 @@
 ---
 import ProjectVideoPreview from "./ProjectVideoPreview.astro";
-const { title, postCode, county, imageUrl, slug, type, previewVideoUrl } = Astro.props;
+import { projectDetailHref } from "../lib/projects";
+const { title, postCode, county, imageUrl, type, previewVideoUrl, project } = Astro.props;
+const href = projectDetailHref(project);
+const Tag = href ? "a" : "div";
 const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-cornflower" : type === "urban" ? "bg-pink" : "bg-primary";
 ---
 
-<a
-  href={`/work/${slug.current}`}
+<Tag
+  href={href}
   class="group block project-card relative overflow-hidden aspect-square"
 >
   {(previewVideoUrl || imageUrl) && <div class="absolute inset-0 z-0">
@@ -27,7 +30,7 @@ const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-
     
     <div class="flex justify-between items-center p-4">
       <span class="text-4xl text-white font-light">{postCode}</span>
-      <img src="/icons/arrow-up-right.svg" alt="arrow" class="arrow w-8" />
+      {href && <img src="/icons/arrow-up-right.svg" alt="" class="arrow w-8" />}
     </div>
     <div class="flex flex-col text-white font-light p-4 overflow-hidden">
       <span class="text-sm md:text-xl">#{title}</span>
@@ -35,4 +38,4 @@ const colourClass = type === "rural" ? "bg-aqua" : type === "inter-urban" ? "bg-
       {county && <span class="text-sm md:text-xl">#{county}</span>}
     </div>
   </div>
-</a>
+</Tag>

@@ -48,8 +48,9 @@ export function initHeroVideo(root: HTMLElement) {
       await video!.play();
     } catch {
       if (attempt !== generation) return;
-      // Autoplay rejection keeps the video's own first frame and a Play button.
+      // Autoplay rejection keeps the photograph visible and a Play button.
       blocked = true;
+      video!.classList.add("opacity-0");
       label();
     }
   }
@@ -72,7 +73,7 @@ export function initHeroVideo(root: HTMLElement) {
   }
 
   function revealFrame() {
-    if (!selected || reduced.matches || root.dataset.videoFallback || video!.readyState < 2) return;
+    if (!selected || reduced.matches || root.dataset.videoFallback || video!.paused || video!.readyState < 2) return;
     video!.classList.remove("opacity-0");
   }
 

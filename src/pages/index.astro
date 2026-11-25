@@ -4,10 +4,10 @@ import VisitorLanding from "../components/VisitorLanding.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 
 import { sanity } from "../lib/sanityClient";
-import { getHomePageQuery, getProjectsQuery } from "../lib/queries";
+import { getHomePageQuery } from "../lib/queries";
 import { normaliseText } from "../utils/normaliseText";
 import { squareProjectImage } from "../lib/heroMedia";
-import type { HeroImage, HeroVideo } from "../types/HeroMedia";
+import { homeProjectTiles } from "../lib/projects";
 import {
   resolveSeoDescription,
   resolveSeoImage,
@@ -15,7 +15,6 @@ import {
 } from "../lib/seo";
 
 const home = await sanity.fetch(getHomePageQuery);
-const projects = await sanity.fetch(getProjectsQuery);
 
 // Featured link (fallback to /studio)
 const featuredHref = home?.featuredPage?.pageSlug
@@ -23,40 +22,7 @@ const featuredHref = home?.featuredPage?.pageSlug
   : "/studio";
 const featuredLabel = home?.featuredPage?.pageTitle || "Studio";
 
-// Build grid items from all projects (no postcode dedupe)
-// First cell remains blank, then one cell per project up to MAX_CELLS
-const MAX_CELLS = 16;
-
-type Project = {
-  title: string;
-  postCode?: string;
-  county?: string;
-  type?: "urban" | "inter-urban" | "rural";
-  slug: { current: string };
-  imageUrl?: string;
-  heroImage?: HeroImage;
-  heroVideo?: HeroVideo;
-};
-
-const items: Array<{ label: string; project?: Project }> = [
-  { label: "" },
-  ...(projects as Project[]).slice(0, MAX_CELLS - 1).map((p) => ({
-    label: p.postCode ?? "",
-    project: p,
-  })),
-];
-// Complete the final two-column row without moving or adding project tiles.
-if (items.length % 2 !== 0) items.push({ label: "" });
-
-// Luke's labels belong only to the existing non-interactive white cells.
-// Keep project postcodes, media positions and the number of cells unchanged.
-const whitePostcodes = ["PE8", "M28", "NN14", "NR21", "LE15", "CB10"];
-let whiteIndex = 0;
-items.forEach((item, i) => {
-  if (!(i > 0 && (i - 1) % 4 < 2 && item.project)) {
-    item.label = whitePostcodes[whiteIndex++] ?? item.label;
-  }
-});
+const items = homeProjectTiles(home?.projectTiles);
 
 // Normalise intro text
 const introRaw = home?.intro ?? "";
@@ -91,14 +57,14 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage?.asset?.url);
     <div class="w-full md:w-1/2">
       <div class="home-project-grid image-grid grid grid-cols-2">
         {
-          items.map(({ label, project: proj }, i) => {
+          items.map(({ label, project: proj, media }) => {
             const img = squareProjectImage(proj?.heroImage, proj?.imageUrl);
 
             return (
               <>
                 <div class="grid-cell image-grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
                   <span class="block p-4 text-4xl">{label}</span>
-                  {(i - 1) % 4 < 2 && i > 0 && proj && (
+                  {media && proj && (
                     <div
                       class={`image-grid-media absolute inset-0 z-0 ${proj.heroVideo?.url ? "" : "opacity-0 pointer-events-none transition-opacity duration-500"}`}
                       data-project-tile={proj.heroVideo?.url ? undefined : ""}
@@ -108,7 +74,7 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage?.asset?.url);
                         postCode={label}
                         county={proj.county}
                         type={proj.type}
-                        slug={proj.slug}
+                        project={proj}
                         imageUrl={img}
                         previewVideoUrl={proj.heroVideo?.url}
                       />

@@ -11,14 +11,19 @@ const initProjectToggle = () => {
   const resetView = () => {
     grid.classList.remove("hidden");
     indexTable.classList.add("hidden");
-    document.querySelector(".filter-toggle-group")?.classList.remove("opacity-0");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-label", "Show project index");
   };
 
   resetView();
 
   btn.addEventListener("click", () => {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    setTimeout(() => { btn.disabled = false; }, 300);
     const isShowingIndex = indexTable.classList.contains("hidden");
-    const filterGroup = document.querySelector(".filter-toggle-group");
+    btn.setAttribute("aria-expanded", String(isShowingIndex));
+    btn.setAttribute("aria-label", isShowingIndex ? "Show project grid" : "Show project index");
 
     if (isShowingIndex) {
       grid.classList.replace("opacity-100", "opacity-0");
@@ -29,8 +34,6 @@ const initProjectToggle = () => {
         indexTable.classList.replace("opacity-0", "opacity-100");
       });
 
-      filterGroup?.classList.add("opacity-0");
-
       // swap labels
       swapToggleLabels(btn, "index", "grid");
     } else {
@@ -39,7 +42,6 @@ const initProjectToggle = () => {
         indexTable.classList.add("hidden");
         grid.classList.remove("opacity-0", "hidden");
         grid.classList.add("opacity-100");
-        filterGroup?.classList.remove("opacity-0");
       }, 300);
 
       // swap labels
@@ -64,6 +66,9 @@ const initProjectToggle = () => {
         card.classList.toggle("hidden", cardType !== type);
       }
     });
+    document.querySelectorAll("#project-index tbody tr").forEach((row) => {
+      row.classList.toggle("hidden", type !== "both" && row.dataset.type !== type);
+    });
   };
 
   updateFilter("both");
@@ -75,8 +80,9 @@ const swapToggleLabels = (btn, from, to) => {
 
   fromLabel.classList.replace("opacity-100", "opacity-0");
   setTimeout(() => {
-    fromLabel.classList.add("hidden");
-    toLabel.classList.remove("hidden");
+    // Both labels share a grid cell, so the widest always reserves its space.
+    fromLabel.classList.add("invisible");
+    toLabel.classList.remove("invisible");
 
     requestAnimationFrame(() => {
       toLabel.classList.replace("opacity-0", "opacity-100");
@@ -85,35 +91,36 @@ const swapToggleLabels = (btn, from, to) => {
 };
 
 const initIndexSort = () => {
-  const chevrons = document.querySelectorAll("#project-index .chevron-icon");
-  let isAlphaSort = true;
-
-  chevrons.forEach((chevron) => {
-    chevron.closest("th")?.addEventListener("click", () => {
+  const buttons = document.querySelectorAll("#project-index [data-sort-column]");
+  buttons.forEach((button) => {
+    if (button.dataset.bound) return;
+    button.dataset.bound = "true";
+    button.addEventListener("click", () => {
+      const heading = button.closest("th");
+      const descending = heading?.getAttribute("aria-sort") === "ascending";
+      const column = Number(button.dataset.sortColumn);
       const rows = Array.from(
         document.querySelectorAll("#project-index tbody tr")
       );
       const sorted = rows.sort((a, b) => {
         const textA =
-          a.querySelector("td")?.innerText.trim().toLowerCase() || "";
+          a.children[column]?.textContent.trim().toLowerCase() || "";
         const textB =
-          b.querySelector("td")?.innerText.trim().toLowerCase() || "";
-        return isAlphaSort
-          ? textB.localeCompare(textA)
-          : textA.localeCompare(textB);
+          b.children[column]?.textContent.trim().toLowerCase() || "";
+        return (descending ? textB.localeCompare(textA, undefined, { numeric: true }) : textA.localeCompare(textB, undefined, { numeric: true }));
       });
 
       const tbody = document.querySelector("#project-index tbody");
       if (tbody) {
-        tbody.innerHTML = "";
         sorted.forEach((row) => tbody.appendChild(row));
       }
 
-      chevrons.forEach((icon) => {
-        icon.style.transform = isAlphaSort ? "rotate(180deg)" : "rotate(0deg)";
+      buttons.forEach((other) => {
+        const active = other === button;
+        other.closest("th")?.setAttribute("aria-sort", active ? descending ? "descending" : "ascending" : "none");
+        const icon = other.querySelector(".chevron-icon");
+        if (icon) icon.style.transform = active && descending ? "rotate(180deg)" : "rotate(0deg)";
       });
-
-      isAlphaSort = !isAlphaSort;
     });
   });
 };

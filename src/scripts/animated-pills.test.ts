@@ -207,13 +207,15 @@ test("Work preserves filtering and its animated Index/Grid toggle alongside shar
   const env = environment(["both", "urban", "inter-urban", "rural"]);
   const toggle = new Element(), grid = new Element(), index = new Element(), indexLabel = new Element(), gridLabel = new Element();
   index.classList.add("hidden", "opacity-0"); grid.classes.add("opacity-100");
-  indexLabel.classes.add("opacity-100"); gridLabel.classList.add("hidden", "opacity-0");
+  indexLabel.classes.add("opacity-100"); gridLabel.classList.add("invisible", "opacity-0");
   toggle.nodes.set("#label-index", indexLabel); toggle.nodes.set("#label-grid", gridLabel);
   env.ids.set("index-toggle", toggle); env.ids.set("project-index", index);
   env.queries.set(".project-grid", grid); env.queries.set(".filter-toggle-group", env.root);
   env.lists.set(".filter-btn", env.buttons);
   const cards = ["urban", "inter-urban", "rural"].map((type) => { const card = new Element(); card.dataset.type = type; return card; });
   env.lists.set(".project-grid .card", cards);
+  const rows = ["urban", "inter-urban", "rural", "urban"].map((type) => { const row = new Element(); row.dataset.type = type; return row; });
+  env.lists.set("#project-index tbody tr", rows);
   env.run("projectToggle.js");
   assert.equal(grid.dataset.projectFilter, "both");
   env.buttons[1].dispatchEvent(new Event("click")); env.flush();
@@ -225,20 +227,57 @@ test("Work preserves filtering and its animated Index/Grid toggle alongside shar
   assert.equal(index.classes.has("opacity-100"), true);
   assert.equal(grid.classes.has("opacity-0"), true);
   assert.equal(grid.classes.has("hidden"), true);
-  assert.equal(env.root.classes.has("opacity-0"), true);
+  assert.equal(env.root.classes.has("opacity-0"), false);
+  assert.equal(toggle.getAttribute("aria-expanded"), "true");
+  assert.equal(indexLabel.classes.has("invisible"), true);
+  assert.equal(gridLabel.classes.has("invisible"), false);
+  assert.deepEqual(rows.map((row) => row.classes.has("hidden")), [false, true, true, false]);
   toggle.dispatchEvent(new Event("click")); t.mock.timers.tick(300); env.flush();
   assert.equal(index.classes.has("hidden"), true);
   assert.equal(index.classes.has("opacity-0"), true);
   assert.equal(grid.classes.has("opacity-100"), true);
   assert.equal(grid.classes.has("hidden"), false);
   assert.equal(env.root.classes.has("opacity-0"), false);
+  assert.equal(indexLabel.classes.has("invisible"), false);
+  assert.equal(gridLabel.classes.has("invisible"), true);
   assert.deepEqual(cards.map((card) => card.classes.has("hidden")), [false, true, true]);
   for (const button of env.buttons) {
     button.dispatchEvent(new Event("click")); env.flush();
     assert.equal(grid.dataset.projectFilter, button.dataset.type);
     assert.deepEqual(cards.map((card) => card.classes.has("hidden")),
       cards.map((card) => button.dataset.type !== "both" && card.dataset.type !== button.dataset.type));
+    assert.deepEqual(rows.map((row) => row.classes.has("hidden")),
+      rows.map((row) => button.dataset.type !== "both" && row.dataset.type !== button.dataset.type));
     assert.equal(button.getAttribute("aria-pressed"), "true");
   }
+  env.cleanup();
+});
+
+test("Work index sorts the selected column numerically and retains filtered rows", () => {
+  const env = environment();
+  const cell = (textContent: string) => Object.assign(new Element(), { textContent });
+  const first = Object.assign(new Element(), { children: [cell("Alpha"), cell("PE10")] });
+  const second = Object.assign(new Element(), { children: [cell("Zulu"), cell("PE2")] });
+  second.classes.add("hidden");
+  const tbody = Object.assign(new Element(), {
+    children: [first, second],
+    appendChild(row: typeof first) { this.children = [...this.children.filter((item) => item !== row), row]; },
+  });
+  const heading = new Element(), icon = new Element(), button = new Element();
+  button.group = heading;
+  button.dataset.sortColumn = "1";
+  button.nodes.set(".chevron-icon", icon);
+  env.lists.set("#project-index [data-sort-column]", [button]);
+  env.lists.set("#project-index tbody tr", tbody.children);
+  env.queries.set("#project-index tbody", tbody);
+  env.run("projectToggle.js");
+  env.document.dispatchEvent(new Event("astro:after-swap"));
+  button.dispatchEvent(new Event("click"));
+  assert.deepEqual(tbody.children, [second, first]);
+  assert.equal(heading.getAttribute("aria-sort"), "ascending");
+  assert.equal(second.classes.has("hidden"), true);
+  button.dispatchEvent(new Event("click"));
+  assert.deepEqual(tbody.children, [first, second]);
+  assert.equal(heading.getAttribute("aria-sort"), "descending");
   env.cleanup();
 });
