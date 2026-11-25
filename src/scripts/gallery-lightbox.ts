@@ -1,6 +1,7 @@
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 import "../styles/gallery-lightbox.css";
+import { galleryTapAction } from "./gallery-lightbox-actions";
 
 const captionText = (element?: HTMLElement) =>
   element?.closest("figure")?.querySelector("figcaption")?.textContent?.trim() || "";
@@ -13,6 +14,8 @@ export function createGalleryLightbox(gallery: HTMLElement) {
     pswpModule: () => import("photoswipe"),
     preload: [1, 1],
     loop: false,
+    bgClickAction: "close",
+    tapAction: galleryTapAction,
     showAnimationDuration: reducedMotion ? 0 : 200,
     hideAnimationDuration: reducedMotion ? 0 : 200,
     zoomAnimationDuration: reducedMotion ? 0 : 200,

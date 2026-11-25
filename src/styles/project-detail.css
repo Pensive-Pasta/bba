@@ -46,3 +46,10 @@
   margin-bottom: 0;
   padding-bottom: var(--site-gutter);
 }
+
+@media (max-width: 767.98px) {
+  .project-detail bba-editorial-gallery,
+  .project-detail bba-editorial-gallery .grid {
+    row-gap: var(--site-gutter);
+  }
+}
