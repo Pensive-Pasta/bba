@@ -13,7 +13,7 @@ const { slide, fullWidth = false } = Astro.props;
   <a href={slide.lightbox} data-gallery-image data-astro-reload
     data-pswp-width={slide.lightboxWidth} data-pswp-height={slide.lightboxHeight}
     data-pswp-srcset={slide.lightboxSrcset}
-    aria-label={`Enlarge photograph: ${slide.alt}`}
+    aria-label={slide.alt ? `Enlarge photograph: ${slide.alt}` : "Enlarge photograph"}
     class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
     <img src={slide.thumbnail} srcset={slide.srcset}
       sizes={fullWidth ? "100vw" : "(min-width: 768px) 50vw, 100vw"}

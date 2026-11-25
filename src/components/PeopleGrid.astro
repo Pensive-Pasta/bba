@@ -1,6 +1,7 @@
 ---
 import type { Person } from "../types/StudioPage";
 import { normaliseText } from "../utils/normaliseText";
+import { imageAlt } from "../lib/imageAlt";
 const { people } = Astro.props as { people: Person[] };
 
 function getFirstName(fullName: string | undefined): string {
@@ -23,7 +24,7 @@ const normalisedPeople = people.map((person) => ({
           <div class="image-grid-media relative aspect-square w-[calc(100%-2rem)] mx-4 md:w-full md:mx-0 shrink-0 overflow-hidden">
             <img
               src={person.image.url}
-              alt={person.image.alt || person.name || ""}
+              alt={imageAlt(person.image)}
               class="w-full h-full object-cover object-top"
               loading="lazy"
             />

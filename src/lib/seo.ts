@@ -1,3 +1,6 @@
+import { heroImage } from "./heroMedia.ts";
+import type { HeroImage } from "../types/HeroMedia";
+
 export const SITE_NAME = "Butcher Bayley Architects";
 export const SITE_TITLE_SUFFIX = "Butcher Bayley Architects (BBA)";
 export const DEFAULT_SEO_IMAGE = "/images/logo-og.jpg";
@@ -63,9 +66,9 @@ export const portableTextToPlainText = (
 
     if ("children" in item && Array.isArray(item.children)) {
       const text = item.children
-        .map((child) => child?.text?.trim())
+        .map((child) => child?.text ?? "")
         .filter(Boolean)
-        .join(" ");
+        .join("");
 
       if (text) parts.push(text);
       continue;
@@ -90,9 +93,27 @@ export const resolveSeoDescription = (
     ...fallbacks.map((value) => (value ? excerpt(value) ?? value : undefined))
   );
 
+export const resolveSeoTitle = (manual?: string | null, fallback?: string): string =>
+  firstNonEmpty(manual, fallback) || `${SITE_TITLE_SUFFIX} | RIBA Chartered Practice`;
+
 export const resolveSeoImage = (
-  ...candidates: Array<string | null | undefined>
-): string => firstNonEmpty(...candidates) ?? DEFAULT_SEO_IMAGE;
+  ...candidates: Array<string | HeroImage | null | undefined>
+): string => {
+  const chosen = candidates.find((candidate) => typeof candidate === "string" ? candidate.trim() : candidate?.asset?.url);
+  const media = chosen && typeof chosen !== "string" ? heroImage(chosen) : undefined;
+  const image = (typeof chosen === "string" ? chosen.trim() : media?.url) || DEFAULT_SEO_IMAGE;
+  if (!image.startsWith("https://cdn.sanity.io/images/")) return image;
+  const url = new URL(image);
+  if (chosen && typeof chosen !== "string" && chosen.hotspot && media) {
+    url.searchParams.set("crop", "focalpoint");
+    url.searchParams.set("fp-x", String(media.x));
+    url.searchParams.set("fp-y", String(media.y));
+  }
+  for (const [key, value] of Object.entries({ w: "1200", h: "630", fit: "crop", auto: "format", q: "80" })) url.searchParams.set(key, value);
+  return url.toString();
+};
+
+export const safeJsonLd = (value: unknown): string => JSON.stringify(value).replace(/</g, "\\u003c");
 
 export const findFirstImageUrl = (
   blocks?: Array<ContentBlock | null | undefined>

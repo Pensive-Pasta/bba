@@ -33,6 +33,7 @@ export interface Person {
   image?: {
     url: string;
     alt?: string;
+    decorative?: boolean;
   };
 }
 

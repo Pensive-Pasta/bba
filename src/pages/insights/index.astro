@@ -4,26 +4,27 @@ import AnimatedPills from "../../components/AnimatedPills.astro";
 import InsightGrid from "../../components/InsightGrid.astro";
 import { sanity } from "../../lib/sanityClient";
 import { getInsightsQuery, getInsightPageQuery } from "../../lib/queries";
+import { isPublicInsight } from "../../lib/publicContent";
+import type { Insight } from "../../types/Insight";
 import {
+  resolveSeoTitle,
   resolveSeoDescription,
   resolveSeoImage,
   SITE_TITLE_SUFFIX,
 } from "../../lib/seo";
 
 const insightPage = await sanity.fetch(getInsightPageQuery);
-const insights = await sanity.fetch(getInsightsQuery);
+const insights = (await sanity.fetch(getInsightsQuery)).filter((insight: Insight) => isPublicInsight(insight));
 const filterTypes = ["all", "news", "projects", "thinking"];
 
-const metaTitle =
-  insightPage?.seo?.metaTitle || `${insightPage?.title ?? "Insights"} | ${SITE_TITLE_SUFFIX}`;
+const metaTitle = resolveSeoTitle(insightPage?.seo?.metaTitle, `${insightPage?.title || "Insights"} | ${SITE_TITLE_SUFFIX}`);
 const configuredDescription = insightPage?.seo?.metaDescription?.trim();
-const legacyDefaultDescription =
-  "Latest news, projects, and thinking from Butcher Bayley Architects.";
 const metaDescription = resolveSeoDescription(
-  configuredDescription === legacyDefaultDescription ? undefined : configuredDescription,
+  configuredDescription,
+  insightPage?.description,
   "Latest news, projects, and perspectives from Butcher Bayley Architects."
 );
-const ogImage = resolveSeoImage(insightPage?.seo?.ogImage?.asset?.url);
+const ogImage = resolveSeoImage(insightPage?.seo?.ogImage);
 ---
 
 <BaseLayout

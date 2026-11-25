@@ -28,7 +28,7 @@ const alignmentClass = alignment === "right" ? "md:ml-auto md:mr-0" : "md:mr-aut
               <a href={slide.lightbox} data-gallery-image data-astro-reload
                 data-pswp-width={slide.lightboxWidth} data-pswp-height={slide.lightboxHeight}
                 data-pswp-srcset={slide.lightboxSrcset}
-                aria-label={`Enlarge photograph: ${slide.alt}`}>
+                aria-label={slide.alt ? `Enlarge photograph: ${slide.alt}` : "Enlarge photograph"}>
                 <img src={slide.thumbnail} srcset={slide.srcset} sizes="auto, (min-width: 768px) 50vw, 100vw"
                   width={slide.width} height={slide.height} alt={slide.alt} loading="lazy" decoding="async" />
               </a>

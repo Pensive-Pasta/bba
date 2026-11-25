@@ -12,6 +12,7 @@ import { projectIntroduction } from "../../lib/projectIntroduction";
 import "../../styles/project-detail.css";
 import {
   portableTextToPlainText,
+  resolveSeoTitle,
   resolveSeoDescription,
   resolveSeoImage,
   SITE_TITLE_SUFFIX,
@@ -32,8 +33,7 @@ const { introduction, body, startIndex } = projectIntroduction(projectInfo.conte
 const hasHero = Boolean(projectInfo.imageUrl || projectInfo.heroVideo?.url ||
   projectInfo.mobileHeroImage?.asset?.url || projectInfo.mobileHeroVideo?.url);
 
-const seoTitle =
-  projectInfo.seo?.metaTitle ?? `${projectInfo.title} | Work | ${SITE_TITLE_SUFFIX}`;
+const seoTitle = resolveSeoTitle(projectInfo.seo?.metaTitle, `${projectInfo.title} | Work | ${SITE_TITLE_SUFFIX}`);
 const completion = projectInfo.credits?.find((credit: { label: string; value: string }) => credit.label === "Completion")?.value;
 const projectSummary = [
   projectInfo.type
@@ -50,12 +50,9 @@ const seoDescription = resolveSeoDescription(
   blockText,
   projectSummary ? `${projectInfo.title}, ${projectSummary}.` : projectInfo.title
 );
-const heroOgImage = projectInfo.imageUrl
-  ? `${projectInfo.imageUrl}?w=1200&h=630&fit=crop&auto=format&q=80`
-  : undefined;
 const ogImage = resolveSeoImage(
-  projectInfo.seo?.ogImage?.asset?.url,
-  heroOgImage
+  projectInfo.seo?.ogImage,
+  projectInfo.heroImage
 );
 ---
 
@@ -64,6 +61,7 @@ const ogImage = resolveSeoImage(
   title={seoTitle}
   description={seoDescription}
   ogImage={ogImage}
+  ogImageAlt={projectInfo.seo?.ogImage?.asset?.url ? projectInfo.seo.ogImage.altText : projectInfo.altText}
   breadcrumbs={[
     { name: "Home", path: "/" },
     { name: "Work", path: "/work/" },
@@ -81,7 +79,7 @@ const ogImage = resolveSeoImage(
           heroVideo={projectInfo.heroVideo}
           mobileHeroImage={projectInfo.mobileHeroImage}
           mobileHeroVideo={projectInfo.mobileHeroVideo}
-          scrollTarget="projects"
+          scrollTarget="project-information"
         />
       )
     }

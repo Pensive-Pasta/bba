@@ -155,6 +155,12 @@ const legalUrl = "/legal";
       if (changed) document.getElementById("site-header")?.dispatchEvent(
         new CustomEvent("bba:menu-state", { detail: { open: isOpen } })
       );
+      if (changed) {
+        document.querySelector<HTMLElement>("main")?.toggleAttribute("inert", isOpen);
+        document.querySelector<HTMLElement>("footer")?.toggleAttribute("inert", isOpen);
+      }
+      if (changed && isOpen) mobileMenu.querySelector<HTMLAnchorElement>("a")?.focus();
+      if (changed && !isOpen && mobileMenu.contains(document.activeElement)) menuToggle.focus();
     };
 
     const closeMenu = () => setMenuState(false);
@@ -176,6 +182,16 @@ const legalUrl = "/legal";
       "keydown",
       (event) => {
         if (event.key === "Escape") closeMenu();
+        if (event.key !== "Tab" || menuToggle.getAttribute("aria-expanded") !== "true") return;
+        const links = Array.from(mobileMenu.querySelectorAll<HTMLAnchorElement>("a[href]"));
+        const last = links.at(-1) || menuToggle;
+        if (event.shiftKey && document.activeElement === menuToggle) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          menuToggle.focus();
+        }
       },
       { signal }
     );

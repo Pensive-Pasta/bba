@@ -3,10 +3,14 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import ContentBlock from "../../components/ContentBlock.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import { sanity } from "../../lib/sanityClient";
-import { getInsightBySlugQuery } from "../../lib/queries";
+import { getInsightBySlugQuery, getInsightsQuery } from "../../lib/queries";
+import { isPublicInsight } from "../../lib/publicContent";
+import { canonicalUrl } from "../../lib/deployment";
+import type { Insight } from "../../types/Insight";
 import {
   findFirstImageUrl,
   portableTextToPlainText,
+  resolveSeoTitle,
   resolveSeoDescription,
   resolveSeoImage,
   SITE_NAME,
@@ -16,40 +20,44 @@ import {
 const { slug } = Astro.params;
 
 export async function getStaticPaths() {
-  const insights = await sanity.fetch(
-    `*[_type == "insight"]{ "slug": slug.current }`
-  );
-  return insights.map((i: { slug: string }) => ({ params: { slug: i.slug } }));
+  const insights: Insight[] = await sanity.fetch(getInsightsQuery);
+  return insights.filter((insight) => isPublicInsight(insight)).map((insight) => ({ params: { slug: insight.slug.current } }));
 }
 
 const insight = await sanity.fetch(getInsightBySlugQuery, { slug });
+if (!isPublicInsight(insight)) throw new Error(`Published Insight is unavailable or has an invalid slug: ${slug}`);
 
-const seoTitle =
-  insight.seo?.metaTitle ?? `${insight.title} | Insights | ${SITE_TITLE_SUFFIX}`;
+const seoTitle = resolveSeoTitle(insight.seo?.metaTitle, `${insight.title} | Insights | ${SITE_TITLE_SUFFIX}`);
 const seoDescription = resolveSeoDescription(
   insight.seo?.metaDescription,
   portableTextToPlainText(insight.contentBlocks),
   `Read ${insight.title} from ${SITE_NAME}.`
 );
 const seoOgImage = resolveSeoImage(
-  insight.seo?.ogImage?.asset?.url,
+  insight.seo?.ogImage,
   findFirstImageUrl(insight.contentBlocks)
 );
 const publishedIso = new Date(insight.publishedAt).toISOString();
+const modifiedIso = new Date(insight._updatedAt || insight.publishedAt).toISOString();
+const articleUrl = canonicalUrl(`/insights/${slug}/`, Astro.site!.toString());
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: seoTitle,
+  "@id": `${articleUrl}#article`,
+  mainEntityOfPage: articleUrl,
+  headline: insight.title,
   description: seoDescription,
   datePublished: publishedIso,
-  dateModified: publishedIso,
-  image: [seoOgImage],
+  dateModified: modifiedIso,
+  image: [new URL(seoOgImage, Astro.site).toString()],
   author: {
     "@type": "Organization",
+    "@id": `${Astro.site!.origin}/#organization`,
     name: SITE_NAME,
   },
   publisher: {
     "@type": "Organization",
+    "@id": `${Astro.site!.origin}/#organization`,
     name: SITE_NAME,
   },
 };
@@ -61,6 +69,7 @@ const articleJsonLd = {
   description={seoDescription}
   ogType="article"
   ogImage={seoOgImage}
+  ogImageAlt={insight.seo?.ogImage?.asset?.url ? insight.seo.ogImage.altText : insight.contentBlocks?.flatMap((block: any) => block.images || []).find((image: any) => image.asset?.url)?.altText}
   jsonLd={articleJsonLd}
   breadcrumbs={[
     { name: "Home", path: "/" },
@@ -76,7 +85,7 @@ const articleJsonLd = {
       {insight.title}
     </h1>
     <p class="text-sm mb-12 px-4 md:px-8">
-      {new Date(insight.publishedAt).toLocaleDateString("en-GB")}
+      <time datetime={publishedIso}>{new Date(insight.publishedAt).toLocaleDateString("en-GB", {timeZone: "Europe/London"})}</time>
     </p>
     <div class="content-separators mt-12 md:-mt-32">
       <ContentBlock blocks={insight.contentBlocks} />

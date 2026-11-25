@@ -71,6 +71,22 @@ body {
   @apply font-future text-primary leading-relaxed min-h-screen;
 }
 
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10001;
+  padding: 0.75rem 1rem;
+  background: white;
+  color: #111;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: translateY(0); }
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
 *,
 *::before,
 *::after {

@@ -7,8 +7,10 @@ const { class: className = "" } = Astro.props;
   xmlns="http://www.w3.org/2000/svg"
   class={`transition duration-300 w-32 h-auto md:w-40 ${className}`}
   fill="currentColor"
+  aria-hidden="true"
+  focusable="false"
 >
-  <g clip-path="url(#clip0_41_103)">
+  <g>
     <path
       d="M41.929 39.3539L31.2881 50C31.2881 50 31.2933 50 31.2984 50C41.6555 50 50.0465 58.3961 50.0465 68.7481C50.0465 79.1 41.6504 87.4961 31.2984 87.4961C20.9465 87.4961 12.5504 79.1 12.5504 68.7481L1.90942 79.3942C6.26488 91.413 17.7779 100 31.2984 100C48.5551 100 62.5504 86.0099 62.5504 68.7481C62.5504 55.2224 53.9581 43.7042 41.9342 39.3539H41.929Z"
       fill="currentColor"></path>
@@ -27,9 +29,4 @@ const { class: className = "" } = Astro.props;
       d="M78.4807 68.7481V0H90.9794V56.2494L78.4807 68.7481Z"
       fill="currentColor"></path>
   </g>
-  <defs>
-    <clipPath id="clip0_41_103">
-      <rect width="219.424" height="100" fill="currentColor"></rect>
-    </clipPath>
-  </defs>
 </svg>

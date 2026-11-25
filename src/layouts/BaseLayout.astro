@@ -9,6 +9,7 @@ import { ClientRouter } from "astro:transitions";
 import Seo from "../components/Seo.astro";
 import CookieConsent from "../components/CookieConsent.astro";
 import { SITE_NAME, DEFAULT_SEO_IMAGE } from "../lib/seo";
+import { canonicalUrl } from "../lib/deployment";
 import landingSession from "../scripts/landing-session.js?raw";
 import theFutureRegularUrl from "../assets/fonts/the-future-regular.woff2";
 
@@ -17,9 +18,11 @@ const {
   description,
   ogType,
   ogImage,
+  ogImageAlt,
   robots,
   jsonLd,
   breadcrumbs = [],
+  canonicalPath,
   hideMenu = false,
   hideFooter = false,
   hideCookieConsent = false,
@@ -34,7 +37,7 @@ if (!siteOrigin) {
   );
 }
 
-const canonical = new URL(Astro.url.pathname, siteOrigin).toString();
+const canonical = canonicalUrl(canonicalPath || Astro.url.pathname, siteOrigin);
 const normalizedSiteOrigin = siteOrigin.replace(/\/$/, "");
 const resolvedOgImage =
   ogImage
@@ -101,6 +104,7 @@ const structuredData = [
       description={description}
       ogType={ogType}
       ogImage={resolvedOgImage}
+      ogImageAlt={ogImageAlt || (resolvedOgImage === new URL(DEFAULT_SEO_IMAGE, siteOrigin).toString() ? "Butcher Bayley Architects logo" : "")}
       canonical={canonical}
       siteOrigin={siteOrigin}
       robots={robots}
@@ -118,9 +122,10 @@ const structuredData = [
   <ClientRouter />
 
   <body class="w-full min-h-screen bg-white flex flex-col">
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <slot name="landing" />
     <Header hideMenu={hideMenu} />
-    <main class:list={["site-main flex-1 min-w-0", mainClass]}>
+    <main id="main-content" tabindex="-1" class:list={["site-main flex-1 min-w-0", mainClass]}>
       <slot />
     </main>
     {!hideFooter && <Footer />}

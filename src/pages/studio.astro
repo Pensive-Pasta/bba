@@ -9,6 +9,7 @@ import TextBlock from "../components/TextBlock.astro";
 import { studioIntroduction } from "../lib/studioIntroduction";
 import {
   portableTextToPlainText,
+  resolveSeoTitle,
   resolveSeoDescription,
   resolveSeoImage,
   SITE_TITLE_SUFFIX,
@@ -22,14 +23,13 @@ const sections = [
   { key: "awards", ...studioIntroduction(studioPage.awardsBlocks, "Awards") },
 ];
 
-const metaTitle =
-  studioPage?.seo?.metaTitle || `${studioPage?.title ?? "Studio"} | ${SITE_TITLE_SUFFIX}`;
+const metaTitle = resolveSeoTitle(studioPage?.seo?.metaTitle, `Studio | ${SITE_TITLE_SUFFIX}`);
 const metaDescription = resolveSeoDescription(
   studioPage?.seo?.metaDescription,
   portableTextToPlainText(studioPage?.profileBlocks),
   "Meet our team, discover our values, and explore the profile of Butcher Bayley Architects, a RIBA Chartered Practice."
 );
-const ogImage = resolveSeoImage(studioPage?.seo?.ogImage?.asset?.url);
+const ogImage = resolveSeoImage(studioPage?.seo?.ogImage);
 ---
 
 <BaseLayout

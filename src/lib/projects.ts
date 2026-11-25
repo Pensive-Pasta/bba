@@ -1,11 +1,12 @@
 import type { Project } from "../types/Project";
+import { hasPublishedEditorial } from "./publicContent.ts";
 
 // Used by route generation, cards and the index. A photo or slug alone never
 // enables a page. Queries use the published perspective and project its text.
 export function projectDetailHref(project: Project): string | undefined {
   const slug = project.slug?.current;
   if (project._id?.startsWith("drafts.") || project.caseStudyEnabled !== true ||
-    !project.caseStudyText?.trim() || !slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ||
+    !hasPublishedEditorial(project.caseStudyText) || !slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ||
     !(project.heroImage?.asset?.url || project.imageUrl || project.heroVideo?.url)) return undefined;
   return `/work/${slug}`;
 }

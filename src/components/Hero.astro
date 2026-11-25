@@ -1,6 +1,7 @@
 ---
 import { heroImage as resolveImage, heroVideos } from "../lib/heroMedia";
 import type { HeroImage, HeroVideo } from "../types/HeroMedia";
+import { imageAlt } from "../lib/imageAlt";
 
 interface Props {
   image?: string;
@@ -20,6 +21,8 @@ const mobileImage = resolveImage(mobileHeroImage, desktopImage.url);
 const mobilePosition = mobileHeroImage?.asset?.url ? mobileImage.position : desktopImage.position;
 const videos = heroVideos(heroVideo, mobileHeroVideo, Boolean(mobileHeroImage?.asset?.url));
 const hasVideo = Boolean(videos.desktop || videos.mobile);
+const desktopAlt = heroImage ? imageAlt(heroImage) : alt;
+const mobileAlt = mobileHeroImage?.asset?.url ? imageAlt(mobileHeroImage) : desktopAlt;
 ---
 
 <section
@@ -29,13 +32,16 @@ const hasVideo = Boolean(videos.desktop || videos.mobile);
   data-hero-media
   data-desktop-video={videos.desktop || undefined}
   data-mobile-video={videos.mobile || undefined}
+  data-scroll-target={scrollTarget || undefined}
+  data-desktop-image-alt={desktopAlt}
+  data-mobile-image-alt={mobileAlt}
 >
   {(desktopImage.url || mobileImage.url) && (
     <picture class="hero-picture absolute inset-0 block">
       {mobileImage.url && <source media="(max-width: 767.98px)" srcset={mobileImage.url} />}
       <img
         src={desktopImage.url || mobileImage.url}
-        alt={alt}
+        alt={desktopAlt}
         class="hero-still w-full h-full object-cover"
         loading="eager"
         fetchpriority="high"
@@ -62,13 +68,6 @@ const hasVideo = Boolean(videos.desktop || videos.mobile);
       >Play video</button>
     </>
   )}
-  <a
-    href={`#${scrollTarget}`}
-    class="absolute bottom-6 md:bottom-12 right-6 md:right-12"
-    data-target={scrollTarget}
-  >
-    <!-- <ChevronDown class="animate-bounce w-16 text-white" /> -->
-  </a>
 </section>
 
 <style>
@@ -93,9 +92,14 @@ const hasVideo = Boolean(videos.desktop || videos.mobile);
   function initSmoothScroll() {
     const hero = document.querySelector<HTMLElement>("[data-hero-media]");
     if (hero) initHeroVideo(hero);
-    const targetId = document
-      .querySelector("a[data-target]")
-      ?.getAttribute("data-target");
+    const still = hero?.querySelector<HTMLImageElement>(".hero-still");
+    const mobile = matchMedia("(max-width: 767.98px)");
+    const updateImageAlt = () => {
+      if (still && hero) still.alt = (mobile.matches ? hero.dataset.mobileImageAlt : hero.dataset.desktopImageAlt) ?? "";
+    };
+    updateImageAlt();
+    mobile.addEventListener("change", updateImageAlt);
+    const targetId = hero?.dataset.scrollTarget;
     let fired = false;
 
     function smoothJump() {
@@ -123,6 +127,7 @@ const hasVideo = Boolean(videos.desktop || videos.mobile);
 
     document.addEventListener("astro:before-swap", () => {
       window.removeEventListener("scroll", onScroll);
+      mobile.removeEventListener("change", updateImageAlt);
       fired = false;
     });
   }

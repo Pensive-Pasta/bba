@@ -8,6 +8,7 @@ import ProjectGrid from "../../components/ProjectGrid.astro";
 import ProjectIndexTable from "../../components/ProjectIndexTable.astro";
 import WorkHeader from "../../components/WorkHeader.astro";
 import {
+  resolveSeoTitle,
   resolveSeoDescription,
   resolveSeoImage,
   SITE_TITLE_SUFFIX,
@@ -16,15 +17,13 @@ import {
 const workPage = await sanity.fetch(getWorkPageQuery);
 const projects = workGridProjects(workPage?.projects);
 
-const metaTitle =
-  workPage?.seo?.metaTitle ||
-  `${workPage?.title ?? "Work"} | ${SITE_TITLE_SUFFIX}`;
+const metaTitle = resolveSeoTitle(workPage?.seo?.metaTitle, `${workPage?.title || "Work"} | ${SITE_TITLE_SUFFIX}`);
 const metaDescription = resolveSeoDescription(
   workPage?.seo?.metaDescription,
   workPage?.description,
   "Explore Butcher Bayley Architects’ portfolio. Filter projects by urban, inter-urban and rural settings, showcasing our sustainable, place-making approach."
 );
-const ogImage = resolveSeoImage(workPage?.seo?.ogImage?.asset?.url);
+const ogImage = resolveSeoImage(workPage?.seo?.ogImage);
 ---
 
 <BaseLayout

@@ -4,6 +4,7 @@ import { sanity } from "../lib/sanityClient";
 import { getContactPageQuery } from "../lib/queries";
 import { normaliseText } from "../utils/normaliseText";
 import {
+  resolveSeoTitle,
   resolveSeoDescription,
   resolveSeoImage,
   SITE_TITLE_SUFFIX,
@@ -43,13 +44,13 @@ const cards: Array<Location | undefined> = [locA, locB];
 const introRaw = description;
 const intro = normaliseText(introRaw);
 const introText = intro.join(" ");
-const metaTitle = seo?.metaTitle ?? `${title ?? "Contact"} | ${SITE_TITLE_SUFFIX}`;
+const metaTitle = resolveSeoTitle(seo?.metaTitle, `${title || "Contact"} | ${SITE_TITLE_SUFFIX}`);
 const metaDescription = resolveSeoDescription(
   seo?.metaDescription,
   introText,
   description
 );
-const ogImage = resolveSeoImage(seo?.ogImage?.asset?.url);
+const ogImage = resolveSeoImage(seo?.ogImage);
 ---
 
 <BaseLayout

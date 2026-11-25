@@ -13,6 +13,7 @@ const formattedDate = new Date(publishedAt)
     day: "2-digit",
     month: "2-digit",
     year: "2-digit",
+    timeZone: "Europe/London",
   })
   .replace(/\//g, ".");
 ---
@@ -29,11 +30,11 @@ const formattedDate = new Date(publishedAt)
     <div class="flex justify-between items-start">
       <span class="text-xl line-clamp-3 mr-4 font-light">{title}</span>
 
-      <img src="/icons/arrow-up-right.svg" alt="arrow" class="arrow w-6 mt-1" />
+      <img src="/icons/arrow-up-right.svg" alt="" aria-hidden="true" class="arrow w-6 mt-1" />
     </div>
     <div class="flex flex-col mt-auto font-light overflow-hidden">
       <span class="text-sm uppercase mt-1 tracking-wide">#{type === "thinking" ? "perspectives" : type}</span>
-      <span class="text-sm">{formattedDate}</span>
+      <time class="text-sm" datetime={new Date(publishedAt).toISOString()}>{formattedDate}</time>
     </div>
   </div>
 </a>

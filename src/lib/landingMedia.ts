@@ -1,5 +1,6 @@
 import { heroImage, heroVideos } from "./heroMedia.ts";
 import type { HeroImage, HeroVideo } from "../types/HeroMedia";
+import { imageAlt } from "./imageAlt.ts";
 
 export interface LandingContent {
   landingHeading?: string | null;
@@ -24,11 +25,11 @@ function usableImage(image?: HeroImage | null) {
 // Reuse hero crop/hotspot handling, then request responsive hero-sized images,
 // never the square listing thumbnail or an unbounded original download.
 function prepareImage(image?: HeroImage | null) {
-  if (!image) return { url: "/images/copper.jpg", srcset: undefined, position: "50% 50%", alt: "Copper House, Butcher Bayley Architects" };
+  if (!image) return { url: "/images/copper.jpg", srcset: undefined, position: "50% 50%", alt: "Copper-clad rear extension and garden behind a brick terraced house." };
   const resolved = heroImage(image);
   const url = new URL(resolved.url);
   if (url.hostname !== "cdn.sanity.io" || !url.pathname.startsWith("/images/")) {
-    return { ...resolved, srcset: undefined, alt: image.altText || "Architecture by Butcher Bayley Architects" };
+    return { ...resolved, srcset: undefined, alt: imageAlt(image) };
   }
   const rectWidth = Number(url.searchParams.get("rect")?.split(",")[2]);
   const nativeWidth = rectWidth || image.asset?.metadata?.dimensions?.width || 2560;
@@ -46,7 +47,7 @@ function prepareImage(image?: HeroImage | null) {
     url: imageUrl(Math.min(1920, maximum)),
     srcset: widths.map((width) => `${imageUrl(width)} ${width}w`).join(", "),
     position: resolved.position,
-    alt: image.altText || "Architecture by Butcher Bayley Architects",
+    alt: imageAlt(image),
   };
 }
 

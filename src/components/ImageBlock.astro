@@ -1,7 +1,9 @@
 ---
+import { imageAlt } from "../lib/imageAlt";
 interface ImageData {
-  asset: { url: string };
+  asset: { url: string; altText?: string; metadata?: { dimensions?: { width: number; height: number } } };
   altText?: string;
+  decorative?: boolean;
   caption?: string;
   size?: "small" | "medium" | "large";
 }
@@ -33,13 +35,16 @@ const widthClass = hasLarge ? "md:w-[65vw]" : "md:w-1/2";
 <section class={`w-full ${widthClass} px-4 md:px-8 mb-12 ${alignmentClass}`}>
   <div class="flex gap-4">
     {
-      images.map((img) => (
+      images.filter((img) => img?.asset?.url).map((img) => (
         <figure class={`flex-1 ${classForSize(img.size as any)}`}>
           <img
             src={img.asset?.url}
-            alt={img.altText || "Project image"}
+            alt={imageAlt(img)}
+            width={img.asset.metadata?.dimensions?.width}
+            height={img.asset.metadata?.dimensions?.height}
             class="w-full h-auto object-cover"
             loading="lazy"
+            decoding="async"
           />
           {img.caption && (
             <figcaption class="mt-2 text-lg">

@@ -6,11 +6,12 @@ _type == "galleryBlock" => {
   "images": coalesce(images, [])[]{
     _key,
     altText,
+    decorative,
     caption,
     editorialLayout,
     crop,
     hotspot,
-    asset->{ url, metadata{ dimensions{ width, height } } }
+    asset->{ url, altText, metadata{ dimensions{ width, height } } }
   }
 }`;
 
@@ -33,7 +34,7 @@ export const projectSummaryProjection = `
   includeInWorkIndex,
   caseStudyEnabled,
   "caseStudyText": pt::text(contentBlocks[_type == "textBlock"].content[]),
-  heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  heroImage{ altText, decorative, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } },
   "heroVideo": heroVideo.asset->{ url, mimeType },
   "imageUrl": heroImage.asset->url
 `;
@@ -48,14 +49,14 @@ export const getHomePageQuery = `*[_type == "homePage"][0]{
   },
   landingHeading,
   landingText,
-  heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  heroImage{ altText, decorative, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } },
   "heroVideo": heroVideo.asset->{ url, mimeType },
-  mobileHeroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  mobileHeroImage{ altText, decorative, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } },
   "mobileHeroVideo": mobileHeroVideo.asset->{ url, mimeType },
   "landingFallbackProject": *[_type == "project" && slug.current == "copper-house"][0]{
     title,
     postCode,
-    heroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } }
+    heroImage{ altText, decorative, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   },
   featuredPage{
     pageTitle,
@@ -64,7 +65,7 @@ export const getHomePageQuery = `*[_type == "homePage"][0]{
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   }
 }`;
 
@@ -76,7 +77,7 @@ export const getWorkPageQuery = `*[_type == "workPage"][0]{
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   }
 }`;
 
@@ -86,12 +87,12 @@ export const getProjectBySlugQuery = `
 *[${caseStudyCondition} && slug.current == $slug][0]{
   ${projectSummaryProjection},
   "altText": heroImage.altText,
-  mobileHeroImage{ altText, crop, hotspot, asset->{ url, metadata{ dimensions{ width, height } } } },
+  mobileHeroImage{ altText, decorative, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } },
   "mobileHeroVideo": mobileHeroVideo.asset->{ url, mimeType },
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   },
   // Default to [] if missing
   "contentBlocks": coalesce(contentBlocks, [])[]{
@@ -101,9 +102,10 @@ export const getProjectBySlugQuery = `
     _type == "imageBlock" => {
       "images": coalesce(images, [])[]{
         altText,
+        decorative,
         caption,
         size,
-        asset->{ url }
+        asset->{ url, altText, metadata{ dimensions{ width, height } } }
       }
     },
     // textBlock
@@ -125,9 +127,10 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
     _type == "imageBlock" => {
       "images": coalesce(images, [])[]{
         altText,
+        decorative,
         caption,
         size,
-        asset->{ url }
+        asset->{ url, altText, metadata{ dimensions{ width, height } } }
       }
     },
     _type == "textBlock" => { content },
@@ -140,9 +143,10 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
     _type == "imageBlock" => {
       "images": coalesce(images, [])[]{
         altText,
+        decorative,
         caption,
         size,
-        asset->{ url }
+        asset->{ url, altText, metadata{ dimensions{ width, height } } }
       }
     },
     _type == "textBlock" => { content },
@@ -155,9 +159,10 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
     _type == "imageBlock" => {
       "images": coalesce(images, [])[]{
         altText,
+        decorative,
         caption,
         size,
-        asset->{ url }
+        asset->{ url, altText, metadata{ dimensions{ width, height } } }
       }
     },
     _type == "textBlock" => { content },
@@ -176,7 +181,8 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
     email,
     "image": {
       "url": image.asset->url,
-      "alt": image.alt
+      "alt": coalesce(image.alt, image.asset->altText),
+      "decorative": image.decorative
     }
   },
 
@@ -184,34 +190,41 @@ export const getStudioPageQuery = `*[_type == "studioPage"][0]{
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   }
 }`;
 
 export const getInsightPageQuery = `*[_type == "insightPage"][0]{
   title,
+  description,
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   }
 }`;
 
-export const getInsightsQuery = `*[_type == "insight"] | order(publishedAt desc){
+const insightCondition = `_type == "insight" && !(_id in path("drafts.**")) && defined(slug.current)`;
+
+export const getInsightsQuery = `*[${insightCondition}] | order(publishedAt desc){
+  _id,
   title,
   slug,
   type,
-  publishedAt
+  "publishedAt": coalesce(publishedAt, _createdAt)
 }`;
 
 export const getInsightBySlugQuery = `
-*[_type == "insight" && slug.current == $slug][0]{
+*[${insightCondition} && slug.current == $slug][0]{
+  _id,
+  slug,
   title,
+  _updatedAt,
   "publishedAt": coalesce(publishedAt, _createdAt),
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   },
   "contentBlocks": coalesce(contentBlocks, [])[]{
     _type,
@@ -219,9 +232,10 @@ export const getInsightBySlugQuery = `
     _type == "imageBlock" => {
       "images": coalesce(images, [])[]{
         altText,
+        decorative,
         caption,
         size,
-        asset->{ url }
+        asset->{ url, altText, metadata{ dimensions{ width, height } } }
       }
     },
     _type == "textBlock" => { content },
@@ -243,7 +257,7 @@ export const getContactPageQuery = `
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   }
 }
 `;
@@ -256,7 +270,7 @@ export const getLegalPageQuery = `
   seo{
     metaTitle,
     metaDescription,
-    ogImage{ asset->{ url } }
+    ogImage{ altText, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } }
   }
 }
 `;

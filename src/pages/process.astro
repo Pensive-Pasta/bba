@@ -53,6 +53,7 @@ const processSteps = [
   title={`Process | ${SITE_TITLE_SUFFIX}`}
   description="Learn how Butcher Bayley Architects develops projects from brief and site analysis through design, technical delivery, and construction."
   ogImage={resolveSeoImage("/images/process1.png")}
+  ogImageAlt="Hands comparing coloured material samples around a design table."
   breadcrumbs={[
     { name: "Home", path: "/" },
     { name: "Process", path: "/process/" },
@@ -60,6 +61,7 @@ const processSteps = [
 >
   <section class="py-20 px-4 md:px-12">
     <div class="container mx-auto">
+      <h1 class="sr-only">Our Process</h1>
       <SectionTitle
         title="Our Process"
         subtitle="We believe in a collaborative approach that puts our clients at the center of the design process."
@@ -92,7 +94,7 @@ const processSteps = [
               <div class={index % 2 === 1 ? "md:col-start-1" : ""}>
                 <img
                   src={step.image || "/placeholder.svg"}
-                  alt={step.title}
+                  alt={step.image === "/images/process1.png" ? "Hands comparing coloured material samples around a design table." : ""}
                   class="w-full aspect-[4/3] object-cover"
                 />
               </div>

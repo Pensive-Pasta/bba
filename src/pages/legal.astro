@@ -5,6 +5,7 @@ import { sanity } from "../lib/sanityClient";
 import { getLegalPageQuery } from "../lib/queries";
 import {
   portableTextToPlainText,
+  resolveSeoTitle,
   resolveSeoDescription,
   resolveSeoImage,
   SITE_TITLE_SUFFIX,
@@ -12,15 +13,13 @@ import {
 
 const legalPage = await sanity.fetch(getLegalPageQuery);
 
-const metaTitle =
-  legalPage?.seo?.metaTitle ||
-  `${legalPage?.title ?? "Legal Information"} | ${SITE_TITLE_SUFFIX}`;
+const metaTitle = resolveSeoTitle(legalPage?.seo?.metaTitle, `${legalPage?.title || "Legal Information"} | ${SITE_TITLE_SUFFIX}`);
 const metaDescription = resolveSeoDescription(
   legalPage?.seo?.metaDescription,
   portableTextToPlainText(legalPage?.body),
   "Legal information, privacy notice, cookie information and website terms for Butcher Bayley Architects.",
 );
-const ogImage = resolveSeoImage(legalPage?.seo?.ogImage?.asset?.url);
+const ogImage = resolveSeoImage(legalPage?.seo?.ogImage);
 const formattedDate = legalPage?.lastUpdated
   ? new Date(`${legalPage.lastUpdated}T00:00:00Z`).toLocaleDateString("en-GB", {
       day: "numeric",

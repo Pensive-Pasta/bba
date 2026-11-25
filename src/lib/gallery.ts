@@ -1,4 +1,5 @@
 import type { GalleryImage } from "../types/Gallery.ts";
+import { imageAlt } from "./imageAlt.ts";
 
 const THUMBNAIL_WIDTHS = [240, 480, 768, 1024, 1440];
 const LIGHTBOX_MAX_EDGE = 2560;
@@ -67,7 +68,7 @@ export function gallerySlide(image: GalleryImage | null | undefined): GallerySli
   const lightboxHeight = Math.max(1, Math.round(height * lightboxWidth / width));
   const thumbnailWidth = Math.min(width, 1440, lightboxWidth);
   return {
-    alt: text(image.altText) || text(image.caption) || "Gallery photograph",
+    alt: imageAlt(image),
     caption: text(image.caption),
     width,
     height,

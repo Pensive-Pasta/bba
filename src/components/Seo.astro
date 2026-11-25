@@ -1,9 +1,12 @@
 ---
+import { pageRobots } from "../lib/deployment";
+import { firstNonEmpty, safeJsonLd } from "../lib/seo";
 interface Props {
   title?: string;
   description?: string;
   ogType?: "website" | "article";
   ogImage?: string;
+  ogImageAlt?: string;
   canonical?: string;
   siteOrigin: string;
   robots?: string;
@@ -11,22 +14,21 @@ interface Props {
 }
 
 const defaultOgImage = "/images/logo-og.jpg";
-const allowIndexing =
-  import.meta.env.PUBLIC_ALLOW_INDEXING?.trim().toLowerCase() === "true";
-const defaultRobots = allowIndexing
-  ? "index,follow,max-image-preview:large"
-  : "noindex,follow";
+const allowIndexing = import.meta.env.BBA_INDEXING_ENABLED === true;
 
 const {
-  title = "Butcher Bayley Architects (BBA) | RIBA Chartered Practice",
-  description = "RIBA chartered practice designing sustainable architecture.",
+  title: requestedTitle,
+  description: requestedDescription,
   ogType = "website",
   ogImage: passedOgImage,
+  ogImageAlt = "",
   canonical,
   siteOrigin,
-  robots = defaultRobots,
+  robots: requestedRobots,
   jsonLd,
 } = Astro.props;
+const title = firstNonEmpty(requestedTitle) || "Butcher Bayley Architects (BBA) | RIBA Chartered Practice";
+const description = firstNonEmpty(requestedDescription) || "RIBA chartered practice designing sustainable architecture.";
 
 const toAbsoluteUrl = (value: string) => {
   if (/^https?:\/\//i.test(value)) return value;
@@ -34,12 +36,13 @@ const toAbsoluteUrl = (value: string) => {
 };
 
 const ogImage = toAbsoluteUrl(passedOgImage ?? defaultOgImage);
+const robots = pageRobots(allowIndexing, requestedRobots);
 
 const siteName = "Butcher Bayley Architects";
 const locale = "en_GB";
 const jsonLdEntries = jsonLd
   ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((entry) =>
-      JSON.stringify(entry),
+      safeJsonLd(entry),
     )
   : [];
 ---
@@ -55,13 +58,13 @@ const jsonLdEntries = jsonLd
 <meta property="og:site_name" content={siteName} />
 <meta property="og:locale" content={locale} />
 <meta property="og:image" content={ogImage} />
-<meta property="og:image:alt" content={`${title} – ${siteName}`} />
+<meta property="og:image:alt" content={ogImageAlt} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
-<meta name="twitter:image:alt" content={`${title} – ${siteName}`} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
 
 <meta name="robots" content={robots} />
 
