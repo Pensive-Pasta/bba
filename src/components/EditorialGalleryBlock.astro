@@ -17,14 +17,16 @@ const title = heading?.trim();
   <section class="w-full mb-12" aria-label={title || "Project photographs"}>
     {title && <h2 class="px-4 md:px-8 text-xl md:text-2xl font-bold mb-4">{title}</h2>}
     <bba-editorial-gallery class="grid gap-y-12">
+      <!-- The first image sets each arrangement's height. Adjacent images
+           fill that height on desktop, keeping their existing mobile flow. -->
       {arrangements.map(({ layout, slides }) => (
-        <div data-editorial-arrangement={layout} class:list={["grid items-start gap-y-12", { "md:grid-cols-2": layout !== "full" }]}>
+        <div data-editorial-arrangement={layout} class:list={["grid items-start md:items-stretch gap-y-12", { "md:grid-cols-2": layout !== "full" }]}>
           <EditorialImage slide={slides[0]} fullWidth={layout === "full"} />
           {layout === "portrait-stack" ? (
-            <div class="grid gap-y-12 min-w-0">
-              {slides.slice(1).map((slide) => <EditorialImage slide={slide} />)}
+            <div class="grid md:grid-rows-2 gap-y-12 min-w-0 min-h-0">
+              {slides.slice(1).map((slide) => <EditorialImage slide={slide} fillColumn />)}
             </div>
-          ) : slides.slice(1).map((slide) => <EditorialImage slide={slide} />)}
+          ) : slides.slice(1).map((slide) => <EditorialImage slide={slide} fillColumn />)}
         </div>
       ))}
     </bba-editorial-gallery>

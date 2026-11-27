@@ -6,14 +6,13 @@ import { imageAlt } from "../lib/imageAlt";
 interface Props {
   image?: string;
   alt?: string;
-  scrollTarget?: string;
   heroImage?: HeroImage | null;
   heroVideo?: HeroVideo | null;
   mobileHeroImage?: HeroImage | null;
   mobileHeroVideo?: HeroVideo | null;
 }
 
-const { image = "", alt = "", scrollTarget = "", heroImage,
+const { image = "", alt = "", heroImage,
   heroVideo, mobileHeroImage, mobileHeroVideo } = Astro.props;
 const desktopImage = resolveImage(heroImage, image);
 const mobileImage = resolveImage(mobileHeroImage, desktopImage.url);
@@ -32,7 +31,6 @@ const mobileAlt = mobileHeroImage?.asset?.url ? imageAlt(mobileHeroImage) : desk
   data-hero-media
   data-desktop-video={videos.desktop || undefined}
   data-mobile-video={videos.mobile || undefined}
-  data-scroll-target={scrollTarget || undefined}
   data-desktop-image-alt={desktopAlt}
   data-mobile-image-alt={mobileAlt}
 >
@@ -89,7 +87,7 @@ const mobileAlt = mobileHeroImage?.asset?.url ? imageAlt(mobileHeroImage) : desk
 <script>
   import { initHeroVideo } from "../scripts/hero-video";
 
-  function initSmoothScroll() {
+  function initHero() {
     const hero = document.querySelector<HTMLElement>("[data-hero-media]");
     if (hero) initHeroVideo(hero);
     const still = hero?.querySelector<HTMLImageElement>(".hero-still");
@@ -99,42 +97,14 @@ const mobileAlt = mobileHeroImage?.asset?.url ? imageAlt(mobileHeroImage) : desk
     };
     updateImageAlt();
     mobile.addEventListener("change", updateImageAlt);
-    const targetId = hero?.dataset.scrollTarget;
-    let fired = false;
-
-    function smoothJump() {
-      if (targetId) {
-        const el = document.getElementById(targetId);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-
-    function onScroll() {
-      const y = window.scrollY;
-
-      if (!fired && y > 10) {
-        fired = true;
-        smoothJump();
-      }
-
-      if (fired && y < 10) {
-        fired = false;
-      }
-    }
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
     document.addEventListener("astro:before-swap", () => {
-      window.removeEventListener("scroll", onScroll);
       mobile.removeEventListener("change", updateImageAlt);
-      fired = false;
     });
   }
 
   // Run on initial load
-  initSmoothScroll();
+  initHero();
 
   // Re-run on client-side navigation
-  document.addEventListener("astro:page-load", initSmoothScroll);
+  document.addEventListener("astro:page-load", initHero);
 </script>

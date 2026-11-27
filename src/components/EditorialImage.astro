@@ -4,21 +4,26 @@ import type { GallerySlide } from "../lib/gallery";
 interface Props {
   slide: GallerySlide;
   fullWidth?: boolean;
+  fillColumn?: boolean;
 }
 
-const { slide, fullWidth = false } = Astro.props;
+const { slide, fullWidth = false, fillColumn = false } = Astro.props;
 ---
 
-<figure class="min-w-0 px-4 md:px-8">
+<figure class:list={["min-w-0 px-4 md:px-8", { "md:flex md:flex-col md:min-h-0": fillColumn }]}>
   <a href={slide.lightbox} data-gallery-image data-astro-reload
     data-pswp-width={slide.lightboxWidth} data-pswp-height={slide.lightboxHeight}
     data-pswp-srcset={slide.lightboxSrcset}
     aria-label={slide.alt ? `Enlarge photograph: ${slide.alt}` : "Enlarge photograph"}
-    class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+    class:list={["block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2", {
+      "md:relative md:flex-1 md:overflow-hidden": fillColumn,
+    }]}>
     <img src={slide.thumbnail} srcset={slide.srcset}
       sizes={fullWidth ? "100vw" : "(min-width: 768px) 50vw, 100vw"}
       width={slide.width} height={slide.height} alt={slide.alt}
-      class="block w-full h-auto" loading="lazy" decoding="async" />
+      class:list={["block w-full h-auto", {
+        "md:absolute md:inset-0 md:h-full md:object-cover": fillColumn,
+      }]} loading="lazy" decoding="async" />
   </a>
   {slide.caption && <figcaption class="mt-2 text-sm md:text-base font-light">{slide.caption}</figcaption>}
 </figure>
