@@ -64,6 +64,9 @@
   background-repeat: repeat-x;
   background-origin: border-box;
 }
+/* The inline selector clears this before reveal; visibility reserves all cells.
+   Without JavaScript the editorial cards remain visible in their normal order. */
+[data-home-grid-pending] .home-project-grid { visibility: hidden; }
 
 /* Work's filtered checkerboards are calculated at build time. CSS picks the
    active column count, without a client-side initial or resize reshuffle. */

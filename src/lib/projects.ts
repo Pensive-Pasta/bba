@@ -28,6 +28,18 @@ export interface HomeProjectTile {
   project?: Project | null;
 }
 
+// Both homepage pools use real project identities, never postcode labels as IDs.
+export function homeProjectCandidates<T extends { _id?: string; postCode?: string }>(projects: (T | null)[] = []) {
+  const seen = new Set<string>();
+  return projects.flatMap((project) => {
+    const id = project?._id;
+    const postCode = project?.postCode?.trim();
+    if (!id || id.startsWith("drafts.") || !postCode || seen.has(id)) return [];
+    seen.add(id);
+    return [{ ...project!, _id: id, postCode }];
+  });
+}
+
 export function homeProjectTiles(tiles: HomeProjectTile[] = []) {
   const items = tiles.map((tile) => ({
     label: tile.project?.postCode || tile.label || "",

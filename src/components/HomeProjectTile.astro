@@ -1,0 +1,38 @@
+---
+import ProjectCard from "./ProjectCard.astro";
+import { squareProjectImage } from "../lib/heroMedia";
+import type { Project } from "../types/Project";
+
+interface Props {
+  label: string;
+  project?: Project | null;
+  media?: boolean;
+  slotType: "media" | "postcode";
+}
+
+const { label, project, media = false, slotType } = Astro.props;
+const imageUrl = media ? squareProjectImage(project?.heroImage, project?.imageUrl) : undefined;
+---
+
+<div
+  class="grid-cell image-grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden"
+  data-home-slot={slotType}
+  data-project-id={project?._id}
+>
+  <span class="block p-4 text-4xl" data-home-postcode-label>{label}</span>
+  {media && project && imageUrl && (
+    <div
+      class="image-grid-media absolute inset-0 z-0"
+      data-project-tile
+    >
+      <ProjectCard
+        title={project.title}
+        postCode={label}
+        county={project.county}
+        type={project.type}
+        project={project}
+        imageUrl={imageUrl}
+      />
+    </div>
+  )}
+</div>

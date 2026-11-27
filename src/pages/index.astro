@@ -1,13 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import VisitorLanding from "../components/VisitorLanding.astro";
-import ProjectCard from "../components/ProjectCard.astro";
+import HomeProjectTile from "../components/HomeProjectTile.astro";
 
 import { sanity } from "../lib/sanityClient";
 import { getHomePageQuery } from "../lib/queries";
 import { normaliseText } from "../utils/normaliseText";
-import { squareProjectImage } from "../lib/heroMedia";
-import { homeProjectTiles } from "../lib/projects";
+import { homeProjectCandidates, homeProjectTiles } from "../lib/projects";
+import type { Project } from "../types/Project";
 import {
   resolveSeoTitle,
   resolveSeoDescription,
@@ -24,6 +24,10 @@ const featuredHref = home?.featuredPage?.pageSlug
 const featuredLabel = home?.featuredPage?.pageTitle || "Studio";
 
 const items = homeProjectTiles(home?.projectTiles);
+const mediaProjects = homeProjectCandidates<Project>(home?.mediaProjects).filter((project) =>
+  project.heroImage?.asset?.url || project.imageUrl
+);
+const postcodeProjects = homeProjectCandidates<{ _id: string; postCode: string }>(home?.postcodeProjects);
 
 // Normalise intro text
 const introRaw = home?.intro ?? "";
@@ -52,38 +56,28 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage);
   >
     <!-- Left: Grid -->
 
-    <div class="w-full md:w-1/2">
+    <div class="w-full md:w-1/2" data-home-projects>
       <div class="home-project-grid image-grid grid grid-cols-2">
         {
-          items.map(({ label, project: proj, media }) => {
-            const img = squareProjectImage(proj?.heroImage, proj?.imageUrl);
-
-            return (
-              <>
-                <div class="grid-cell image-grid-cell aspect-square text-xl text-primary-dot font-light relative overflow-hidden">
-                  <span class="block p-4 text-4xl">{label}</span>
-                  {media && proj && (
-                    <div
-                      class={`image-grid-media absolute inset-0 z-0 ${proj.heroVideo?.url ? "" : "opacity-0 pointer-events-none transition-opacity duration-500"}`}
-                      data-project-tile={proj.heroVideo?.url ? undefined : ""}
-                    >
-                      <ProjectCard
-                        title={proj.title}
-                        postCode={label}
-                        county={proj.county}
-                        type={proj.type}
-                        project={proj}
-                        imageUrl={img}
-                        previewVideoUrl={proj.heroVideo?.url}
-                      />
-                    </div>
-                  )}
-                </div>
-              </>
-            );
+          Array.from({ length: 12 }, (_, index) => {
+            const slotType = index % 4 === 1 || index % 4 === 2 ? "media" : "postcode";
+            const item = items[index];
+            return <HomeProjectTile
+              label={item?.label ?? ""}
+              project={item?.project}
+              media={slotType === "media" && item?.media}
+              slotType={slotType}
+            />;
           })
         }
       </div>
+      {mediaProjects.map((project) => (
+        <template data-home-media data-project-id={project._id} data-project-type={project.type ?? ""} data-postcode={project.postCode}>
+          <HomeProjectTile label={project.postCode} project={project} media slotType="media" />
+        </template>
+      ))}
+      <script is:inline type="application/json" data-home-postcodes set:html={JSON.stringify(postcodeProjects).replace(/</g, "\\u003c")} />
+      <script is:inline>window.__bbaHomeGrid?.initialise(document);</script>
     </div>
 
     <!-- Right: Copy -->
@@ -111,56 +105,4 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage);
       </a>
     </div>
   </div>
-
-  <script is:inline>
-    function setInitialState() {
-      const tiles = document.querySelectorAll("[data-project-tile]");
-      tiles.forEach((el) => {
-        // Ensure starting hidden state and slow transition
-        el.classList.add(
-          "opacity-0",
-          "pointer-events-none",
-          "transition-opacity"
-        );
-        el.classList.remove("duration-500");
-        el.classList.add("duration-[2000ms]"); // very slow fade
-      });
-    }
-
-    function runFade() {
-      const tiles = document.querySelectorAll("[data-project-tile]");
-      if (!tiles.length) return;
-      tiles.forEach((el) => {
-        el.classList.remove("pointer-events-none");
-        el.classList.add("opacity-100");
-      });
-    }
-
-    function setupScrollTrigger() {
-      // Make sure we start hidden each time this page loads via Astro soft nav
-      setInitialState();
-
-      let triggered = false;
-      const fire = () => {
-        if (triggered) return;
-        triggered = true;
-        // Small rAF to let classes apply before animating
-        requestAnimationFrame(runFade);
-        window.removeEventListener("scroll", onScroll, { passive: true });
-        window.removeEventListener("wheel", onScroll, { passive: true });
-        window.removeEventListener("touchmove", onScroll, { passive: true });
-      };
-
-      const onScroll = () => fire();
-
-      // Trigger on any user scroll gesture
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("wheel", onScroll, { passive: true });
-      window.addEventListener("touchmove", onScroll, { passive: true });
-      setTimeout(fire, 3000); // Fallback: auto-fade after 3 seconds with no scroll
-    }
-
-    document.addEventListener("DOMContentLoaded", setupScrollTrigger);
-    document.addEventListener("astro:page-load", setupScrollTrigger);
-  </script>
 </BaseLayout>

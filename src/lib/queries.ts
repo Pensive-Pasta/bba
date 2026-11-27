@@ -47,6 +47,11 @@ export const getHomePageQuery = `*[_type == "homePage"][0]{
     label,
     "project": project->{${projectSummaryProjection}}
   },
+  "mediaProjects": *[_type == "project" && !(_id in path("drafts.**")) &&
+    defined(postCode) && postCode != "" &&
+    defined(heroImage.asset->url)]{${projectSummaryProjection}},
+  "postcodeProjects": *[_type == "project" && !(_id in path("drafts.**")) &&
+    defined(postCode) && postCode != ""]{_id, postCode},
   landingHeading,
   landingText,
   heroImage{ altText, decorative, crop, hotspot, asset->{ url, altText, metadata{ dimensions{ width, height } } } },

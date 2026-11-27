@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { homeProjectTiles, projectDetailHref, workGridProjects } from "../lib/projects.ts";
+import { homeProjectCandidates, homeProjectTiles, projectDetailHref, workGridProjects } from "../lib/projects.ts";
 import type { Project } from "../types/Project";
 
 const caseStudy: Project = {
@@ -35,4 +35,14 @@ test("homepage keeps explicit white tiles white and never invents an ambiguous p
   ]);
   assert.equal(result[0].project, undefined);
   assert.equal(homeProjectTiles([{ display: "media", project: null }])[0].media, false);
+});
+
+test("homepage pools retain distinct project identities sharing a postcode and reject drafts, missing IDs and blank codes", () => {
+  const first = { _id: "one", postCode: " PE8 " };
+  const second = { _id: "two", postCode: "PE8" };
+  assert.deepEqual(homeProjectCandidates([
+    first, null, second, first, { _id: "drafts.three", postCode: "PE9" },
+    { _id: "blank", postCode: "  " }, { postCode: "PE2" }, { _id: "missing-code" },
+  ]), [{ _id: "one", postCode: "PE8" }, second]);
+  assert.equal(first.postCode, " PE8 ");
 });

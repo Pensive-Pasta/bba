@@ -2,13 +2,14 @@
    ResizeObserver publishes the actual in-flow height for zoom and resizing. */
 :root {
   --site-header-logo-width: 7rem;
-  --site-header-padding-y: 6px;
+  --site-header-padding-y: 16px;
   --site-header-height: calc(var(--site-header-logo-width) * 100 / 220 + 2 * var(--site-header-padding-y));
   --page-header-gap: 7rem;
 }
 @media (min-width: 768px) {
   :root {
     --site-header-logo-width: 8rem;
+    --site-header-padding-y: 18px;
     --page-header-gap: 4rem;
   }
 }
