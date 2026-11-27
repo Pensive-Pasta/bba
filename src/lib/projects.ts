@@ -22,6 +22,20 @@ export function workGridProjects(projects: (Project | null)[] = []): Project[] {
   });
 }
 
+// Project numbers are string identifiers in Sanity. Sort only the index and
+// preserve incoming order for equal numbers or missing/invalid values at the end.
+export function workIndexProjects(projects: Project[] = []): Project[] {
+  const rank = (project: Project) => {
+    const value = project.projectNumber?.trim() ?? "";
+    const number = /^\d+$/.test(value) ? Number(value) : NaN;
+    return Number.isSafeInteger(number) ? number : Infinity;
+  };
+  return [...projects].sort((a, b) => {
+    const left = rank(a), right = rank(b);
+    return left === right ? 0 : left - right;
+  });
+}
+
 export interface HomeProjectTile {
   display: "media" | "postcode";
   label?: string;

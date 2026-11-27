@@ -78,7 +78,7 @@ export const getWorkPageQuery = `*[_type == "workPage"][0]{
   title,
   description,
   "projects": coalesce(projects, [])[]->{${projectSummaryProjection}},
-  "indexProjects": *[_type == "project" && !(_id in path("drafts.**")) && includeInWorkIndex == true] | order(lower(title) asc){${projectSummaryProjection}},
+  "indexProjects": *[_type == "project" && !(_id in path("drafts.**")) && includeInWorkIndex == true]{${projectSummaryProjection}},
   seo{
     metaTitle,
     metaDescription,

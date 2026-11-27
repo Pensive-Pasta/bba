@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { homeProjectCandidates, homeProjectTiles, projectDetailHref, workGridProjects } from "../lib/projects.ts";
+import { homeProjectCandidates, homeProjectTiles, projectDetailHref, workGridProjects, workIndexProjects } from "../lib/projects.ts";
 import type { Project } from "../types/Project";
 
 const caseStudy: Project = {
@@ -21,6 +21,30 @@ test("grid selection preserves editorial order while excluding duplicates and un
   const second = { ...caseStudy, _id: "second", title: "Second" };
   assert.deepEqual(workGridProjects([second, null, { ...caseStudy, caseStudyEnabled: false }, caseStudy, second]), [second, caseStudy]);
   assert.deepEqual(workGridProjects([{ ...caseStudy, imageUrl: undefined, heroVideo: { url: "https://example.com/hero.mp4" } }]), []);
+});
+
+test("Work index defaults to numeric project order without mutating the supplied array or its project records", () => {
+  const projects = [
+    { ...caseStudy, title: "Alpha", projectNumber: "100" },
+    { ...caseStudy, title: "Zulu", projectNumber: "2" },
+    { ...caseStudy, title: "Middle", projectNumber: " 010 " },
+  ];
+  const before = structuredClone(projects);
+  const ordered = workIndexProjects(projects);
+  assert.deepEqual(ordered.map((project) => project.projectNumber), ["2", " 010 ", "100"]);
+  assert.equal(ordered[0], projects[1]);
+  assert.deepEqual(projects, before);
+});
+
+test("Work index puts missing, blank and invalid project numbers last, retaining all rows and stable ties", () => {
+  const invalid = [undefined, "", "  ", "12a", "1e2", "1.5", "-1", "Infinity", "9007199254740992"]
+    .map((projectNumber, i) => ({ ...caseStudy, title: `Invalid ${i}`, projectNumber }));
+  const first = { ...caseStudy, title: "First", projectNumber: "2" };
+  const tied = { ...caseStudy, title: "Tied", projectNumber: "002" };
+  const last = { ...caseStudy, title: "Last", projectNumber: "10" };
+  const input = [...invalid.slice(0, 3), last, first, ...invalid.slice(3), tied];
+  assert.deepEqual(workIndexProjects(input), [first, tied, last, ...invalid]);
+  assert.deepEqual(workIndexProjects(), []);
 });
 
 test("homepage keeps explicit white tiles white and never invents an ambiguous project", () => {

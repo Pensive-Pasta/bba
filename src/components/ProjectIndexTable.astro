@@ -1,7 +1,8 @@
 ---
 import type { Project } from "../types/Project";
-import { projectDetailHref } from "../lib/projects";
+import { projectDetailHref, workIndexProjects } from "../lib/projects";
 const { projects } = Astro.props as { projects: Project[] };
+const indexProjects = workIndexProjects(projects);
 const columns = ["Name", "Code", "County", "Context", "Typology"];
 ---
 
@@ -10,11 +11,11 @@ const columns = ["Name", "Code", "County", "Context", "Typology"];
   class="hidden p-4 md:p-8 transition-opacity duration-300 ease-in-out opacity-0 max-w-[1600px] mx-auto overflow-auto"
 >
   <table class="w-full text-left">
-    <caption class="sr-only">Project index. Use the context filters above or the column buttons to sort.</caption>
+    <caption class="sr-only">Project index, initially ordered by project number (ascending). Use the context filters above or the column buttons to sort.</caption>
     <thead>
       <tr class="text-base sm:text-lg font-bold">
         {columns.map((column, index) => (
-          <th scope="col" aria-sort={index === 0 ? "ascending" : "none"} class:list={["pb-2 pr-4", { "project-index-desktop": index === 2 || index === 3 }]}>
+          <th scope="col" aria-sort="none" class:list={["pb-2 pr-4", { "project-index-desktop": index === 2 || index === 3 }]}>
             <button type="button" data-sort-column={index} class="flex items-center text-left" aria-label={`Sort by ${column.toLowerCase()}`}>
               {column}<span class="chevron-icon inline-block ml-1 transition-transform duration-300"><img src="/icons/Chevron.svg" alt="" class="w-4" /></span>
             </button>
@@ -24,7 +25,7 @@ const columns = ["Name", "Code", "County", "Context", "Typology"];
     </thead>
     <tbody>
       {
-        projects.map((project) => {
+        indexProjects.map((project) => {
           const href = projectDetailHref(project);
           return (
           <tr data-type={project.type} class="text-sm sm:text-lg font-light align-top">
