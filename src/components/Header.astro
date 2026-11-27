@@ -28,7 +28,7 @@ const legalUrl = "/legal";
       aria-label="Butcher Bayley Architects home"
     >
       <span class="header-text">
-        <Logo class="logo" />
+        <Logo class="logo site-chrome-logo" />
       </span>
     </a>
 
@@ -55,7 +55,7 @@ const legalUrl = "/legal";
   {
     !hideMenu && (
       <div
-        class="nav-menu fixed inset-0 min-h-screen w-screen z-30 hidden overflow-auto isolate bg-[#178FE4]"
+        class="nav-menu fixed inset-0 h-[100dvh] w-screen z-30 hidden overflow-auto isolate bg-[#178FE4]"
         id="nav-menu"
         aria-hidden="true"
       >
@@ -64,9 +64,9 @@ const legalUrl = "/legal";
       class="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#178FE4]"
     >
     </div>
-    <div class="relative z-10 h-full max-w-[1600px] mx-auto">
+    <div class="relative z-10 max-w-[1600px] mx-auto">
       <div
-        class="flex flex-col items-center justify-between h-full bg-primary pt-[160px] px-4 md:px-8 pb-8"
+        class="nav-menu-layout bg-primary px-4 md:px-8 pb-8"
       >
         <nav class="dot-grid w-full max-w-[600px] aspect-square" aria-label="Primary">
           {
