@@ -23,6 +23,7 @@ type ContactData = {
   description: string;
   email: string;
   tel: string;
+  manchesterTel?: string;
   mapCards?: { locationA?: Location; locationB?: Location };
   seo?: {
     metaTitle?: string;
@@ -32,7 +33,7 @@ type ContactData = {
 };
 
 const data = (await sanity.fetch(getContactPageQuery)) as ContactData;
-const { title, description, email, tel, mapCards, seo } = data ?? {};
+const { title, description, email, tel, manchesterTel, mapCards, seo } = data ?? {};
 const locA = mapCards?.locationA;
 const locB = mapCards?.locationB;
 
@@ -40,6 +41,12 @@ const locB = mapCards?.locationB;
 const overlayForIndex = (i: number) => (i === 0 ? "bg-purple" : "bg-red-600");
 // Cards array in fixed order
 const cards: Array<Location | undefined> = [locA, locB];
+const phones = [
+  { label: "Oundle", number: tel },
+  { label: "Manchester", number: manchesterTel },
+];
+// Keep the client's display formatting, but omit the optional UK trunk zero when dialling internationally.
+const telephoneHref = (number: string) => `tel:${number.replace(/\(0\)/g, "").replace(/[^\d+]/g, "")}`;
 
 const introRaw = description;
 const intro = normaliseText(introRaw);
@@ -83,19 +90,19 @@ const ogImage = resolveSeoImage(seo?.ogImage);
             </dd>
           </>
         )}
-        {tel && (
+        {phones.map(({ label, number }) => number && (
           <>
-            <dt class="font-medium">Phone:</dt>
+            <dt class="font-medium">{label}:</dt>
             <dd class="font-bold text-xl min-w-0 [overflow-wrap:anywhere]">
               <a
-                href={`tel:${tel}`}
+                href={telephoneHref(number)}
                 class="hover:opacity-70 transition-opacity"
               >
-                {tel}
+                {number}
               </a>
             </dd>
           </>
-        )}
+        ))}
       </dl>
     </div>
 
@@ -120,8 +127,9 @@ const ogImage = resolveSeoImage(seo?.ogImage);
                 <div class="image-grid-media absolute inset-0">
                   <iframe
                     src={loc.embedSrc}
-                    title={`Interactive map for ${loc.label ?? "our studio"}`}
-                    class="block w-full h-full border-0"
+                    title={`Map for ${loc.label ?? "our studio"}`}
+                    tabindex="-1"
+                    class="block w-full h-full border-0 grayscale"
                     allowfullscreen=""
                     loading="lazy"
                   />
@@ -140,7 +148,7 @@ const ogImage = resolveSeoImage(seo?.ogImage);
 
                 <a
                   href={loc.mapsLink}
-                  class="absolute top-4 right-4 md:top-8 md:right-8 z-30"
+                  class="absolute inset-0 z-30"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Open ${loc.label ?? "location"} in Google Maps`}
@@ -149,7 +157,7 @@ const ogImage = resolveSeoImage(seo?.ogImage);
                     src="/icons/arrow-up-right.svg"
                     alt=""
                     aria-hidden="true"
-                    class="w-8"
+                    class="absolute top-4 right-4 md:top-8 md:right-8 w-8"
                   />
                 </a>
 

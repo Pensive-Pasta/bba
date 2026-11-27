@@ -255,6 +255,7 @@ export const getContactPageQuery = `
   description,
   email,
   tel,
+  manchesterTel,
   mapCards{
     locationA{ label, addressLines, postcodeBadge, mapsLink, embedSrc },
     locationB{ label, addressLines, postcodeBadge, mapsLink, embedSrc }
