@@ -140,11 +140,11 @@
   pointer-events: none;
 }
 @screen lg {
-  .page-grid-header { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .page-grid-lead,
-  .page-grid-description {
-    /* One square of the four-column grid, including headers without copy. */
-    min-height: min(25vw, calc(var(--site-max-width) / 4));
+  .page-grid-header {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* One flush cell of the fluid four-column image grid. Border-box sizing
+       includes the intro padding and separator; longer copy grows naturally. */
+    min-height: 25vw;
   }
   .page-grid-header::before { display: block; }
 }
