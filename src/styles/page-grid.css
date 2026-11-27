@@ -55,6 +55,26 @@
 .image-grid-cell > a,
 .image-grid-cell > .image-grid-media { z-index: 1; }
 
+/* Centre the home rules on cell boundaries, like the shared page-centre rule.
+   Each cell paints its exposed half; media covers the same half in image cells.
+   Leading edges complete rules after an image without adding outer/top rules. */
+.home-project-grid > .image-grid-cell::before {
+  background-image: var(--grid-dot), var(--grid-dot), var(--grid-dot), var(--grid-dot);
+  background-size:
+    var(--image-grid-right-stroke, var(--grid-stroke)) var(--grid-dot-spacing),
+    var(--grid-dot-spacing) var(--grid-stroke),
+    var(--home-grid-left-stroke, 0px) var(--grid-dot-spacing),
+    var(--grid-dot-spacing) var(--home-grid-top-stroke, 0px);
+  background-position:
+    right calc(-1 * var(--grid-half-stroke)) top,
+    left bottom calc(-1 * var(--grid-half-stroke)),
+    left calc(-1 * var(--grid-half-stroke)) top,
+    left top calc(-1 * var(--grid-half-stroke));
+  background-repeat: repeat-y, repeat-x, repeat-y, repeat-x;
+}
+.home-project-grid > .image-grid-cell:nth-child(2n) { --home-grid-left-stroke: var(--grid-stroke); }
+.home-project-grid > .image-grid-cell:nth-child(n + 3) { --home-grid-top-stroke: var(--grid-stroke); }
+
 /* On mobile the home grid follows the intro copy and owns their separator. */
 .home-project-grid {
   border-top: var(--grid-stroke) solid transparent;
