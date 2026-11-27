@@ -57,9 +57,9 @@ const ogImage = resolveSeoImage(studioPage?.seo?.ogImage);
     </div>
   </StudioHeader>
 
-  <section id="studio-page" class="site-frame">
+  <section id="studio-page">
     {sections.map(({ key, body, startIndex }, index) => (
-      <div id={key} class:list={["w-full min-w-0 content-separators", { hidden: index !== 0 }]}>
+      <div id={key} class:list={["site-frame w-full min-w-0 content-separators", { "site-frame--fluid": key === "people", hidden: index !== 0 }]}>
         {key === "people" ? <PeopleGrid people={studioPage.people} /> : <ContentBlock blocks={body} startIndex={startIndex} />}
       </div>
     ))}

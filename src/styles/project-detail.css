@@ -7,8 +7,8 @@
   align-items: start;
   row-gap: var(--site-gutter);
   padding-block: var(--site-gutter);
-  border-bottom: var(--grid-stroke) dotted var(--dot-color);
-  background: white;
+  border-bottom: var(--grid-stroke) solid transparent;
+  background-color: white;
 }
 .project-information,
 .project-intro-copy {
@@ -25,7 +25,7 @@
 @screen lg {
   .project-introduction {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    background: transparent;
+    background-color: transparent;
   }
   .project-information {
     position: sticky;

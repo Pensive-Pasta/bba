@@ -48,7 +48,7 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage);
 >
   <VisitorLanding slot="landing" content={home} />
   <div
-    class="site-frame flex md:flex-row flex-col-reverse page-header-min-screen"
+    class="home-frame site-frame flex md:flex-row flex-col-reverse page-header-min-screen"
   >
     <!-- Left: Grid -->
 
@@ -88,7 +88,7 @@ const ogImage = resolveSeoImage(home?.seo?.ogImage);
 
     <!-- Right: Copy -->
     <div
-      class="w-full md:w-1/2 flex flex-col px-4 md:px-8 md:sticky md:top-0 self-start page-header-clearance page-header-clearance--home"
+      class="w-full md:w-1/2 md:max-w-[800px] flex flex-col px-4 md:px-8 md:sticky md:top-0 self-start page-header-clearance page-header-clearance--home"
     >
       <h1 class="font-future text-2xl md:text-4xl text-primary mb-4">
         {home?.title ?? "BBA is an inter-urban studio."}

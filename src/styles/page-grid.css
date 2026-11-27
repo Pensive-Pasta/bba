@@ -5,6 +5,36 @@
   margin-inline: auto;
 }
 
+/* Visual grids can expand beyond the shared frame. Text and site chrome
+   retain the normal cap; existing grid proportions and breakpoints stay put. */
+@media (min-width: 1600px) {
+  .home-frame,
+  .site-frame--fluid { max-width: none; }
+}
+
+/* Keep the original border space while painting circular dots ourselves.
+   These backgrounds also follow the full width of responsive content rows. */
+.page-grid-header,
+.contact-intro,
+.content-separators > .content-block-row,
+.project-introduction {
+  background-image: var(--grid-dot);
+  background-size: var(--grid-dot-spacing) var(--grid-stroke);
+  background-position: left bottom;
+  background-repeat: repeat-x;
+  background-origin: border-box;
+}
+
+.page-grid-header::before,
+.contact-intro::before,
+.page-grid-main::before,
+.listing-grid > .card::before {
+  width: var(--grid-stroke);
+  background-image: var(--grid-dot);
+  background-size: var(--grid-stroke) var(--grid-dot-spacing);
+  background-repeat: repeat-y;
+}
+
 /* Image cells meet without separator tracks. Each cell owns its trailing
    boundaries, underneath the media: opaque photographs cover the ink, while
    exposed cells and biography areas retain the dotted structure. People keeps
@@ -15,8 +45,10 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-right: var(--image-grid-right-stroke, var(--grid-stroke)) dotted var(--dot-color);
-  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+  background-image: var(--grid-dot), var(--grid-dot);
+  background-size: var(--image-grid-right-stroke, var(--grid-stroke)) var(--grid-dot-spacing), var(--grid-dot-spacing) var(--grid-stroke);
+  background-position: right top, left bottom;
+  background-repeat: repeat-y, repeat-x;
   pointer-events: none;
   z-index: 0;
 }
@@ -24,7 +56,14 @@
 .image-grid-cell > .image-grid-media { z-index: 1; }
 
 /* On mobile the home grid follows the intro copy and owns their separator. */
-.home-project-grid { border-top: var(--grid-stroke) dotted var(--dot-color); }
+.home-project-grid {
+  border-top: var(--grid-stroke) solid transparent;
+  background-image: var(--grid-dot);
+  background-size: var(--grid-dot-spacing) var(--grid-stroke);
+  background-position: left top;
+  background-repeat: repeat-x;
+  background-origin: border-box;
+}
 
 /* Work's filtered checkerboards are calculated at build time. CSS picks the
    active column count, without a client-side initial or resize reshuffle. */
@@ -66,8 +105,8 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--site-gutter) 0;
   padding-block: var(--page-header-gap) var(--site-gutter);
-  border-bottom: var(--grid-stroke) dotted var(--dot-color);
-  background: white;
+  border-bottom: var(--grid-stroke) solid transparent;
+  background-color: white;
   isolation: isolate;
 }
 .page-grid-lead,
@@ -94,7 +133,6 @@
   position: absolute;
   inset-block: 0;
   left: 50%;
-  border-left: var(--grid-stroke) dotted var(--dot-color);
   transform: translateX(calc(-1 * var(--grid-half-stroke)));
   pointer-events: none;
 }
@@ -118,25 +156,23 @@
   position: absolute;
   inset-block: 0;
   left: 50%;
-  width: 0;
-  border-left: var(--grid-stroke) dotted var(--dot-color);
   transform: translateX(calc(-1 * var(--grid-half-stroke)));
   pointer-events: none;
   z-index: -1;
 }
 @screen md {
-  .home-project-grid { border-top: 0; }
+  .home-project-grid { border-top: 0; background-image: none; }
   .page-grid-main--md::before { display: block; }
   .page-grid-main--md .contact-intro::before { display: none; }
   /* The home grid occupies the left half; its second cell ends at page centre. */
-  .page-grid-main .home-project-grid > .image-grid-cell:nth-child(2n)::before { border-right: 0; }
-  .page-grid-main--md .listing-grid > .card:nth-child(2n)::before { border-left: 0; }
+  .page-grid-main .home-project-grid > .image-grid-cell:nth-child(2n)::before { --image-grid-right-stroke: 0px; }
+  .page-grid-main--md .listing-grid > .card:nth-child(2n)::before { width: 0; }
 }
 @screen lg {
   .page-grid-main::before { display: block; }
-  .page-grid-main .page-grid-header { background: transparent; }
+  .page-grid-main .page-grid-header { background-color: transparent; }
   .page-grid-main .page-grid-header::before { display: none; }
-  .page-grid-main .image-grid[class~="lg:grid-cols-4"] > .image-grid-cell:nth-child(4n + 2)::before { border-right-width: var(--image-grid-right-stroke, 0px); }
+  .page-grid-main .image-grid[class~="lg:grid-cols-4"] > .image-grid-cell:nth-child(4n + 2)::before { --image-grid-right-stroke: var(--work-edge, 0px); }
 }
 /* Captions and the three-column Index table can span the centre boundary. */
 .page-grid-main #project-index,
@@ -158,13 +194,15 @@
 .listing-grid > .card::before {
   inset-block: 0;
   left: calc(-1 * var(--grid-stroke));
-  border-left: var(--grid-stroke) dotted var(--dot-color);
 }
 .listing-grid > .card::after {
   left: calc(-1 * var(--grid-stroke));
   right: 0;
   top: calc(-1 * var(--grid-stroke));
-  border-top: var(--grid-stroke) dotted var(--dot-color);
+  height: var(--grid-stroke);
+  background-image: var(--grid-dot);
+  background-size: var(--grid-dot-spacing) var(--grid-stroke);
+  background-repeat: repeat-x;
 }
 
 /* A full-width row owns the horizontal rule. Its existing inner section can
@@ -173,14 +211,14 @@
 .content-separators > .content-block-row {
   display: flow-root;
   padding-bottom: var(--site-gutter);
-  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+  border-bottom: var(--grid-stroke) solid transparent;
 }
 .contact-intro {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   padding-bottom: var(--site-gutter);
-  border-bottom: var(--grid-stroke) dotted var(--dot-color);
+  border-bottom: var(--grid-stroke) solid transparent;
 }
 .contact-intro > * { min-width: 0; padding-inline: var(--site-gutter); }
 @screen md {

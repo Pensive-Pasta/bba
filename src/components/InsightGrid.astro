@@ -5,7 +5,7 @@ const { insights } = Astro.props as { insights: Insight[] };
 ---
 
 <div
-  class="image-grid site-frame grid grid-cols-2 lg:grid-cols-4"
+  class="image-grid site-frame site-frame--fluid grid grid-cols-2 lg:grid-cols-4"
 >
   {
     insights.map((insight) => (

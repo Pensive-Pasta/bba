@@ -11,6 +11,10 @@
   --site-gutter: 1rem;
   --grid-stroke: 4px;
   --grid-half-stroke: calc(var(--grid-stroke) / 2);
+  /* Fixed-size circles on an eight-pixel pitch match the native Chrome rules
+     without relying on each browser's dotted-border rasterisation. */
+  --grid-dot-spacing: calc(var(--grid-stroke) * 2);
+  --grid-dot: radial-gradient(circle, var(--dot-color) calc(var(--grid-half-stroke) - 0.25px), transparent var(--grid-half-stroke));
 }
 @screen md {
   :root { --site-gutter: 2rem; }
@@ -114,40 +118,44 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  border: 4px dotted var(--dot-color);
+  border: var(--grid-stroke) solid transparent;
+  background-image: var(--grid-dot), var(--grid-dot), var(--grid-dot), var(--grid-dot);
+  background-size: var(--grid-stroke) var(--grid-dot-spacing), var(--grid-stroke) var(--grid-dot-spacing), var(--grid-dot-spacing) var(--grid-stroke), var(--grid-dot-spacing) var(--grid-stroke);
+  background-position: left top, right top, left top, left bottom;
+  background-repeat: repeat-y, repeat-y, repeat-x, repeat-x;
+  background-origin: border-box;
 }
 
 .dot-grid::before,
 .dot-grid::after {
   content: "";
   position: absolute;
-  background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
-  background-repeat: repeat;
-  background-position: center;
+  background-image: var(--grid-dot);
+  pointer-events: none;
 }
 
 /* Vertical line down the center */
 .dot-grid::before {
   content: "";
   position: absolute;
-  top: 4px;
-  bottom: 4px;
+  top: var(--grid-stroke);
+  bottom: var(--grid-stroke);
   left: 50%;
-  width: 0; /* no extra box width */
-  transform: translateX(-2px); /* centre the 4 px border */
-  border-left: 4px dotted var(--dot-color);
-  pointer-events: none;
+  width: var(--grid-stroke);
+  transform: translateX(calc(-1 * var(--grid-half-stroke)));
+  background-size: var(--grid-stroke) var(--grid-dot-spacing);
+  background-repeat: repeat-y;
 }
 
 /* Horizontal line across the center */
 .dot-grid::after {
   content: "";
   position: absolute;
-  left: 4px;
-  right: 4px;
+  left: var(--grid-stroke);
+  right: var(--grid-stroke);
   top: 50%;
-  height: 0; /* no extra box height */
-  transform: translateY(-2px); /* centre the 4 px border */
-  border-top: 4px dotted var(--dot-color);
-  pointer-events: none;
+  height: var(--grid-stroke);
+  transform: translateY(calc(-1 * var(--grid-half-stroke)));
+  background-size: var(--grid-dot-spacing) var(--grid-stroke);
+  background-repeat: repeat-x;
 }
