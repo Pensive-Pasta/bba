@@ -48,10 +48,18 @@ const ogImage = resolveSeoImage(studioPage?.seo?.ogImage);
   >
     <div slot="introduction">
       {sections.map(({ key, introduction }, index) => (
-        <div id={`${key}-intro`} class:list={{ hidden: index !== 0 }}>
-          <div class="space-y-4">
+        <div id={`${key}-intro`} class:list={{ hidden: index !== 0, "flex flex-col": index === 0 }}>
+          <div class:list={["space-y-4", { "mb-4": index === 0 }]}>
             {introduction.map((block) => <TextBlock content={block.content!} alignment="right" embedded />)}
           </div>
+          {index === 0 && (
+            <a
+              href="/work"
+              class="text-lg md:text-xl w-fit mb-10 underline underline-offset-4 decoration-2"
+            >
+              &gt; Work
+            </a>
+          )}
         </div>
       ))}
     </div>
